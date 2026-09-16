@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test de Régimen de Transición | Evoluciona Pensional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F6F3EC;
+    --bg-panel: #FFFFFF;
+    --ink: #22261F;
+    --ink-soft: #5B5F53;
+    --green-deep: #1C3A2B;
+    --green-mid: #2C5741;
+    --gold: #A8823A;
+    --gold-soft: #EADFC4;
+    --line: #DAD4C3;
+    --verde: #3F7D5D;
+    --amarillo: #B8862F;
+    --naranja: #B5602F;
+    --rojo: #AE4B33;
+    --azul: #3A5F80;
+    --azul-soft: #E4ECF2;
+    --radius: 4px;
+    --shadow: 0 1px 2px rgba(28,58,43,0.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Public Sans', sans-serif;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  h1,h2,h3,.display{
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    color: var(--green-deep);
+    letter-spacing: -0.01em;
+  }
+  .wrap{ max-width: 680px; margin: 0 auto; padding: 0 24px 80px; }
+
+  .top{
+    background: var(--green-deep);
+    color: #F6F3EC;
+    padding: 40px 24px 32px;
+    border-bottom: 3px solid var(--azul);
+  }
+  .top-inner{ max-width: 680px; margin: 0 auto; }
+  .eyebrow{ font-size: 13px; color: var(--gold-soft); margin: 0 0 6px; }
+  .top h1{ color: #FBF9F4; font-size: 28px; margin: 0 0 8px; line-height: 1.15; }
+  .top p{ color: #D8D9CE; font-size: 15px; max-width: 54ch; margin: 0; }
+  .advisor-badge{
+    display:inline-block; font-size:11px; font-weight:700; letter-spacing:.05em;
+    background: var(--gold); color:#3A2E10; padding:4px 10px; border-radius:3px; margin-bottom:12px;
+  }
+
+  .context-box{
+    max-width: 680px;
+    margin: 22px auto 0;
+    padding: 0 24px;
+  }
+  .context-inner{
+    background: var(--azul-soft);
+    border-left: 4px solid var(--azul);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    font-size: 13.5px;
+    color: #2C4155;
+  }
+  .context-inner strong{ color: var(--azul); }
+
+  .stepper{ display:flex; gap: 6px; max-width: 680px; margin: 20px auto 0; padding: 0 24px; }
+  .step-dot{ flex: 1; height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; }
+  .step-dot i{ display:block; height: 100%; width: 0%; background: var(--azul); transition: width .35s ease; }
+  .step-label{ max-width: 680px; margin: 10px auto 0; padding: 0 24px; font-size: 13px; color: var(--ink-soft); display:flex; justify-content: space-between; }
+
+  .card{ background: var(--bg-panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 32px; margin-top: 18px; }
+  .section-title{ font-size: 21px; margin: 0 0 4px; }
+  .section-sub{ color: var(--ink-soft); font-size: 14px; margin: 0 0 24px; }
+
+  .field{ margin-bottom: 22px; }
+  .field:last-child{margin-bottom:0;}
+  label.q{ display:block; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: var(--ink); }
+  .hint{ font-size: 13px; color: var(--ink-soft); font-weight: 400; display:block; margin-top: 2px; }
+  input[type=text], input[type=date], input[type=number], input[type=email], input[type=tel]{
+    width:100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: var(--radius);
+    background: #FEFDFB; font-family: 'Public Sans', sans-serif; font-size: 15px; color: var(--ink);
+  }
+  input:focus{ outline: 2px solid var(--azul); outline-offset: 1px; border-color: var(--azul); }
+  .opts{ display:flex; flex-wrap: wrap; gap: 8px; }
+  .opt{ border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 14px; font-size: 14px; cursor: pointer; background: #FEFDFB; transition: border-color .15s, background .15s; user-select: none; }
+  .opt:hover{ border-color: var(--azul); }
+  .opt.selected{ border-color: var(--azul); background: var(--azul); color: #F6F3EC; font-weight: 600; }
+
+  .nav{ display:flex; justify-content: space-between; align-items:center; margin-top: 26px; }
+  button{ font-family: 'Public Sans', sans-serif; font-size: 15px; font-weight: 600; border-radius: var(--radius); padding: 12px 22px; cursor: pointer; border: 1px solid transparent; }
+  .btn-primary{ background: var(--green-deep); color: #F6F3EC; border-color: var(--green-deep); }
+  .btn-primary:hover{ background: var(--green-mid); }
+  .btn-ghost{ background: transparent; color: var(--ink-soft); border-color: var(--line); }
+  .btn-ghost:hover{ border-color: var(--ink-soft); color: var(--ink); }
+  .req-msg{ font-size: 13px; color: var(--rojo); margin-top: 10px; display:none; }
+  .req-msg.show{ display:block; }
+
+  .result{ display:none; }
+  .result.show{ display:block; }
+  .quiz.hide{ display:none; }
+
+  .verdict-card{ border-radius: var(--radius); padding: 32px; text-align: left; border-bottom: 4px solid; margin-top:18px; }
+  .verdict-tag{ display:inline-block; font-size: 12.5px; font-weight: 700; padding: 5px 10px; border-radius: 3px; margin-bottom: 14px; color:#1B1B14; }
+  .verdict-card h2{ font-size: 24px; margin: 0 0 10px; color:#1B1B14; }
+  .verdict-card p{ font-size: 15px; margin: 0; max-width: 58ch; color:#3A3A32; }
+
+  .metric-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+  .metric{ background: var(--bg-panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; }
+  .metric .num{ font-family:'Fraunces', serif; font-size: 26px; color: var(--green-deep); display:block; }
+  .metric .lab{ font-size: 12.5px; color: var(--ink-soft); }
+
+  .concept-box{ margin-top: 24px; background: var(--bg-panel); border: 1px solid var(--line); border-left: 4px solid var(--gold); border-radius: var(--radius); padding: 22px 24px; }
+  .concept-box h3{ margin: 0 0 10px; font-size: 17px; }
+  .concept-box p{ margin: 0; font-size: 14.5px; color: var(--ink-soft); }
+
+  .next-step{ margin-top: 20px; background: var(--gold-soft); border-radius: var(--radius); padding: 22px 24px; }
+  .next-step h3{ margin: 0 0 8px; font-size: 17px; color: var(--green-deep); }
+  .next-step p{ margin: 0 0 16px; font-size: 14.5px; color: #4A4230; }
+  .sent-msg{ font-size: 13.5px; color: var(--green-mid); margin-top: 16px; display:none; }
+  .sent-msg.show{ display:block; }
+
+  .disclaimer{ margin-top: 24px; font-size: 12.5px; color: var(--ink-soft); border-top: 1px solid var(--line); padding-top: 16px; }
+
+  @media (max-width: 560px){
+    .top h1{ font-size: 23px; }
+    .card{ padding: 22px 18px; }
+    .verdict-card{ padding: 24px 20px; }
+    .metric-grid{ grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <span class="advisor-badge">HERRAMIENTA PARA ASESORES</span>
+    <p class="eyebrow">EVOLUCIONA PENSIONAL</p>
+    <h1>Test de Régimen de Transición</h1>
+    <p>Diligénciala durante la asesoría: determina si tu cliente queda protegido por la Ley 100 de 1993 frente a la reforma pensional, o si se regirá por el nuevo sistema de pilares.</p>
+  </div>
+</div>
+
+<div class="context-box">
+  <div class="context-inner">
+    <strong>Contexto:</strong> la reforma pensional (Ley 2381 de 2024) entra en vigencia el <strong>1 de abril de 2027</strong>. Quedan protegidos por las reglas actuales quienes acrediten <strong>750 semanas (mujeres) o 900 semanas (hombres)</strong> cotizadas a esa fecha. Este test es una proyección preliminar — no reemplaza la verificación con la historia laboral certificada del cliente.
+  </div>
+</div>
+
+<div class="stepper" id="stepper"></div>
+<div class="step-label"><span id="stepLabelText">Sección A</span><span id="stepCount">1 / 4</span></div>
+
+<div class="wrap">
+
+  <div class="quiz" id="quizWrap">
+    <div class="card" id="cardArea"></div>
+    <div class="req-msg" id="reqMsg">Por favor responde las preguntas marcadas antes de continuar.</div>
+    <div class="nav">
+      <button class="btn-ghost" id="btnBack" type="button">Atrás</button>
+      <button class="btn-primary" id="btnNext" type="button">Continuar</button>
+    </div>
+  </div>
+
+  <div class="result" id="resultWrap">
+    <div class="verdict-card" id="verdictCard">
+      <span class="verdict-tag" id="verdictTag">RESULTADO</span>
+      <h2 id="verdictTitle">—</h2>
+      <p id="verdictDesc">—</p>
+    </div>
+
+    <div class="metric-grid" id="metricGrid"></div>
+
+    <div class="concept-box">
+      <h3>Concepto preliminar de conveniencia</h3>
+      <p id="conceptText">—</p>
+    </div>
+
+    <div class="next-step">
+      <h3 id="nextStepTitle">Siguiente paso recomendado</h3>
+      <p id="nextStepText">—</p>
+      <button class="btn-primary" type="button" onclick="window.location.href='#contacto'">Quiero mi concepto formal</button>
+      <div class="sent-msg" id="sentMsg">Tu ficha ya fue enviada a nuestro equipo de asesores. Te contactaremos pronto.</div>
+    </div>
+
+    <p class="disclaimer">Este resultado es una estimación preliminar basada en la información que ingresaste y en la normativa vigente a la fecha (Ley 2381 de 2024, vigencia 1 de abril de 2027). No constituye un concepto jurídico definitivo ni sustituye la verificación con tu historia laboral certificada por Colpensiones o tu fondo privado.</p>
+  </div>
+
+</div>
+
+<script>
+const sections = [
+  {
+    id:"A", title:"Datos básicos", sub:"El umbral de semanas exigido depende de tu sexo.",
+    fields:[
+      { id:"sexo", q:"Sexo", type:"choice", options:["Mujer","Hombre"], required:true },
+      { id:"fnac", q:"Fecha de nacimiento", type:"date", required:true }
+    ]
+  },
+  {
+    id:"B", title:"Tu historia de semanas", sub:"Esto es lo que determina si el régimen de transición te protege.",
+    fields:[
+      { id:"conoceSemanas", q:"¿Conoces tu número actual de semanas cotizadas?", type:"choice", options:["Sí","No, necesito solicitar mi historia laboral"], required:true },
+      { id:"semanas", q:"¿Cuántas semanas tienes cotizadas hoy?", type:"number", showIf:{field:"conoceSemanas", equals:"Sí"} },
+      { id:"cotizandoActivo", q:"¿Sigues cotizando de forma activa y continua en este momento?", type:"choice", options:["Sí, todos los meses","Sí, pero con algunas interrupciones","No, no estoy cotizando actualmente"], required:true }
+    ]
+  },
+  {
+    id:"C", title:"Tu régimen actual", sub:"Para el concepto de conveniencia.",
+    fields:[
+      { id:"regimen", q:"¿A qué régimen estás afiliado hoy?", type:"choice", options:["Colpensiones (Prima Media - RPM)","Fondo privado (RAIS)","No lo sé"], required:true },
+      { id:"traslados", q:"¿Te has trasladado de régimen alguna vez?", type:"choice", options:["Sí","No","No lo sé"], required:true },
+      { id:"objetivoTest", q:"¿Qué esperas resolver con este test?", type:"choice",
+        options:["Saber si me protege el régimen de transición","Saber si me conviene RPM o RAIS","Ambas"], required:true }
+    ]
+  },
+  {
+    id:"D", title:"Datos de contacto del cliente", sub:"Para dejar el resultado en su expediente.",
+    fields:[
+      { id:"nombre", q:"Nombre completo", type:"text", required:true },
+      { id:"telefono", q:"Número de WhatsApp", type:"tel", required:true },
+      { id:"email", q:"Correo electrónico", type:"email", required:true }
+    ]
+  }
+];
+
+let current = 0;
+const answers = {};
+
+const stepperEl = document.getElementById("stepper");
+sections.forEach(()=>{
+  const d = document.createElement("div");
+  d.className = "step-dot";
+  d.innerHTML = "<i></i>";
+  stepperEl.appendChild(d);
+});
+
+function updateStepper(){
+  const dots = stepperEl.querySelectorAll(".step-dot i");
+  dots.forEach((d,i)=>{ d.style.width = i < current ? "100%" : (i === current ? "50%" : "0%"); });
+  document.getElementById("stepLabelText").textContent = "Sección " + sections[current].id + " · " + sections[current].title;
+  document.getElementById("stepCount").textContent = (current+1) + " / " + sections.length;
+}
+
+function fieldVisible(f){
+  if(!f.showIf) return true;
+  return answers[f.showIf.field] === f.showIf.equals;
+}
+
+function renderSection(){
+  const s = sections[current];
+  const card = document.getElementById("cardArea");
+  card.innerHTML = "";
+
+  const h = document.createElement("h2");
+  h.className = "section-title";
+  h.textContent = s.title;
+  card.appendChild(h);
+
+  const sub = document.createElement("p");
+  sub.className = "section-sub";
+  sub.textContent = s.sub;
+  card.appendChild(sub);
+
+  s.fields.forEach(f=>{
+    const wrap = document.createElement("div");
+    wrap.className = "field";
+    wrap.style.display = fieldVisible(f) ? "block" : "none";
+
+    const label = document.createElement("label");
+    label.className = "q";
+    label.textContent = f.q;
+    if(f.hint){
+      const hint = document.createElement("span");
+      hint.className = "hint";
+      hint.textContent = f.hint;
+      label.appendChild(hint);
+    }
+    wrap.appendChild(label);
+
+    if(f.type === "choice"){
+      const opts = document.createElement("div");
+      opts.className = "opts";
+      f.options.forEach(opt=>{
+        const chip = document.createElement("div");
+        chip.className = "opt" + (answers[f.id]===opt ? " selected":"");
+        chip.textContent = opt;
+        chip.addEventListener("click", ()=>{ answers[f.id] = opt; renderSection(); });
+        opts.appendChild(chip);
+      });
+      wrap.appendChild(opts);
+    } else {
+      const input = document.createElement("input");
+      input.type = f.type;
+      input.value = answers[f.id] || "";
+      input.addEventListener("input", (e)=>{ answers[f.id] = e.target.value; });
+      wrap.appendChild(input);
+    }
+    card.appendChild(wrap);
+  });
+
+  document.getElementById("btnBack").style.visibility = current === 0 ? "hidden" : "visible";
+  document.getElementById("btnNext").textContent = current === sections.length - 1 ? "Ver mi resultado" : "Continuar";
+  document.getElementById("reqMsg").classList.remove("show");
+  updateStepper();
+}
+
+function validateSection(){
+  const s = sections[current];
+  for(const f of s.fields){
+    if(!fieldVisible(f)) continue;
+    if(f.required && (!answers[f.id] || String(answers[f.id]).trim()==="")) return false;
+  }
+  return true;
+}
+
+document.getElementById("btnNext").addEventListener("click", ()=>{
+  if(!validateSection()){
+    document.getElementById("reqMsg").classList.add("show");
+    return;
+  }
+  if(current < sections.length - 1){
+    current++;
+    renderSection();
+    window.scrollTo({top:0, behavior:"smooth"});
+  } else {
+    finish();
+  }
+});
+document.getElementById("btnBack").addEventListener("click", ()=>{
+  if(current > 0){ current--; renderSection(); window.scrollTo({top:0, behavior:"smooth"}); }
+});
+
+/* ==================== LOGIC ==================== */
+const FECHA_VIGENCIA = new Date("2027-04-01T00:00:00");
+
+function semanasProyectadasHastaVigencia(){
+  const hoy = new Date();
+  const msRestantes = FECHA_VIGENCIA - hoy;
+  const semanasRestantes = Math.max(0, Math.floor(msRestantes / (1000*60*60*24*7)));
+
+  let factor = 0;
+  if(answers.cotizandoActivo === "Sí, todos los meses") factor = 1;
+  else if(answers.cotizandoActivo === "Sí, pero con algunas interrupciones") factor = 0.7;
+  else factor = 0;
+
+  return Math.round(semanasRestantes * factor);
+}
+
+function evaluar(){
+  const umbral = answers.sexo === "Mujer" ? 750 : 900;
+  const semanasActuales = answers.conoceSemanas === "Sí" ? (parseInt(answers.semanas,10) || 0) : null;
+  const proyectadas = semanasProyectadasHastaVigencia();
+
+  if(semanasActuales === null){
+    return {
+      sinDato:true, umbral,
+      verdict:{ key:"sindato", tag:"REQUIERE HISTORIA LABORAL DEL CLIENTE", color:"var(--azul)",
+        title:"Con la información disponible no se puede calcular todavía",
+        desc:"No se conoce el número de semanas cotizadas del cliente, así que no es posible proyectar si llega al umbral. El primer paso es solicitar su historia laboral en Colpensiones o su fondo privado." }
+    };
+  }
+
+  const totalProyectado = semanasActuales + proyectadas;
+  const diferencia = totalProyectado - umbral;
+
+  let verdict;
+  if(diferencia >= 30){
+    verdict = { key:"si_amplio", tag:"SÍ QUEDA PROTEGIDO", color:"var(--verde)",
+      title:"Todo indica que el régimen de transición lo cubre",
+      desc:"Con el ritmo actual de cotización, se proyecta que llegará al 1 de abril de 2027 superando cómodamente el umbral exigido. Seguiría bajo las reglas de la Ley 100 de 1993." };
+  } else if(diferencia >= 0){
+    verdict = { key:"si_limite", tag:"QUEDA PROTEGIDO, PERO EN EL LÍMITE", color:"var(--amarillo)",
+      title:"Está justo en el umbral — cualquier interrupción es riesgosa",
+      desc:"La proyección lo ubica apenas por encima del mínimo exigido. Una interrupción en la cotización entre hoy y abril de 2027 podría hacerle perder la protección del régimen de transición." };
+  } else if(diferencia >= -60){
+    verdict = { key:"cerca", tag:"AÚN NO ALCANZA EL UMBRAL, PERO ESTÁ CERCA", color:"var(--naranja)",
+      title:"Con esfuerzo constante, podría llegar a tiempo",
+      desc:"Hoy la proyección lo deja por debajo del umbral, pero la diferencia es corta. Cotizar sin interrupciones — o revisar semanas no reportadas — podría cerrar esa brecha antes del 1 de abril de 2027." };
+  } else {
+    verdict = { key:"no", tag:"SE REGIRÍA POR EL NUEVO SISTEMA", color:"var(--rojo)",
+      title:"No alcanzaría el umbral del régimen de transición",
+      desc:"Con la proyección actual, no llegaría a las semanas exigidas antes del 1 de abril de 2027. Esto no es necesariamente negativo: el nuevo sistema de pilares tiene reglas propias que conviene explicarle con tiempo." };
+  }
+
+  return { sinDato:false, umbral, semanasActuales, proyectadas, totalProyectado, diferencia, verdict };
+}
+
+function conceptoConveniencia(e){
+  if(e.sinDato){
+    return "Sin el dato de semanas no es posible dar un concepto de conveniencia todavía. Una vez se tenga la historia laboral, se puede evaluar si le conviene permanecer en su régimen actual o hacer algún ajuste.";
+  }
+  const enRPM = answers.regimen === "Colpensiones (Prima Media - RPM)";
+  const enRAIS = answers.regimen === "Fondo privado (RAIS)";
+
+  if(e.verdict.key === "si_amplio" || e.verdict.key === "si_limite"){
+    if(enRAIS){
+      return "Al quedar protegido por el régimen de transición, sigues bajo las reglas de la Ley 100, tanto si permaneces en tu fondo privado (RAIS) como si en algún momento evalúas Colpensiones (RPM). La decisión de cuál te conviene depende de tu Ingreso Base de Liquidación (IBL) y del monto proyectado de mesada en cada esquema — eso lo resolvemos con la Proyección Pensional Personalizada.";
+    }
+    if(enRPM){
+      return "Al quedar protegido por el régimen de transición y estar ya en Colpensiones (RPM), tus reglas de liquidación bajo la Ley 100 se mantienen estables. Vale la pena confirmar tu IBL proyectado para tener claridad sobre el monto esperado de tu mesada.";
+    }
+    return "Al quedar protegido por el régimen de transición, es importante que definamos con certeza en qué régimen estás afiliado hoy para poder darte un concepto de conveniencia completo.";
+  }
+
+  if(e.verdict.key === "cerca"){
+    return "Como estás cerca del umbral, el mayor valor ahora mismo es maximizar semanas cotizadas de forma continua antes del 1 de abril de 2027 — incluyendo revisar si tienes semanas no reportadas en tu historia laboral. Eso puede ser más determinante que cualquier decisión de régimen en este momento.";
+  }
+
+  return "Sin la protección del régimen de transición, la conversación relevante deja de ser 'RPM vs. RAIS bajo la Ley 100' y pasa a ser cómo te conviene ubicarte dentro del nuevo sistema de pilares (contributivo, semicontributivo, solidario) según tu nivel de ingresos y semanas.";
+}
+
+function finish(){
+  const e = evaluar();
+  document.getElementById("quizWrap").classList.add("hide");
+  document.getElementById("resultWrap").classList.add("show");
+  renderResult(e);
+  window.scrollTo({top:0, behavior:"smooth"});
+  sendToAdvisor(e);
+}
+
+function renderResult(e){
+  document.getElementById("verdictTag").textContent = e.verdict.tag;
+  document.getElementById("verdictTag").style.background = e.verdict.color;
+  document.getElementById("verdictTitle").textContent = e.verdict.title;
+  document.getElementById("verdictDesc").textContent = e.verdict.desc;
+  document.getElementById("verdictCard").style.borderBottomColor = e.verdict.color;
+  document.getElementById("verdictCard").style.background = "#FFFFFF";
+  document.getElementById("verdictCard").style.border = "1px solid var(--line)";
+  document.getElementById("verdictCard").style.borderBottomWidth = "4px";
+  document.getElementById("verdictTitle").style.color = "var(--green-deep)";
+  document.getElementById("verdictDesc").style.color = "var(--ink-soft)";
+
+  const grid = document.getElementById("metricGrid");
+  grid.innerHTML = "";
+  if(!e.sinDato){
+    const items = [
+      { num: e.umbral, lab: "Semanas exigidas (umbral)" },
+      { num: e.semanasActuales, lab: "Semanas que reportas hoy" },
+      { num: "+" + e.proyectadas, lab: "Semanas proyectadas hasta abr. 2027" },
+      { num: e.totalProyectado, lab: "Total proyectado al 1 abr. 2027" }
+    ];
+    items.forEach(it=>{
+      const div = document.createElement("div");
+      div.className = "metric";
+      div.innerHTML = `<span class="num">${it.num}</span><span class="lab">${it.lab}</span>`;
+      grid.appendChild(div);
+    });
+  }
+
+  document.getElementById("conceptText").textContent = conceptoConveniencia(e);
+
+  const nextSteps = {
+    sindato: "Te recomendamos solicitar tu historia laboral y luego repetir este test, o agendar directamente para que te ayudemos a solicitarla.",
+    si_amplio: "Te recomendamos la Proyección Pensional Personalizada para definir tu IBL y el monto estimado de tu mesada.",
+    si_limite: "Te recomendamos una Auditoría de Historia Laboral para blindar las semanas que ya tienes y evitar sorpresas antes de abril de 2027.",
+    cerca: "Te recomendamos una Auditoría de Historia Laboral urgente para identificar semanas faltantes o no reportadas.",
+    no: "Te recomendamos una asesoría para entender cómo te ubicas dentro del nuevo sistema de pilares."
+  };
+  document.getElementById("nextStepText").textContent = nextSteps[e.verdict.key] || nextSteps.si_limite;
+}
+
+async function sendToAdvisor(e){
+  const payload = {
+    ...answers,
+    resultado_test: e.verdict.tag,
+    umbral_aplicable: e.umbral,
+    semanas_actuales: e.semanasActuales,
+    semanas_proyectadas_adicionales: e.proyectadas,
+    total_proyectado: e.totalProyectado,
+    fecha_test: new Date().toISOString()
+  };
+  try{
+    const resp = await fetch("https://formspree.io/f/TU_ENDPOINT_AQUI", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if(resp.ok){ document.getElementById("sentMsg").classList.add("show"); }
+  } catch(err){
+    console.error("No se pudo enviar la ficha al asesor:", err);
+  }
+}
+
+renderSection();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="auth-check.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico de Invalidez y Viabilidad del Caso | Evoluciona Pensional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F3EC; --bg-panel:#FFFFFF; --ink:#22261F; --ink-soft:#5B5F53;
+    --green-deep:#1C3A2B; --green-mid:#2C5741; --gold:#A8823A; --gold-soft:#EADFC4;
+    --line:#DAD4C3; --slate:#41546B; --slate-soft:#E2E7ED;
+    --verde:#3F7D5D; --amarillo:#B8862F; --naranja:#B5602F; --rojo:#AE4B33; --azul:#3A5F80;
+    --radius:4px; --shadow:0 1px 2px rgba(28,58,43,0.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{ background:var(--bg); color:var(--ink); font-family:'Public Sans',sans-serif; line-height:1.5; min-height:100vh; }
+  h1,h2,h3{ font-family:'Fraunces',serif; font-weight:500; color:var(--green-deep); letter-spacing:-0.01em; }
+  .wrap{ max-width:700px; margin:0 auto; padding:0 24px 80px; }
+
+  .top{ background:var(--green-deep); color:#F6F3EC; padding:40px 24px 32px; border-bottom:3px solid var(--slate); }
+  .top-inner{ max-width:700px; margin:0 auto; }
+  .eyebrow{ font-size:13px; color:var(--gold-soft); margin:0 0 6px; }
+  .top h1{ color:#FBF9F4; font-size:27px; margin:0 0 8px; line-height:1.18; }
+  .top p{ color:#D8D9CE; font-size:15px; max-width:56ch; margin:0; }
+
+  .context-box{ max-width:700px; margin:22px auto 0; padding:0 24px; }
+  .context-inner{ background:var(--slate-soft); border-left:4px solid var(--slate); border-radius:var(--radius); padding:16px 18px; font-size:13.5px; color:#2B394A; }
+
+  .stepper{ display:flex; gap:6px; max-width:700px; margin:20px auto 0; padding:0 24px; }
+  .step-dot{ flex:1; height:4px; background:var(--line); border-radius:2px; overflow:hidden; }
+  .step-dot i{ display:block; height:100%; width:0%; background:var(--slate); transition:width .35s ease; }
+  .step-label{ max-width:700px; margin:10px auto 0; padding:0 24px; font-size:13px; color:var(--ink-soft); display:flex; justify-content:space-between; }
+
+  .card{ background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:32px; margin-top:18px; }
+  .section-title{ font-size:21px; margin:0 0 4px; }
+  .section-sub{ color:var(--ink-soft); font-size:14px; margin:0 0 24px; }
+
+  .field{ margin-bottom:22px; }
+  .field:last-child{margin-bottom:0;}
+  label.q{ display:block; font-size:15px; font-weight:600; margin-bottom:10px; color:var(--ink); }
+  .hint{ font-size:13px; color:var(--ink-soft); font-weight:400; display:block; margin-top:2px; }
+  input[type=text], input[type=date], input[type=number], input[type=email], input[type=tel]{
+    width:100%; padding:11px 12px; border:1px solid var(--line); border-radius:var(--radius);
+    background:#FEFDFB; font-family:'Public Sans',sans-serif; font-size:15px; color:var(--ink);
+  }
+  input:focus{ outline:2px solid var(--slate); outline-offset:1px; border-color:var(--slate); }
+  .opts{ display:flex; flex-wrap:wrap; gap:8px; }
+  .opt{ border:1px solid var(--line); border-radius:var(--radius); padding:10px 14px; font-size:14px; cursor:pointer; background:#FEFDFB; transition:border-color .15s, background .15s; user-select:none; }
+  .opt:hover{ border-color:var(--slate); }
+  .opt.selected{ border-color:var(--slate); background:var(--slate); color:#F6F3EC; font-weight:600; }
+
+  .nav{ display:flex; justify-content:space-between; align-items:center; margin-top:26px; }
+  button{ font-family:'Public Sans',sans-serif; font-size:15px; font-weight:600; border-radius:var(--radius); padding:12px 22px; cursor:pointer; border:1px solid transparent; }
+  .btn-primary{ background:var(--green-deep); color:#F6F3EC; border-color:var(--green-deep); }
+  .btn-primary:hover{ background:var(--green-mid); }
+  .btn-ghost{ background:transparent; color:var(--ink-soft); border-color:var(--line); }
+  .btn-ghost:hover{ border-color:var(--ink-soft); color:var(--ink); }
+  .req-msg{ font-size:13px; color:var(--rojo); margin-top:10px; display:none; }
+  .req-msg.show{ display:block; }
+
+  .result{ display:none; }
+  .result.show{ display:block; }
+  .quiz.hide{ display:none; }
+
+  .verdict-card{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:32px; border-bottom:4px solid var(--slate); margin-top:18px; }
+  .verdict-tag{ display:inline-block; font-size:12.5px; font-weight:700; padding:5px 10px; border-radius:3px; margin-bottom:14px; color:#1B1B14; }
+  .verdict-card h2{ font-size:23px; margin:0 0 10px; }
+  .verdict-card p{ font-size:15px; margin:0; max-width:58ch; color:var(--ink-soft); }
+
+  .group-title{ font-size:14px; font-weight:700; color:var(--green-deep); margin:26px 0 12px; }
+  .metric-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .metric{ background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; }
+  .metric .num{ font-family:'Fraunces', serif; font-size:20px; color:var(--green-deep); display:block; }
+  .metric .lab{ font-size:12.5px; color:var(--ink-soft); }
+
+  .note-list{ margin-top:18px; display:flex; flex-direction:column; gap:10px; }
+  .note{ padding:14px 16px; border-radius:var(--radius); border-left:4px solid var(--azul); background:#E9F0F5; font-size:14px; color:#233C4D; }
+  .note.gold{ border-color:var(--gold); background:var(--gold-soft); color:#4A3A18; }
+  .note.rojo{ border-color:var(--rojo); background:#F8E9E4; color:#5E2E1E; }
+
+  .internal-box{ margin-top:24px; background:#F1EEE4; border:1px dashed var(--line); border-radius:var(--radius); padding:20px 22px; }
+  .internal-box .badge{ font-size:11px; font-weight:700; color:var(--ink-soft); letter-spacing:.04em; margin-bottom:8px; display:block; }
+  .internal-box h3{ font-size:16px; margin:0 0 8px; }
+  .internal-box p{ margin:0; font-size:14px; color:var(--ink-soft); }
+
+  .next-step{ margin-top:24px; background:var(--gold-soft); border-radius:var(--radius); padding:22px 24px; }
+  .next-step h3{ margin:0 0 8px; font-size:17px; color:var(--green-deep); }
+  .next-step p{ margin:0 0 16px; font-size:14.5px; color:#4A4230; }
+  .sent-msg{ font-size:13.5px; color:var(--green-mid); margin-top:16px; display:none; }
+  .sent-msg.show{ display:block; }
+
+  .disclaimer{ margin-top:24px; font-size:12.5px; color:var(--ink-soft); border-top:1px solid var(--line); padding-top:16px; }
+
+  @media (max-width:560px){
+    .top h1{ font-size:22px; }
+    .card{ padding:22px 18px; }
+    .verdict-card{ padding:24px 20px; }
+    .metric-grid{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <p class="eyebrow">EVOLUCIONA PENSIONAL</p>
+    <h1>Diagnóstico de Invalidez y Viabilidad del Caso</h1>
+    <p>Para clientes que llegan buscando una pensión de invalidez: qué tan viable es el caso, qué falta, y con qué monto aproximado podrían pensionarse.</p>
+  </div>
+</div>
+
+<div class="context-box">
+  <div class="context-inner">
+    La pensión de invalidez exige <strong>Pérdida de Capacidad Laboral (PCL) ≥ 50%</strong>. Si el origen es <strong>laboral</strong> (ARL), no se exigen semanas mínimas. Si el origen es <strong>común</strong>, se exigen <strong>50 semanas cotizadas en los 3 años anteriores</strong> a la fecha de estructuración (26 semanas si la persona es menor de 20 años).
+  </div>
+</div>
+
+<div class="stepper" id="stepper"></div>
+<div class="step-label"><span id="stepLabelText">Sección A</span><span id="stepCount">1 / 6</span></div>
+
+<div class="wrap">
+  <div class="quiz" id="quizWrap">
+    <div class="card" id="cardArea"></div>
+    <div class="req-msg" id="reqMsg">Por favor responde las preguntas marcadas antes de continuar.</div>
+    <div class="nav">
+      <button class="btn-ghost" id="btnBack" type="button">Atrás</button>
+      <button class="btn-primary" id="btnNext" type="button">Continuar</button>
+    </div>
+  </div>
+
+  <div class="result" id="resultWrap">
+    <div class="verdict-card" id="verdictCard">
+      <span class="verdict-tag" id="verdictTag">RESULTADO</span>
+      <h2 id="verdictTitle">—</h2>
+      <p id="verdictDesc">—</p>
+    </div>
+
+    <div class="note-list" id="noteList"></div>
+
+    <div id="montoBlock">
+      <p class="group-title">Estimado de tu mesada (si el caso avanza)</p>
+      <div class="metric-grid" id="gridMonto"></div>
+    </div>
+
+    <div class="internal-box">
+      <span class="badge">USO INTERNO · SOLO ASESORES</span>
+      <h3 id="internalTitle">Nivel de viabilidad</h3>
+      <p id="internalText">—</p>
+    </div>
+
+    <div class="next-step">
+      <h3 id="nextStepTitle">Siguiente paso recomendado</h3>
+      <p id="nextStepText">—</p>
+      <button class="btn-primary" type="button" onclick="window.location.href='#contacto'">Quiero agendar mi asesoría</button>
+      <div class="sent-msg" id="sentMsg">Tu ficha completa ya fue enviada a nuestro equipo de asesores. Te contactaremos pronto.</div>
+    </div>
+
+    <p class="disclaimer">Este diagnóstico es una orientación preliminar basada en la información que compartiste y en la normativa vigente (Ley 100 de 1993, Ley 860 de 2003, Decreto 1507 de 2014 y Ley 2381 de 2024). No reemplaza la revisión del dictamen médico-legal ni el análisis jurídico de tu abogado, que es quien determina la viabilidad definitiva del caso.</p>
+  </div>
+</div>
+
+<script>
+const SMLV_2026 = 1750905;
+
+const sections = [
+  {
+    id:"A", title:"Datos del cliente", sub:"Información básica del caso.",
+    fields:[
+      { id:"nombre", q:"Nombre completo", type:"text", required:true },
+      { id:"fnac", q:"Fecha de nacimiento", type:"date", required:true },
+      { id:"sexo", q:"Sexo", type:"choice", options:["Mujer","Hombre"], required:true },
+      { id:"ciudad", q:"Ciudad", type:"text", required:true }
+    ]
+  },
+  {
+    id:"B", title:"Estado de tu calificación", sub:"Lo que ya sabes sobre tu Pérdida de Capacidad Laboral (PCL).",
+    fields:[
+      { id:"pclStatus", q:"¿Ya tienes un dictamen de Pérdida de Capacidad Laboral (PCL)?", type:"choice",
+        options:["Sí, ya fui calificado","En trámite, esperando resultado","No, aún no me han calificado"], required:true },
+      { id:"pclQuien", q:"¿Quién emitió el dictamen?", type:"choice",
+        options:["EPS","ARL","Junta Regional de Calificación de Invalidez","Junta Nacional de Calificación de Invalidez","Colpensiones o mi fondo de pensiones (AFP)","No lo sé"],
+        showIf:{field:"pclStatus", equals:"Sí, ya fui calificado"} },
+      { id:"pclPorcentaje", q:"¿Cuál fue el porcentaje de PCL dictaminado?", type:"number", hint:"Ej: 55",
+        showIf:{field:"pclStatus", equals:"Sí, ya fui calificado"} },
+      { id:"fechaEstructuracion", q:"Fecha de estructuración dictaminada", type:"date",
+        showIf:{field:"pclStatus", equals:"Sí, ya fui calificado"} },
+      { id:"origenDictaminado", q:"¿Cuál fue el origen dictaminado?", type:"choice",
+        options:["Común","Laboral (accidente o enfermedad de trabajo)","No lo sé"],
+        showIf:{field:"pclStatus", equals:"Sí, ya fui calificado"} },
+      { id:"deAcuerdo", q:"¿Estás de acuerdo con ese dictamen?", type:"choice",
+        options:["Sí, estoy de acuerdo","No, quiero impugnarlo","No estoy seguro"],
+        showIf:{field:"pclStatus", equals:"Sí, ya fui calificado"} }
+    ]
+  },
+  {
+    id:"C", title:"Si aún no tienes calificación", sub:"Para orientarte sobre cómo iniciar el proceso.",
+    fields:[
+      { id:"tiempoIncapacidad", q:"¿Cuánto tiempo llevas con incapacidad médica continua?", type:"choice",
+        options:["Menos de 180 días","Más de 180 días","No he tenido incapacidades médicas formales"] },
+      { id:"relacionTrabajo", q:"¿La enfermedad o accidente tiene relación con tu trabajo?", type:"choice",
+        options:["Sí, fue un accidente de trabajo o enfermedad laboral","No, es de origen común","No estoy seguro"] },
+      { id:"procesoIniciado", q:"¿Tu EPS, ARL o empleador ya inició el proceso de calificación?", type:"choice",
+        options:["Sí","No","No lo sé"] }
+    ]
+  },
+  {
+    id:"D", title:"Historia laboral", sub:"Para el requisito de semanas y el cálculo del monto.",
+    fields:[
+      { id:"semanas3anos", q:"¿Cuántas semanas tienes cotizadas en los últimos 3 años?", type:"number", hint:"Cuenta hacia atrás desde la fecha de estructuración, o desde hoy si aún no la tienes", required:true },
+      { id:"semanasTotales", q:"¿Cuántas semanas tienes cotizadas en total, en toda tu vida laboral?", type:"number", hint:"Da tu mejor estimado", required:true },
+      { id:"afiliadoActivo", q:"¿Sigues afiliado activamente a pensión y/o ARL?", type:"choice", options:["Sí","No"], required:true },
+      { id:"asistenciaTercero", q:"¿Requieres la asistencia permanente de otra persona para tus actividades diarias?", type:"choice", options:["Sí","No"], required:true }
+    ]
+  },
+  {
+    id:"E", title:"Ingresos", sub:"Para estimar el monto de tu mesada.",
+    fields:[
+      { id:"ibc", q:"¿Cuál ha sido tu IBC o salario mensual promedio?", type:"number", hint:"En pesos colombianos, ej: 2500000", required:true }
+    ]
+  },
+  {
+    id:"F", title:"Tu objetivo y contacto", sub:"Para dirigirte al servicio correcto y contactarte.",
+    fields:[
+      { id:"objetivo", q:"¿Qué necesitas de nosotros?", type:"choice",
+        options:["Que me ayuden a iniciar el trámite de calificación","Que revisen si mi dictamen está bien hecho","Que impugnen un dictamen con el que no estoy de acuerdo","Que reclamen una pensión que ya me negaron","No estoy seguro, necesito orientación"], required:true },
+      { id:"negado", q:"¿Te han negado la pensión de invalidez alguna vez?", type:"choice", options:["Sí","No"], required:true },
+      { id:"telefono", q:"Número de WhatsApp", type:"tel", required:true },
+      { id:"email", q:"Correo electrónico", type:"email", required:true }
+    ]
+  }
+];
+
+let current = 0;
+const answers = {};
+
+const stepperEl = document.getElementById("stepper");
+sections.forEach(()=>{
+  const d = document.createElement("div");
+  d.className = "step-dot";
+  d.innerHTML = "<i></i>";
+  stepperEl.appendChild(d);
+});
+
+function updateStepper(){
+  const dots = stepperEl.querySelectorAll(".step-dot i");
+  dots.forEach((d,i)=>{ d.style.width = i < current ? "100%" : (i === current ? "50%" : "0%"); });
+  document.getElementById("stepLabelText").textContent = "Sección " + sections[current].id + " · " + sections[current].title;
+  document.getElementById("stepCount").textContent = (current+1) + " / " + sections.length;
+}
+
+function fieldVisible(f){
+  if(!f.showIf) return true;
+  return answers[f.showIf.field] === f.showIf.equals;
+}
+
+function renderSection(){
+  const s = sections[current];
+  const card = document.getElementById("cardArea");
+  card.innerHTML = "";
+
+  const h = document.createElement("h2");
+  h.className = "section-title";
+  h.textContent = s.title;
+  card.appendChild(h);
+
+  const sub = document.createElement("p");
+  sub.className = "section-sub";
+  sub.textContent = s.sub;
+  card.appendChild(sub);
+
+  s.fields.forEach(f=>{
+    const wrap = document.createElement("div");
+    wrap.className = "field";
+    wrap.style.display = fieldVisible(f) ? "block" : "none";
+
+    const label = document.createElement("label");
+    label.className = "q";
+    label.textContent = f.q;
+    if(f.hint){
+      const hint = document.createElement("span");
+      hint.className = "hint";
+      hint.textContent = f.hint;
+      label.appendChild(hint);
+    }
+    wrap.appendChild(label);
+
+    if(f.type === "choice"){
+      const opts = document.createElement("div");
+      opts.className = "opts";
+      f.options.forEach(opt=>{
+        const chip = document.createElement("div");
+        chip.className = "opt" + (answers[f.id]===opt ? " selected":"");
+        chip.textContent = opt;
+        chip.addEventListener("click", ()=>{ answers[f.id] = opt; renderSection(); });
+        opts.appendChild(chip);
+      });
+      wrap.appendChild(opts);
+    } else {
+      const input = document.createElement("input");
+      input.type = f.type;
+      input.value = answers[f.id] || "";
+      input.addEventListener("input", (e)=>{ answers[f.id] = e.target.value; });
+      wrap.appendChild(input);
+    }
+    card.appendChild(wrap);
+  });
+
+  document.getElementById("btnBack").style.visibility = current === 0 ? "hidden" : "visible";
+  document.getElementById("btnNext").textContent = current === sections.length - 1 ? "Ver diagnóstico" : "Continuar";
+  document.getElementById("reqMsg").classList.remove("show");
+  updateStepper();
+}
+
+function validateSection(){
+  const s = sections[current];
+  for(const f of s.fields){
+    if(!fieldVisible(f)) continue;
+    if(f.required && (!answers[f.id] || String(answers[f.id]).trim()==="")) return false;
+  }
+  return true;
+}
+
+document.getElementById("btnNext").addEventListener("click", ()=>{
+  if(!validateSection()){ document.getElementById("reqMsg").classList.add("show"); return; }
+  if(current < sections.length - 1){
+    current++; renderSection(); window.scrollTo({top:0, behavior:"smooth"});
+  } else { finish(); }
+});
+document.getElementById("btnBack").addEventListener("click", ()=>{
+  if(current > 0){ current--; renderSection(); window.scrollTo({top:0, behavior:"smooth"}); }
+});
+
+/* ==================== EVALUATION ENGINE ==================== */
+function calcEdad(fnacStr, refDateStr){
+  const fnac = new Date(fnacStr);
+  const ref = refDateStr ? new Date(refDateStr) : new Date();
+  let edad = ref.getFullYear() - fnac.getFullYear();
+  const m = ref.getMonth() - fnac.getMonth();
+  if(m < 0 || (m===0 && ref.getDate() < fnac.getDate())) edad--;
+  return edad;
+}
+function fmtCOP(n){ return "$" + Math.round(n).toLocaleString("es-CO"); }
+
+function evaluar(){
+  const notes = [];
+  let verdict, internal, montoInfo = null;
+
+  if(answers.negado === "Sí"){
+    notes.push({type:"gold", text:"Ya recibiste una negación previa. Independientemente del resultado de este diagnóstico, ese acto administrativo debe revisarse a fondo — puede haber vicios en el dictamen o en el trámite que sustenten un recurso."});
+  }
+
+  if(answers.pclStatus !== "Sí, ya fui calificado"){
+    // Sin calificación aún
+    verdict = { tag:"PENDIENTE DE CALIFICACIÓN", color:"var(--azul)",
+      title:"Primero hay que obtener el dictamen de PCL",
+      desc:"Aún no cuentas con una calificación formal de Pérdida de Capacidad Laboral. Ese es el paso previo indispensable antes de poder hablar de viabilidad." };
+
+    if(answers.relacionTrabajo === "Sí, fue un accidente de trabajo o enfermedad laboral"){
+      notes.push({type:"", text:"Por ser de posible origen laboral, la calificación y el pago inicial de incapacidades corresponden a la ARL, sin exigir semanas mínimas de cotización."});
+    } else if(answers.relacionTrabajo === "No, es de origen común") {
+      notes.push({type:"", text:"Por ser de origen común, si tu incapacidad supera 180 días continuos, corresponde a tu EPS o fondo de pensiones iniciar el proceso de calificación de PCL en primera oportunidad."});
+    } else {
+      notes.push({type:"", text:"Antes de avanzar, es clave determinar si el origen es común o laboral, porque eso define qué entidad debe calificarte y si se exigen semanas mínimas."});
+    }
+
+    internal = "Caso en etapa temprana. La prioridad es gestionar el inicio o impulso del trámite de calificación, no aún un análisis de viabilidad de pensión.";
+  }
+  else {
+    const pcl = parseFloat(answers.pclPorcentaje) || 0;
+    const origen = answers.origenDictaminado;
+    const edadHecho = answers.fechaEstructuracion ? calcEdad(answers.fnac, answers.fechaEstructuracion) : calcEdad(answers.fnac);
+    const semanasReq = edadHecho < 20 ? 26 : 50;
+    const semanas3 = parseInt(answers.semanas3anos,10) || 0;
+
+    if(pcl < 50){
+      verdict = { tag:"NO CUMPLE PCL MÍNIMO", color:"var(--rojo)",
+        title:"El dictamen actual no alcanza el 50% exigido para pensión",
+        desc:`Con un ${pcl}% de PCL dictaminado, no se cumple el mínimo legal para pensión de invalidez. Esto no cierra la puerta: puede haber espacio para impugnar el dictamen, o para otras figuras como indemnización o reubicación laboral.` };
+      notes.push({type:"gold", text:"Vale la pena revisar el dictamen médico-legal en detalle: si hay elementos clínicos no valorados, es posible impugnarlo ante la Junta Regional de Calificación de Invalidez."});
+      internal = "Viabilidad BAJA para pensión con el dictamen actual. Evaluar si hay mérito técnico para impugnación (revisar historia clínica completa) antes de descartar el caso.";
+    }
+    else if(origen === "Laboral (accidente o enfermedad de trabajo)"){
+      verdict = { tag:"CUMPLE REQUISITOS", color:"var(--verde)",
+        title:"El caso cumple los requisitos para pensión de invalidez",
+        desc:"Con un origen laboral y PCL igual o superior al 50%, no se exigen semanas mínimas de cotización — el caso técnicamente cumple los requisitos de ley." };
+      internal = "Viabilidad ALTA. Origen laboral con PCL ≥50% no requiere semanas mínimas. Confirmar afiliación vigente a ARL al momento del hecho y solidez del nexo causal.";
+      montoInfo = { pcl, semanasTotales: parseInt(answers.semanasTotales,10)||0 };
+    }
+    else if(origen === "Común"){
+      if(semanas3 >= semanasReq){
+        verdict = { tag:"CUMPLE REQUISITOS", color:"var(--verde)",
+          title:"El caso cumple los requisitos para pensión de invalidez",
+          desc:`Con PCL de ${pcl}% y ${semanas3} semanas cotizadas en los últimos 3 años (se exigían ${semanasReq}), el caso cumple los requisitos legales de origen común.` };
+        internal = "Viabilidad ALTA. PCL y semanas cumplen el estándar de origen común. Confirmar la fecha de estructuración con el dictamen oficial y verificar consistencia con la historia laboral certificada.";
+      } else {
+        verdict = { tag:"NO CUMPLE SEMANAS", color:"var(--naranja)",
+          title:"El PCL cumple, pero faltan semanas cotizadas",
+          desc:`Con PCL de ${pcl}% sí se supera el mínimo, pero reportas ${semanas3} semanas en los últimos 3 años y se exigían ${semanasReq}. Sin esas semanas, no procede la pensión mensual — pero sí puede proceder la indemnización sustitutiva.` };
+        notes.push({type:"gold", text:"Al no cumplir semanas, aplica el artículo 45 de la Ley 100: devolución de los aportes realizados (indemnización sustitutiva), en lugar de una mesada mensual."});
+        notes.push({type:"", text:"Vale la pena revisar si la fecha de estructuración dictaminada es la correcta — a veces una fecha distinta (más tardía) sí permitiría cumplir el requisito de semanas."});
+        internal = "Viabilidad MEDIA-BAJA para pensión mensual; viabilidad ALTA para indemnización sustitutiva. Explorar si existe mérito para discutir la fecha de estructuración.";
+      }
+      montoInfo = { pcl, semanasTotales: parseInt(answers.semanasTotales,10)||0 };
+    }
+    else {
+      verdict = { tag:"FALTA CONFIRMAR ORIGEN", color:"var(--azul)",
+        title:"Necesitamos confirmar el origen para evaluar el caso",
+        desc:"No se conoce con certeza si el origen dictaminado es común o laboral, y eso determina si se exigen semanas mínimas. Es el primer punto a aclarar con el dictamen en mano." };
+      internal = "No se puede determinar viabilidad sin conocer el origen dictaminado. Solicitar copia del dictamen para continuar el análisis.";
+    }
+
+    if(answers.deAcuerdo === "No, quiero impugnarlo"){
+      notes.push({type:"gold", text:"Indicaste que no estás de acuerdo con el dictamen. La impugnación (ante Junta Regional y, si aplica, Junta Nacional) puede avanzar en paralelo al resto del proceso."});
+    }
+    if(answers.asistenciaTercero === "Sí" && pcl >= 66){
+      notes.push({type:"", text:"Por requerir asistencia permanente de otra persona y tener un PCL igual o superior a 66%, tu caso podría dar derecho a un incremento adicional del 15% en la mesada."});
+    }
+  }
+
+  return { verdict, notes, internal, montoInfo };
+}
+
+function calcularMonto(montoInfo){
+  const { pcl, semanasTotales } = montoInfo;
+  const ibc = parseFloat(answers.ibc) || 0;
+  const grado2 = pcl >= 66;
+  const base = grado2 ? 54 : 45;
+  const umbral = grado2 ? 800 : 500;
+  const incrementoUnidad = grado2 ? 2 : 1.5;
+  const semanasAdicionales = Math.max(0, semanasTotales - umbral);
+  const bono = Math.min(Math.floor(semanasAdicionales/50) * incrementoUnidad, 75 - base);
+  const tasaFinal = Math.min(base + bono, 75);
+  const mesada = Math.max((tasaFinal/100) * ibc, SMLV_2026);
+  return { tasaFinal, mesada, grado2 };
+}
+
+function finish(){
+  const e = evaluar();
+  document.getElementById("quizWrap").classList.add("hide");
+  document.getElementById("resultWrap").classList.add("show");
+  renderResult(e);
+  window.scrollTo({top:0, behavior:"smooth"});
+  sendToAdvisor(e);
+}
+
+function renderResult(e){
+  document.getElementById("verdictTag").textContent = e.verdict.tag;
+  document.getElementById("verdictTag").style.background = e.verdict.color;
+  document.getElementById("verdictTitle").textContent = e.verdict.title;
+  document.getElementById("verdictDesc").textContent = e.verdict.desc;
+  document.getElementById("verdictCard").style.borderBottomColor = e.verdict.color;
+
+  const noteList = document.getElementById("noteList");
+  noteList.innerHTML = "";
+  e.notes.forEach(n=>{
+    const div = document.createElement("div");
+    div.className = "note" + (n.type ? " " + n.type : "");
+    div.textContent = n.text;
+    noteList.appendChild(div);
+  });
+
+  const montoBlock = document.getElementById("montoBlock");
+  if(e.montoInfo){
+    montoBlock.style.display = "block";
+    const c = calcularMonto(e.montoInfo);
+    document.getElementById("gridMonto").innerHTML = `
+      <div class="metric"><span class="num">${c.tasaFinal.toFixed(1)}%</span><span class="lab">Tasa de reemplazo estimada</span></div>
+      <div class="metric"><span class="num">${fmtCOP(c.mesada)}</span><span class="lab">Mesada mensual estimada</span></div>
+    `;
+  } else {
+    montoBlock.style.display = "none";
+  }
+
+  document.getElementById("internalTitle").textContent = "Nivel de viabilidad";
+  document.getElementById("internalText").textContent = e.internal;
+
+  const nextSteps = {
+    "PENDIENTE DE CALIFICACIÓN": "Te recomendamos que te ayudemos a impulsar el inicio del trámite de calificación ante la entidad que corresponda.",
+    "NO CUMPLE PCL MÍNIMO": "Te recomendamos una revisión detallada de tu dictamen e historia clínica para evaluar una posible impugnación.",
+    "CUMPLE REQUISITOS": "Te recomendamos iniciar la Gestión del trámite de reconocimiento de tu pensión de invalidez.",
+    "NO CUMPLE SEMANAS": "Te recomendamos revisar la fecha de estructuración y, en paralelo, iniciar el trámite de indemnización sustitutiva.",
+    "FALTA CONFIRMAR ORIGEN": "Te recomendamos traer tu dictamen para confirmar el origen y completar el diagnóstico."
+  };
+  document.getElementById("nextStepText").textContent = nextSteps[e.verdict.tag] || "Te recomendamos agendar una asesoría para revisar tu caso en detalle.";
+}
+
+async function sendToAdvisor(e){
+  const payload = {
+    ...answers,
+    resultado_diagnostico: e.verdict.tag,
+    nivel_viabilidad_interno: e.internal,
+    fecha_diagnostico: new Date().toISOString()
+  };
+  try{
+    const resp = await fetch("https://formspree.io/f/TU_ENDPOINT_AQUI", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if(resp.ok){ document.getElementById("sentMsg").classList.add("show"); }
+  } catch(err){
+    console.error("No se pudo enviar la ficha al asesor:", err);
+  }
+}
+
+renderSection();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="auth-check.js"></script>
+
+</body>
+</html>

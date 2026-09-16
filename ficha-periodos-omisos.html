@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ficha de Períodos Omisos | Uso Interno | Evoluciona Pensional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F1EFE9; --bg-panel:#FFFFFF; --ink:#22261F; --ink-soft:#5B5F53;
+    --green-deep:#1C3A2B; --green-mid:#2C5741; --gold:#A8823A; --gold-soft:#EADFC4;
+    --line:#D6D0C2; --graphite:#3D3B36; --graphite-soft:#E4E1D8;
+    --verde:#3F7D5D; --amarillo:#B8862F; --naranja:#B5602F; --rojo:#AE4B33; --azul:#3A5F80;
+    --radius:4px; --shadow:0 1px 2px rgba(28,58,43,0.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{ background:var(--bg); color:var(--ink); font-family:'Public Sans',sans-serif; line-height:1.5; min-height:100vh; }
+  h1,h2,h3{ font-family:'Fraunces',serif; font-weight:500; color:var(--green-deep); letter-spacing:-0.01em; }
+  .wrap{ max-width:820px; margin:0 auto; padding:0 24px 80px; }
+
+  .top{ background:var(--graphite); color:#F3F1EA; padding:34px 24px 26px; border-bottom:3px solid var(--gold); }
+  .top-inner{ max-width:820px; margin:0 auto; }
+  .badge-internal{ display:inline-block; font-size:11px; font-weight:700; letter-spacing:.05em; background:var(--gold); color:#3A2E10; padding:4px 10px; border-radius:3px; margin-bottom:12px; }
+  .top h1{ color:#FBF9F4; font-size:26px; margin:0 0 8px; line-height:1.15; }
+  .top p{ color:#D6D3C8; font-size:14.5px; max-width:62ch; margin:0; }
+
+  .rule-box{ max-width:820px; margin:20px auto 0; padding:0 24px; }
+  .rule-inner{ background:var(--graphite-soft); border-left:4px solid var(--graphite); border-radius:var(--radius); padding:16px 18px; font-size:13.5px; color:#2E2C27; }
+  .rule-inner strong{ color:var(--graphite); }
+
+  .card{ background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:28px; margin-top:20px; }
+  .card h2{ font-size:19px; margin:0 0 4px; }
+  .card .sub{ color:var(--ink-soft); font-size:13.5px; margin:0 0 20px; }
+
+  .field{ margin-bottom:18px; }
+  .field:last-child{ margin-bottom:0; }
+  label.q{ display:block; font-size:14px; font-weight:600; margin-bottom:8px; color:var(--ink); }
+  .hint{ font-size:12.5px; color:var(--ink-soft); font-weight:400; display:block; margin-top:2px; }
+  input[type=text], input[type=date], input[type=number]{
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:var(--radius);
+    background:#FEFDFB; font-family:'Public Sans',sans-serif; font-size:14.5px; color:var(--ink);
+  }
+  input:focus{ outline:2px solid var(--graphite); outline-offset:1px; border-color:var(--graphite); }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .row3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+  .opts{ display:flex; flex-wrap:wrap; gap:8px; }
+  .opt{ border:1px solid var(--line); border-radius:var(--radius); padding:9px 13px; font-size:13.5px; cursor:pointer; background:#FEFDFB; transition:border-color .15s, background .15s; user-select:none; }
+  .opt:hover{ border-color:var(--graphite); }
+  .opt.selected{ border-color:var(--graphite); background:var(--graphite); color:#F6F3EC; font-weight:600; }
+
+  .period-card{ border:1px solid var(--line); border-radius:var(--radius); padding:22px; margin-top:16px; position:relative; background:#FCFBF8; }
+  .period-card .period-title{ font-size:15px; font-weight:700; color:var(--green-deep); margin-bottom:14px; }
+  .btn-remove{ position:absolute; top:16px; right:16px; background:none; border:none; color:var(--rojo); font-size:13px; font-weight:600; cursor:pointer; padding:4px 8px; }
+  .btn-remove:hover{ text-decoration:underline; }
+
+  button{ font-family:'Public Sans',sans-serif; font-size:14.5px; font-weight:600; border-radius:var(--radius); padding:11px 20px; cursor:pointer; border:1px solid transparent; }
+  .btn-primary{ background:var(--green-deep); color:#F6F3EC; border-color:var(--green-deep); }
+  .btn-primary:hover{ background:var(--green-mid); }
+  .btn-add{ background:#FFFFFF; color:var(--graphite); border:1px dashed var(--graphite); width:100%; margin-top:18px; }
+  .btn-add:hover{ background:var(--graphite-soft); }
+  .btn-ghost{ background:transparent; color:var(--ink-soft); border-color:var(--line); }
+
+  .actions-row{ display:flex; justify-content:space-between; align-items:center; margin-top:22px; }
+
+  /* Result */
+  .result{ display:none; }
+  .result.show{ display:block; }
+
+  .summary-header{ background:var(--green-deep); color:#F6F3EC; border-radius:var(--radius); padding:26px 28px; margin-top:20px; border-bottom:4px solid var(--gold); }
+  .summary-header h2{ color:#FBF9F4; font-size:21px; margin:0 0 6px; }
+  .summary-header p{ color:#D8D9CE; font-size:14px; margin:0; }
+  .summary-metrics{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:18px; }
+  .smetric{ background:rgba(255,255,255,0.08); border-radius:var(--radius); padding:14px 16px; }
+  .smetric .num{ font-family:'Fraunces',serif; font-size:22px; color:#FBF9F4; display:block; }
+  .smetric .lab{ font-size:11.5px; color:#C9CABE; }
+
+  table{ width:100%; border-collapse:collapse; margin-top:18px; font-size:13.5px; }
+  th, td{ text-align:left; padding:10px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th{ font-size:11.5px; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-soft); font-weight:700; }
+  .mech-tag{ display:inline-block; font-size:11.5px; font-weight:700; padding:3px 8px; border-radius:3px; }
+  .mech-mora{ background:#E4F0EA; color:#1F4433; }
+  .mech-actuarial{ background:var(--gold-soft); color:#4A3A18; }
+  .mech-planillaM{ background:#E1E9F0; color:#233C4D; }
+
+  .row-note{ font-size:12.5px; color:var(--ink-soft); margin-top:4px; }
+
+  .disclaimer{ margin-top:22px; font-size:12px; color:var(--ink-soft); border-top:1px solid var(--line); padding-top:14px; }
+  .sent-msg{ font-size:13px; color:var(--green-mid); margin-top:14px; display:none; }
+  .sent-msg.show{ display:block; }
+
+  @media (max-width:640px){
+    .row2, .row3{ grid-template-columns:1fr; }
+    .summary-metrics{ grid-template-columns:1fr; }
+    table{ font-size:12.5px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <span class="badge-internal">USO INTERNO · SOLO ASESORES</span>
+    <h1>Ficha de Análisis de Períodos Omisos</h1>
+    <p>Registra cada período omiso de la historia laboral del cliente y esta ficha lo clasifica: pago normal por PILA con mora, o cálculo actuarial. También ayuda a decidir si vale la pena recuperarlo.</p>
+  </div>
+</div>
+
+<div class="rule-box">
+  <div class="rule-inner">
+    <strong>Regla aplicable:</strong> la Ley 100 de 1993 habilitó el cálculo actuarial para omisiones de <strong>empleadores</strong> desde 1994; la Ley 797 de 2003 extendió la obligación de cotizar (y por tanto la posibilidad de corregir omisiones) a <strong>independientes</strong> desde el 29 de enero de 2003. Hoy existen <strong>tres mecanismos</strong> según la fecha del período, no dos: <strong>Planilla tipo M</strong> para períodos anteriores a marzo de 2014 con ausencia total de pago; <strong>PILA normal + mora</strong> (Decreto 1296/2022, art. 23 Ley 100) si la omisión se subsana dentro de los 6 meses siguientes a cuando debió reportarse; y <strong>cálculo actuarial</strong> (Decreto 1887/1994, planilla tipo "Z") para todo lo demás — períodos posteriores a marzo de 2014 con más de 6 meses de atraso.
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="card">
+    <h2>Datos del caso</h2>
+    <p class="sub">Identificación del cliente y del asesor que diligencia esta ficha.</p>
+    <div class="row3">
+      <div class="field">
+        <label class="q">Nombre del cliente</label>
+        <input type="text" id="clienteNombre">
+      </div>
+      <div class="field">
+        <label class="q">Cédula / referencia del caso</label>
+        <input type="text" id="clienteRef">
+      </div>
+      <div class="field">
+        <label class="q">Asesor que diligencia</label>
+        <input type="text" id="asesorNombre">
+      </div>
+    </div>
+    <div class="row2" style="margin-top:4px;">
+      <div class="field">
+        <label class="q">Tasa de interés moratorio vigente (E.A.)
+          <span class="hint">Certificada por la Superfinanciera para renta y complementarios — actualízala cada mes</span>
+        </label>
+        <input type="number" id="tasaMora" value="26.79" step="0.01">
+      </div>
+      <div class="field">
+        <label class="q">Fecha proyectada de pago
+          <span class="hint">Fecha en la que el cliente pagaría los aportes atrasados</span>
+        </label>
+        <input type="date" id="fechaPago">
+      </div>
+    </div>
+  </div>
+
+  <div id="periodsContainer"></div>
+
+  <button class="btn-add" id="btnAddPeriod" type="button">+ Agregar período omiso</button>
+
+  <div class="actions-row">
+    <button class="btn-ghost" type="button" onclick="window.print()">Imprimir / PDF</button>
+    <button class="btn-primary" id="btnCalcular" type="button">Calcular ficha consolidada</button>
+  </div>
+
+  <div class="result" id="resultWrap">
+    <div class="summary-header">
+      <h2>Ficha consolidada</h2>
+      <p id="clienteResumen">—</p>
+      <div class="summary-metrics" id="summaryMetrics"></div>
+    </div>
+
+    <div class="card">
+      <h2>Detalle por período</h2>
+      <p class="sub">Mecanismo aplicable, responsable del pago y estimado base de aportes por período.</p>
+      <p id="tasaUsadaNote" class="row-note" style="margin-bottom:10px;"></p>
+      <table>
+        <thead>
+          <tr>
+            <th>Vinculación</th>
+            <th>Período</th>
+            <th>Mecanismo</th>
+            <th>Responsable</th>
+            <th>Semanas</th>
+            <th>Aportes</th>
+            <th>Interés mora</th>
+            <th>Total a pagar</th>
+          </tr>
+        </thead>
+        <tbody id="tablaPeriodos"></tbody>
+      </table>
+      <p class="disclaimer"><strong>Períodos con mora (≤6 meses):</strong> el total sí es una cifra de pago real — aportes (16% del IBC histórico del período, sin indexar) + interés moratorio compuesto mes a mes con la tasa que registraste arriba (art. 23 Ley 100). No se aplica actualización monetaria/IPC en este mecanismo: se paga con el salario de la época, más el interés por la demora.</p>
+      <p class="disclaimer"><strong>Períodos con Planilla tipo M (anteriores a marzo de 2014):</strong> mecanismo vigente para ausencia total de pago en períodos previos a esa fecha (Resolución 2388/2016). El valor exacto a pagar se liquida directamente con la administradora al momento de generar la planilla — la cifra de "Aportes" aquí es solo orden de magnitud.</p>
+      <p class="disclaimer"><strong>Períodos con cálculo actuarial (posteriores a marzo de 2014, &gt;6 meses):</strong> aquí sí existe una actualización monetaria del salario de referencia, pero como parte de la metodología de reserva actuarial (Decreto 1887 de 1994), que además usa un interés técnico ("DTF Pensional" = IPC compuesto + 3 puntos efectivos anuales) y factores demográficos que no son seguros de replicar aquí. El valor definitivo solo se obtiene en la plataforma oficial www.soyactuario.com.co — la cifra de "Aportes" en esa fila es solo un orden de magnitud, no el valor a pagar.</p>
+    </div>
+
+    <div class="card">
+      <h2>Guía de soportes por tipo de vinculación</h2>
+      <div id="soportesGuia"></div>
+    </div>
+
+    <div class="card">
+      <h2>Guardar en el expediente</h2>
+      <p class="sub">Envía esta ficha consolidada al registro interno del caso.</p>
+      <button class="btn-primary" id="btnEnviar" type="button">Guardar ficha en el expediente</button>
+      <div class="sent-msg" id="sentMsg">Ficha guardada y enviada al expediente del caso.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let periods = [];
+let periodCounter = 0;
+
+function addPeriod(){
+  const id = "p" + (periodCounter++);
+  periods.push({
+    id,
+    tipoVinculacion: "Dependiente",
+    empresaActividad: "",
+    fechaDebioReportarse: "",
+    fechaInicio: "",
+    fechaFin: "",
+    ibc: ""
+  });
+  renderPeriods();
+}
+
+function removePeriod(id){
+  periods = periods.filter(p => p.id !== id);
+  renderPeriods();
+}
+
+function updatePeriod(id, field, value){
+  const p = periods.find(p => p.id === id);
+  if(p) p[field] = value;
+}
+
+function renderPeriods(){
+  const container = document.getElementById("periodsContainer");
+  container.innerHTML = "";
+  periods.forEach((p, idx) => {
+    const card = document.createElement("div");
+    card.className = "period-card";
+    card.innerHTML = `
+      <button class="btn-remove" type="button" onclick="removePeriod('${p.id}')">Eliminar</button>
+      <div class="period-title">Período omiso ${idx+1}</div>
+      <div class="field">
+        <label class="q">Tipo de vinculación</label>
+        <div class="opts" id="tipo-${p.id}"></div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label class="q">Empresa (si dependiente) o actividad (si independiente)</label>
+          <input type="text" value="${p.empresaActividad}" oninput="updatePeriod('${p.id}','empresaActividad',this.value)">
+        </div>
+        <div class="field">
+          <label class="q">Fecha en que debió reportarse la novedad
+            <span class="hint">Generalmente coincide con el inicio del período</span>
+          </label>
+          <input type="date" value="${p.fechaDebioReportarse}" oninput="updatePeriod('${p.id}','fechaDebioReportarse',this.value)">
+        </div>
+      </div>
+      <div class="row3">
+        <div class="field">
+          <label class="q">Fecha inicio del período omiso</label>
+          <input type="date" value="${p.fechaInicio}" oninput="updatePeriod('${p.id}','fechaInicio',this.value)">
+        </div>
+        <div class="field">
+          <label class="q">Fecha fin del período omiso</label>
+          <input type="date" value="${p.fechaFin}" oninput="updatePeriod('${p.id}','fechaFin',this.value)">
+        </div>
+        <div class="field">
+          <label class="q">IBC o salario aproximado del período
+            <span class="hint">En pesos colombianos</span>
+          </label>
+          <input type="number" value="${p.ibc}" oninput="updatePeriod('${p.id}','ibc',this.value)">
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+
+    const tipoOpts = card.querySelector(`#tipo-${p.id}`);
+    ["Dependiente","Independiente"].forEach(opt=>{
+      const chip = document.createElement("div");
+      chip.className = "opt" + (p.tipoVinculacion === opt ? " selected" : "");
+      chip.textContent = opt;
+      chip.addEventListener("click", ()=>{
+        p.tipoVinculacion = opt;
+        renderPeriods();
+      });
+      tipoOpts.appendChild(chip);
+    });
+  });
+}
+
+document.getElementById("btnAddPeriod").addEventListener("click", addPeriod);
+addPeriod(); // start with one period
+
+/* ==================== CALCULATION ==================== */
+function diffMonths(d1, d2){
+  return (d2.getFullYear()-d1.getFullYear())*12 + (d2.getMonth()-d1.getMonth());
+}
+function diffWeeks(d1, d2){
+  return Math.max(0, Math.round((d2-d1)/(1000*60*60*24*7)));
+}
+function diffMonthsSpan(d1, d2){
+  return Math.max(1, Math.round((d2-d1)/(1000*60*60*24*30.44)));
+}
+function fmtCOP(n){ return "$" + Math.round(n).toLocaleString("es-CO"); }
+function fmtDate(d){ return d ? new Date(d).toLocaleDateString("es-CO") : "—"; }
+
+function mesesEnPeriodo(fIni, fFin){
+  // Devuelve un arreglo de fechas "1° del mes" para cada mes cubierto por el período
+  const meses = [];
+  const cursor = new Date(fIni.getFullYear(), fIni.getMonth(), 1);
+  const limite = new Date(fFin.getFullYear(), fFin.getMonth(), 1);
+  while(cursor <= limite){
+    meses.push(new Date(cursor));
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
+  return meses;
+}
+
+function calcularInteresMora(aporteMensual, fechaVencimiento, fechaPago, tasaEA){
+  const mesesMora = diffMonths(fechaVencimiento, fechaPago);
+  if(mesesMora <= 0) return 0;
+  const tasaMensual = Math.pow(1 + tasaEA, 1/12) - 1;
+  return aporteMensual * (Math.pow(1 + tasaMensual, mesesMora) - 1);
+}
+
+function calcularFicha(){
+  const hoy = new Date();
+  const fechaPago = document.getElementById("fechaPago").value ? new Date(document.getElementById("fechaPago").value) : hoy;
+  const tasaEA = (parseFloat(document.getElementById("tasaMora").value) || 0) / 100;
+
+  const filas = [];
+  let totalSemanas = 0;
+  let totalAportesMora = 0;
+  let totalInteresMora = 0;
+  let totalAportesActuarial = 0;
+  let totalAportesPlanillaM = 0;
+
+  periods.forEach(p=>{
+    if(!p.fechaInicio || !p.fechaFin || !p.fechaDebioReportarse) return;
+    const fReporte = new Date(p.fechaDebioReportarse);
+    const fIni = new Date(p.fechaInicio);
+    const fFin = new Date(p.fechaFin);
+    const mesesTranscurridos = diffMonths(fReporte, hoy);
+    const antesMarzo2014 = fFin < new Date("2014-03-01");
+    const mecanismo = antesMarzo2014 ? "planillaM" : (mesesTranscurridos <= 6 ? "mora" : "actuarial");
+    const responsable = p.tipoVinculacion === "Dependiente" ? "Empleador" : "Trabajador independiente";
+    const semanas = diffWeeks(fIni, fFin);
+    const mesesPeriodo = diffMonthsSpan(fIni, fFin);
+    const ibc = parseFloat(p.ibc) || 0;
+    const aporteMensual = ibc * 0.16;
+    const aportesBase = aporteMensual * mesesPeriodo;
+
+    totalSemanas += semanas;
+
+    let interesMora = 0;
+    let totalPeriodo = null;
+
+    if(mecanismo === "mora"){
+      // Interés mes a mes: cada mensualidad vence el 1° del mes siguiente al causado
+      mesesEnPeriodo(fIni, fFin).forEach(mesCausado=>{
+        const vencimiento = new Date(mesCausado.getFullYear(), mesCausado.getMonth() + 1, 1);
+        interesMora += calcularInteresMora(aporteMensual, vencimiento, fechaPago, tasaEA);
+      });
+      totalPeriodo = aportesBase + interesMora;
+      totalAportesMora += aportesBase;
+      totalInteresMora += interesMora;
+    } else if(mecanismo === "planillaM"){
+      totalAportesPlanillaM += aportesBase;
+    } else {
+      totalAportesActuarial += aportesBase;
+    }
+
+    filas.push({ ...p, mecanismo, responsable, semanas, aportesBase, interesMora, totalPeriodo, mesesTranscurridos });
+  });
+
+  return { filas, totalSemanas, totalAportesMora, totalInteresMora, totalAportesActuarial, totalAportesPlanillaM, tasaEA, fechaPago };
+}
+
+document.getElementById("btnCalcular").addEventListener("click", ()=>{
+  const r = calcularFicha();
+  document.getElementById("resultWrap").classList.add("show");
+
+  const nombre = document.getElementById("clienteNombre").value || "Cliente sin nombre";
+  const ref = document.getElementById("clienteRef").value || "—";
+  const asesor = document.getElementById("asesorNombre").value || "—";
+  document.getElementById("clienteResumen").textContent = `${nombre} · Ref: ${ref} · Asesor: ${asesor}`;
+
+  const totalMoraConIntereses = r.totalAportesMora + r.totalInteresMora;
+  document.getElementById("summaryMetrics").innerHTML = `
+    <div class="smetric"><span class="num">${r.totalSemanas}</span><span class="lab">Semanas totales recuperables</span></div>
+    <div class="smetric"><span class="num">${fmtCOP(totalMoraConIntereses)}</span><span class="lab">Total a pagar · períodos con mora (aportes + interés)</span></div>
+    <div class="smetric"><span class="num">${r.filas.filter(f=>f.mecanismo==='planillaM').length}</span><span class="lab">Períodos con Planilla tipo M (antes de marzo 2014)</span></div>
+    <div class="smetric"><span class="num">${r.filas.filter(f=>f.mecanismo==='actuarial').length}</span><span class="lab">Períodos que requieren cálculo actuarial</span></div>
+  `;
+
+  document.getElementById("tasaUsadaNote").textContent =
+    `Interés de mora calculado con tasa del ${document.getElementById("tasaMora").value}% E.A., mes a mes desde el vencimiento de cada mensualidad hasta el ${fmtDate(r.fechaPago)}.`;
+
+  const tbody = document.getElementById("tablaPeriodos");
+  tbody.innerHTML = "";
+  r.filas.forEach(f=>{
+    const tr = document.createElement("tr");
+    const mechLabels = { mora:"PILA + mora", actuarial:"Cálculo actuarial", planillaM:"Planilla tipo M" };
+    const colInteres = f.mecanismo === "mora" ? fmtCOP(f.interesMora) : "—";
+    const colTotal = f.mecanismo === "mora"
+      ? `<strong>${fmtCOP(f.totalPeriodo)}</strong>`
+      : `<span class="row-note">${f.mecanismo === 'planillaM' ? 'Consultar con la administradora' : 'Ver plataforma oficial'}</span>`;
+    tr.innerHTML = `
+      <td>${f.tipoVinculacion}<div class="row-note">${f.empresaActividad || "—"}</div></td>
+      <td>${fmtDate(f.fechaInicio)} — ${fmtDate(f.fechaFin)}</td>
+      <td><span class="mech-tag mech-${f.mecanismo}">${mechLabels[f.mecanismo]}</span></td>
+      <td>${f.responsable}</td>
+      <td>${f.semanas}</td>
+      <td>${f.aportesBase ? fmtCOP(f.aportesBase) : "—"}</td>
+      <td>${colInteres}</td>
+      <td>${colTotal}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const soportes = document.getElementById("soportesGuia");
+  soportes.innerHTML = `
+    <p class="sub" style="margin-bottom:12px;"><strong>Dependiente (empleador):</strong> certificación laboral, contrato de trabajo, comprobantes de pago o prestaciones sociales, testimonios o pruebas indirectas de la relación laboral si no hay documentos formales.</p>
+    <p class="sub"><strong>Independiente:</strong> declaración de renta del período, extractos bancarios, contratos de prestación de servicios, facturas o cuentas de cobro emitidas — el Decreto 1296/2022 exige poder demostrar que hubo ingresos y actividad durante esos meses.</p>
+  `;
+
+  window.scrollTo({top: document.getElementById("resultWrap").offsetTop - 20, behavior:"smooth"});
+});
+
+document.getElementById("btnEnviar").addEventListener("click", async ()=>{
+  const r = calcularFicha();
+  const payload = {
+    cliente: document.getElementById("clienteNombre").value,
+    referencia: document.getElementById("clienteRef").value,
+    asesor: document.getElementById("asesorNombre").value,
+    periodos: r.filas,
+    total_semanas_recuperables: r.totalSemanas,
+    total_aportes_mora: r.totalAportesMora,
+    total_interes_mora: r.totalInteresMora,
+    total_a_pagar_mora: r.totalAportesMora + r.totalInteresMora,
+    total_aportes_actuarial_referencial: r.totalAportesActuarial,
+    tasa_mora_usada: r.tasaEA,
+    fecha_pago_proyectada: r.fechaPago,
+    fecha_ficha: new Date().toISOString()
+  };
+  try{
+    const resp = await fetch("https://formspree.io/f/TU_ENDPOINT_AQUI", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if(resp.ok){ document.getElementById("sentMsg").classList.add("show"); }
+  } catch(err){
+    console.error("No se pudo guardar la ficha:", err);
+  }
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="auth-check.js"></script>
+
+</body>
+</html>

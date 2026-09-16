@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel del Profesional | Evoluciona Pensional PRO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+  :root{
+    --bg:#F6F3EC; --bg-panel:#FFFFFF; --ink:#22261F; --ink-soft:#5B5F53;
+    --green-deep:#1C3A2B; --green-mid:#2C5741; --gold:#A8823A; --gold-soft:#EADFC4;
+    --line:#DAD4C3; --radius:4px; --shadow:0 1px 2px rgba(28,58,43,0.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{ background:var(--bg); color:var(--ink); font-family:'Public Sans',sans-serif; opacity:0; transition:opacity .2s; }
+  body.ready{ opacity:1; }
+  h1,h2{ font-family:'Fraunces',serif; font-weight:500; color:var(--green-deep); }
+
+  header{ background:var(--green-deep); color:#F6F3EC; padding:22px 40px; display:flex; justify-content:space-between; align-items:center; }
+  .brand{ font-family:'Fraunces',serif; font-size:18px; display:flex; align-items:center; gap:8px; }
+  .pro-badge{ font-size:10px; background:var(--gold); color:#3A2E10; padding:2px 7px; border-radius:3px; letter-spacing:.04em; }
+  .user-info{ display:flex; align-items:center; gap:16px; font-size:13.5px; }
+  .user-info button{ background:transparent; border:1px solid rgba(255,255,255,0.4); color:#F6F3EC; padding:7px 14px; border-radius:var(--radius); font-size:13px; cursor:pointer; }
+  .user-info button:hover{ background:rgba(255,255,255,0.1); }
+
+  .wrap{ max-width:1000px; margin:0 auto; padding:40px 24px 80px; }
+  .wrap h1{ font-size:26px; margin:0 0 4px; }
+  .wrap .sub{ color:var(--ink-soft); font-size:14.5px; margin:0 0 32px; }
+
+  .tools-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .tool-card{ background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow); text-decoration:none; color:inherit; display:block; transition:transform .12s, border-color .12s; }
+  .tool-card:hover{ border-color:var(--green-deep); transform:translateY(-2px); }
+  .tool-card .num{ font-family:'Fraunces',serif; font-size:24px; color:var(--gold); }
+  .tool-card h3{ font-size:15px; margin:10px 0 6px; color:var(--green-deep); }
+  .tool-card p{ font-size:13px; color:var(--ink-soft); margin:0; }
+  .tool-card.internal{ border-style:dashed; }
+  .tool-card .badge-internal{ display:inline-block; font-size:10px; font-weight:700; color:var(--ink-soft); letter-spacing:.03em; margin-top:8px; }
+
+  @media (max-width:720px){
+    header{ padding:16px 20px; flex-direction:column; gap:12px; align-items:flex-start; }
+    .tools-grid{ grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Evoluciona Pensional <span class="pro-badge">PRO</span></div>
+  <div class="user-info">
+    <span id="userEmail">—</span>
+    <button onclick="cerrarSesionPensionalPro()">Cerrar sesión</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <h1>Panel del profesional</h1>
+  <p class="sub">Mis herramientas</p>
+
+  <div class="tools-grid">
+    <a class="tool-card" href="diagnostico-pensional-general.html"><span class="num">01</span><h3>Diagnóstico Pensional General</h3><p>Primer filtro de clasificación.</p></a>
+    <a class="tool-card" href="proyeccion-pensional.html"><span class="num">02</span><h3>Proyección Pensional</h3><p>IBL, tasa y mesada — o la ruta inversa.</p></a>
+    <a class="tool-card" href="test-regimen-transicion.html"><span class="num">03</span><h3>Régimen de Transición</h3><p>¿Le cubre la Ley 100 o la reforma?</p></a>
+    <a class="tool-card" href="diagnostico-invalidez.html"><span class="num">04</span><h3>Invalidez y Viabilidad</h3><p>PCL, requisitos y viabilidad del caso.</p></a>
+    <a class="tool-card" href="determinador-tipo-pension.html"><span class="num">05</span><h3>Determinador de Pensión</h3><p>Vejez, invalidez o sobrevivientes.</p></a>
+    <a class="tool-card" href="linea-mujer.html"><span class="num">06</span><h3>Línea Mujer</h3><p>Beneficios diferenciales vigentes.</p></a>
+    <a class="tool-card internal" href="ficha-periodos-omisos.html"><span class="num">07</span><h3>Períodos Omisos</h3><p>Mora vs. cálculo actuarial.</p><span class="badge-internal">USO INTERNO</span></a>
+    <a class="tool-card" href="diagnostico-empresarial-pensional.html"><span class="num">08</span><h3>Diagnóstico Empresarial</h3><p>Riesgo de fuero de prepensionado.</p></a>
+  </div>
+</div>
+
+<script src="auth-check.js"></script>
+<script>
+  window.addEventListener("accesoVerificado", (e)=>{
+    document.getElementById("userEmail").textContent = e.detail.nombre ? `${e.detail.nombre} · ${e.detail.plan}` : e.detail.email;
+    document.body.classList.add("ready");
+  });
+</script>
+
+</body>
+</html>

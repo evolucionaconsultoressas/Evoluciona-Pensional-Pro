@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Renovar mi licencia | Evoluciona Pensional PRO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://checkout.wompi.co/widget.js"></script>
+<style>
+  :root{
+    --bg:#F6F3EC; --bg-panel:#FFFFFF; --ink:#22261F; --ink-soft:#5B5F53;
+    --green-deep:#1C3A2B; --green-mid:#2C5741; --gold:#A8823A; --gold-soft:#EADFC4;
+    --line:#DAD4C3; --radius:4px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{ background:var(--bg); color:var(--ink); font-family:'Public Sans',sans-serif; min-height:100vh; opacity:0; transition:opacity .2s; }
+  body.ready{ opacity:1; }
+  h1{ font-family:'Fraunces',serif; font-weight:500; color:var(--green-deep); }
+  .wrap{ max-width:480px; margin:60px auto; padding:0 24px; }
+  .card{ background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); padding:36px; box-shadow:0 1px 2px rgba(28,58,43,0.06); }
+  h1{ font-size:22px; margin:0 0 8px; }
+  .sub{ color:var(--ink-soft); font-size:14px; margin:0 0 26px; }
+  .plan-opt{ border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; margin-bottom:12px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+  .plan-opt.selected{ border-color:var(--green-deep); background:var(--gold-soft); }
+  .plan-opt .nombre{ font-weight:600; font-size:14.5px; }
+  .plan-opt .precio{ font-family:'Fraunces',serif; color:var(--green-deep); font-size:17px; }
+  button{ width:100%; background:var(--green-deep); color:#F6F3EC; border:none; padding:14px; border-radius:var(--radius); font-size:15px; font-weight:700; cursor:pointer; margin-top:10px; }
+  button:hover{ background:var(--green-mid); }
+  button:disabled{ opacity:.5; cursor:not-allowed; }
+  .msg{ font-size:13px; margin-top:16px; padding:12px 14px; border-radius:var(--radius); display:none; }
+  .msg.error{ background:#F8E9E4; color:#5E2E1E; display:block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>Renovar mi licencia</h1>
+    <p class="sub" id="planActual">Cargando tu plan actual...</p>
+
+    <div id="opcionesPlan"></div>
+    <button id="btnPagar" type="button" disabled>Pagar y renovar</button>
+    <div class="msg" id="msgBox"></div>
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL = "TU_SUPABASE_URL_AQUI";
+  const SUPABASE_ANON_KEY = "TU_SUPABASE_ANON_KEY_AQUI";
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  let planSeleccionado = null; // {plan, periodo, monto_cop}
+  let planActualUsuario = null;
+
+  async function init(){
+    const { data: { session } } = await sb.auth.getSession();
+    if(!session){ window.location.href = "login.html"; return; }
+
+    const { data: licencia } = await sb.from("licencias").select("plan, fecha_expiracion").eq("user_id", session.user.id).single();
+    planActualUsuario = licencia?.plan || "individual";
+    document.getElementById("planActual").textContent = licencia
+      ? `Tu plan actual (${licencia.plan}) vence el ${licencia.fecha_expiracion}.`
+      : "Elige tu plan para activar tu licencia.";
+
+    const { data: planes } = await sb.from("planes").select("*").eq("activo", true).eq("plan", planActualUsuario);
+    const cont = document.getElementById("opcionesPlan");
+    cont.innerHTML = "";
+    (planes || []).forEach(p=>{
+      const div = document.createElement("div");
+      div.className = "plan-opt";
+      div.innerHTML = `<span class="nombre">${p.periodo === 'anual' ? 'Renovación anual' : 'Renovación mensual'}</span><span class="precio">$${p.monto_cop.toLocaleString('es-CO')}</span>`;
+      div.addEventListener("click", ()=>{
+        document.querySelectorAll(".plan-opt").forEach(el=>el.classList.remove("selected"));
+        div.classList.add("selected");
+        planSeleccionado = p;
+        document.getElementById("btnPagar").disabled = false;
+      });
+      cont.appendChild(div);
+    });
+
+    document.body.classList.add("ready");
+  }
+
+  document.getElementById("btnPagar").addEventListener("click", async ()=>{
+    if(!planSeleccionado) return;
+    const btn = document.getElementById("btnPagar");
+    btn.disabled = true;
+    btn.textContent = "Preparando pago...";
+
+    const { data: { session } } = await sb.auth.getSession();
+
+    const resp = await fetch(`${SUPABASE_URL}/functions/v1/crear-firma-pago`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${session.access_token}`
+      },
+      body: JSON.stringify({ plan: planSeleccionado.plan, periodo: planSeleccionado.periodo })
+    });
+
+    const datosPago = await resp.json();
+    if(datosPago.error){
+      document.getElementById("msgBox").className = "msg error";
+      document.getElementById("msgBox").textContent = "No se pudo iniciar el pago: " + datosPago.error;
+      btn.disabled = false;
+      btn.textContent = "Pagar y renovar";
+      return;
+    }
+
+    const checkout = new WidgetCheckout({
+      currency: datosPago.currency,
+      amountInCents: datosPago.amountInCents,
+      reference: datosPago.reference,
+      publicKey: datosPago.publicKey,
+      signature: { integrity: datosPago.signature },
+      customerData: { email: datosPago.customerEmail }
+    });
+
+    checkout.open(function(result){
+      const transaction = result.transaction;
+      if(transaction && transaction.status === "APPROVED"){
+        window.location.href = "panel.html?renovado=1";
+      } else {
+        btn.disabled = false;
+        btn.textContent = "Pagar y renovar";
+        document.getElementById("msgBox").className = "msg error";
+        document.getElementById("msgBox").textContent = "El pago no se completó. Puedes intentarlo de nuevo.";
+      }
+    });
+
+    btn.textContent = "Pagar y renovar";
+    btn.disabled = false;
+  });
+
+  init();
+</script>
+</body>
+</html>

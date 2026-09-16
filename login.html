@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ingresar | Evoluciona Pensional PRO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+  :root{
+    --bg:#F6F3EC; --bg-panel:#FFFFFF; --ink:#22261F; --ink-soft:#5B5F53;
+    --green-deep:#1C3A2B; --green-mid:#2C5741; --gold:#A8823A; --gold-soft:#EADFC4;
+    --line:#DAD4C3; --rojo:#AE4B33; --radius:4px; --shadow:0 1px 2px rgba(28,58,43,0.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{ background:var(--green-deep); color:var(--ink); font-family:'Public Sans',sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+  .login-card{ background:var(--bg-panel); border-radius:var(--radius); box-shadow:0 8px 30px rgba(0,0,0,0.25); padding:40px; width:100%; max-width:400px; }
+  .brand{ font-family:'Fraunces',serif; font-size:19px; color:var(--green-deep); font-weight:600; margin-bottom:4px; display:flex; align-items:center; gap:8px; }
+  .pro-badge{ font-size:10px; background:var(--green-deep); color:#F6F3EC; padding:2px 7px; border-radius:3px; letter-spacing:.04em; }
+  .subtitle{ font-size:13.5px; color:var(--ink-soft); margin:0 0 28px; }
+  label{ display:block; font-size:13.5px; font-weight:600; margin-bottom:6px; }
+  input{ width:100%; padding:11px 12px; border:1px solid var(--line); border-radius:var(--radius); font-size:14.5px; margin-bottom:18px; font-family:'Public Sans',sans-serif; }
+  input:focus{ outline:2px solid var(--green-deep); outline-offset:1px; }
+  button{ width:100%; background:var(--green-deep); color:#F6F3EC; border:none; padding:13px; border-radius:var(--radius); font-size:15px; font-weight:700; cursor:pointer; }
+  button:hover{ background:var(--green-mid); }
+  button:disabled{ opacity:.6; cursor:not-allowed; }
+  .msg{ font-size:13px; margin-top:16px; padding:12px 14px; border-radius:var(--radius); display:none; }
+  .msg.error{ background:#F8E9E4; color:#5E2E1E; display:block; }
+  .msg.info{ background:var(--gold-soft); color:#4A3A18; display:block; }
+  .back-link{ display:block; text-align:center; margin-top:20px; font-size:13px; color:var(--ink-soft); text-decoration:none; }
+</style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="brand">Evoluciona Pensional <span class="pro-badge">PRO</span></div>
+    <p class="subtitle">Ingresa con tu usuario y contraseña de licencia.</p>
+
+    <form id="loginForm">
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" required autocomplete="username">
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" required autocomplete="current-password">
+      <button type="submit" id="btnLogin">Ingresar</button>
+    </form>
+
+    <div class="msg" id="msgBox"></div>
+    <a class="back-link" href="index.html">← Volver al inicio</a>
+  </div>
+
+<script>
+  // ==== CONFIGURACIÓN — reemplazar con los datos reales del proyecto Supabase ====
+  const SUPABASE_URL = "https://mdhdlnfhnqvjelecerla.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_8CdFdPL3mCYzRfALVDO96A_J5mYv9uh";
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const params = new URLSearchParams(window.location.search);
+  if(params.get("expirada")){
+    showMsg("Tu licencia venció o fue desactivada. Escríbenos para renovarla.", "error");
+  }
+
+  function showMsg(text, type){
+    const box = document.getElementById("msgBox");
+    box.textContent = text;
+    box.className = "msg " + type;
+  }
+
+  document.getElementById("loginForm").addEventListener("submit", async (e)=>{
+    e.preventDefault();
+    const btn = document.getElementById("btnLogin");
+    btn.disabled = true;
+    btn.textContent = "Verificando...";
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+    if(error){
+      showMsg("Usuario o contraseña incorrectos.", "error");
+      btn.disabled = false;
+      btn.textContent = "Ingresar";
+      return;
+    }
+
+    // Verificar estado de la licencia en la tabla "licencias"
+    const { data: licencia, error: licError } = await sb
+      .from("licencias")
+      .select("activo, fecha_expiracion")
+      .eq("user_id", data.user.id)
+      .single();
+
+    if(licError || !licencia){
+      showMsg("Tu cuenta no tiene una licencia asociada. Contacta a Evoluciona Consultores.", "error");
+      await sb.auth.signOut();
+      btn.disabled = false;
+      btn.textContent = "Ingresar";
+      return;
+    }
+
+    const vencida = new Date(licencia.fecha_expiracion) < new Date();
+    if(!licencia.activo || vencida){
+      showMsg("Tu licencia venció o está inactiva. Escríbenos para renovarla.", "error");
+      await sb.auth.signOut();
+      btn.disabled = false;
+      btn.textContent = "Ingresar";
+      return;
+    }
+
+    // Intentar abrir sesión — respeta el límite de 1 sesión activa por usuario
+    const { data: token, error: sesionError } = await sb.rpc("intentar_abrir_sesion");
+
+    if(sesionError){
+      if(sesionError.message && sesionError.message.includes("SESION_ACTIVA_EXISTENTE")){
+        showMsg("Ya tienes una sesión activa en otro dispositivo. Ciérrala allá, o espera unos minutos si esa pestaña quedó abierta sin usarse.", "error");
+      } else {
+        showMsg("No se pudo iniciar la sesión. Intenta de nuevo.", "error");
+      }
+      await sb.auth.signOut();
+      btn.disabled = false;
+      btn.textContent = "Ingresar";
+      return;
+    }
+
+    localStorage.setItem("pensional_pro_token", token);
+    window.location.href = "panel.html";
+  });
+</script>
+</body>
+</html>

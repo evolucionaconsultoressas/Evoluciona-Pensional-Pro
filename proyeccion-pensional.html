@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proyección Pensional Personalizada | Evoluciona Pensional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F3EC; --bg-panel:#FFFFFF; --ink:#22261F; --ink-soft:#5B5F53;
+    --green-deep:#1C3A2B; --green-mid:#2C5741; --gold:#A8823A; --gold-soft:#EADFC4;
+    --line:#DAD4C3; --teal:#2E5C63; --teal-soft:#DEE9EA; --rojo:#AE4B33; --amarillo:#B8862F; --verde:#3F7D5D;
+    --radius:4px; --shadow:0 1px 2px rgba(28,58,43,0.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{ background:var(--bg); color:var(--ink); font-family:'Public Sans',sans-serif; line-height:1.5; min-height:100vh; }
+  h1,h2,h3{ font-family:'Fraunces',serif; font-weight:500; color:var(--green-deep); letter-spacing:-0.01em; }
+  .wrap{ max-width:700px; margin:0 auto; padding:0 24px 80px; }
+
+  .top{ background:var(--green-deep); color:#F6F3EC; padding:40px 24px 32px; border-bottom:3px solid var(--teal); }
+  .top-inner{ max-width:700px; margin:0 auto; }
+  .eyebrow{ font-size:13px; color:var(--gold-soft); margin:0 0 6px; }
+  .top h1{ color:#FBF9F4; font-size:28px; margin:0 0 8px; line-height:1.15; }
+  .top p{ color:#D8D9CE; font-size:15px; max-width:56ch; margin:0; }
+
+  .context-box{ max-width:700px; margin:22px auto 0; padding:0 24px; }
+  .context-inner{ background:var(--teal-soft); border-left:4px solid var(--teal); border-radius:var(--radius); padding:16px 18px; font-size:13.5px; color:#233F44; }
+
+  .stepper{ display:flex; gap:6px; max-width:700px; margin:20px auto 0; padding:0 24px; }
+  .step-dot{ flex:1; height:4px; background:var(--line); border-radius:2px; overflow:hidden; }
+  .step-dot i{ display:block; height:100%; width:0%; background:var(--teal); transition:width .35s ease; }
+  .step-label{ max-width:700px; margin:10px auto 0; padding:0 24px; font-size:13px; color:var(--ink-soft); display:flex; justify-content:space-between; }
+
+  .card{ background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:32px; margin-top:18px; }
+  .section-title{ font-size:21px; margin:0 0 4px; }
+  .section-sub{ color:var(--ink-soft); font-size:14px; margin:0 0 24px; }
+
+  .field{ margin-bottom:22px; }
+  .field:last-child{margin-bottom:0;}
+  label.q{ display:block; font-size:15px; font-weight:600; margin-bottom:10px; color:var(--ink); }
+  .hint{ font-size:13px; color:var(--ink-soft); font-weight:400; display:block; margin-top:2px; }
+  input[type=text], input[type=date], input[type=number], input[type=email], input[type=tel]{
+    width:100%; padding:11px 12px; border:1px solid var(--line); border-radius:var(--radius);
+    background:#FEFDFB; font-family:'Public Sans',sans-serif; font-size:15px; color:var(--ink);
+  }
+  input:focus{ outline:2px solid var(--teal); outline-offset:1px; border-color:var(--teal); }
+  .opts{ display:flex; flex-wrap:wrap; gap:8px; }
+  .opts.stack{ flex-direction:column; }
+  .opt{ border:1px solid var(--line); border-radius:var(--radius); padding:10px 14px; font-size:14px; cursor:pointer; background:#FEFDFB; transition:border-color .15s, background .15s; user-select:none; }
+  .opts.stack .opt{ padding:14px 16px; }
+  .opt:hover{ border-color:var(--teal); }
+  .opt.selected{ border-color:var(--teal); background:var(--teal); color:#F6F3EC; font-weight:600; }
+
+  .nav{ display:flex; justify-content:space-between; align-items:center; margin-top:26px; }
+  button{ font-family:'Public Sans',sans-serif; font-size:15px; font-weight:600; border-radius:var(--radius); padding:12px 22px; cursor:pointer; border:1px solid transparent; }
+  .btn-primary{ background:var(--green-deep); color:#F6F3EC; border-color:var(--green-deep); }
+  .btn-primary:hover{ background:var(--green-mid); }
+  .btn-ghost{ background:transparent; color:var(--ink-soft); border-color:var(--line); }
+  .btn-ghost:hover{ border-color:var(--ink-soft); color:var(--ink); }
+  .req-msg{ font-size:13px; color:var(--rojo); margin-top:10px; display:none; }
+  .req-msg.show{ display:block; }
+
+  .result{ display:none; }
+  .result.show{ display:block; }
+  .quiz.hide{ display:none; }
+
+  .headline-card{ background:var(--green-deep); color:#F6F3EC; border-radius:var(--radius); padding:32px; border-bottom:4px solid var(--teal); margin-top:18px; }
+  .headline-card .tag{ font-size:12.5px; font-weight:700; color:var(--gold-soft); margin:0 0 10px; letter-spacing:.02em; }
+  .headline-card .big{ font-family:'Fraunces',serif; font-size:32px; color:#FBF9F4; margin:0 0 6px; }
+  .headline-card p{ color:#D8D9CE; font-size:14.5px; margin:0; max-width:56ch; }
+
+  .group-title{ font-size:14px; font-weight:700; color:var(--green-deep); margin:28px 0 12px; }
+  .metric-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .metric{ background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; }
+  .metric .num{ font-family:'Fraunces', serif; font-size:20px; color:var(--green-deep); display:block; }
+  .metric .lab{ font-size:12.5px; color:var(--ink-soft); }
+
+  .breakdown{ margin-top:10px; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; }
+  .breakdown-row{ display:flex; justify-content:space-between; padding:11px 16px; font-size:13.5px; border-bottom:1px solid var(--line); background:#FCFBF8; }
+  .breakdown-row:last-child{ border-bottom:none; background:var(--teal-soft); font-weight:700; }
+  .breakdown-row span:first-child{ color:var(--ink-soft); }
+
+  .flag{ margin-top:16px; padding:14px 16px; border-radius:var(--radius); border-left:4px solid var(--amarillo); background:#FBF3E4; font-size:14px; color:#5A4419; }
+  .flag.rojo{ border-color:var(--rojo); background:#F8E9E4; color:#5E2E1E; }
+  .flag.verde{ border-color:var(--verde); background:#E4F0EA; color:#1F4433; }
+
+  .next-step{ margin-top:26px; background:var(--gold-soft); border-radius:var(--radius); padding:22px 24px; }
+  .next-step h3{ margin:0 0 8px; font-size:17px; color:var(--green-deep); }
+  .next-step p{ margin:0 0 16px; font-size:14.5px; color:#4A4230; }
+  .sent-msg{ font-size:13.5px; color:var(--green-mid); margin-top:16px; display:none; }
+  .sent-msg.show{ display:block; }
+  .warn-msg{ font-size:13px; color:var(--rojo); margin-top:12px; display:none; }
+  .warn-msg.show{ display:block; }
+
+  .disclaimer{ margin-top:26px; font-size:12.5px; color:var(--ink-soft); border-top:1px solid var(--line); padding-top:16px; }
+
+  @media (max-width:560px){
+    .top h1{ font-size:23px; }
+    .card{ padding:22px 18px; }
+    .headline-card{ padding:24px 20px; }
+    .headline-card .big{ font-size:24px; }
+    .metric-grid{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <p class="eyebrow">EVOLUCIONA PENSIONAL</p>
+    <h1>Proyección Pensional Personalizada</h1>
+    <p>Sirve para dos cosas: saber con cuánto te pensionarías hoy, o —si apenas empiezas— saber cuánto debes cotizar para llegar a la pensión que quieres.</p>
+  </div>
+</div>
+
+<div class="context-box">
+  <div class="context-inner">
+    Esta proyección estima tu <strong>Ingreso Base de Liquidación (IBL)</strong>, tu tasa de reemplazo y tu mesada aproximada, con el detalle completo del cálculo. Es un estimado preliminar: la cifra oficial depende de tu historia laboral certificada.
+  </div>
+</div>
+
+<div class="stepper" id="stepper"></div>
+<div class="step-label"><span id="stepLabelText">Sección A</span><span id="stepCount">1 / 5</span></div>
+
+<div class="wrap">
+  <div class="quiz" id="quizWrap">
+    <div class="card" id="cardArea"></div>
+    <div class="req-msg" id="reqMsg">Por favor responde las preguntas marcadas antes de continuar.</div>
+    <div class="nav">
+      <button class="btn-ghost" id="btnBack" type="button">Atrás</button>
+      <button class="btn-primary" id="btnNext" type="button">Continuar</button>
+    </div>
+  </div>
+
+  <div class="result" id="resultWrap">
+    <div class="headline-card">
+      <p class="tag" id="headTag">TU PROYECCIÓN</p>
+      <p class="big" id="headBig">—</p>
+      <p id="headDesc">—</p>
+    </div>
+
+    <div id="flagArea"></div>
+
+    <p class="group-title" id="gridHoyTitle">Lo que tienes hoy</p>
+    <div class="metric-grid" id="gridHoy"></div>
+
+    <p class="group-title" id="gridFaltaTitle">Lo que te falta</p>
+    <div class="metric-grid" id="gridFalta"></div>
+
+    <p class="group-title">Cómo se calculó tu mesada</p>
+    <div class="breakdown" id="breakdown"></div>
+
+    <div class="next-step">
+      <h3 id="nextStepTitle">Siguiente paso recomendado</h3>
+      <p id="nextStepText">—</p>
+      <button class="btn-primary" type="button" onclick="window.location.href='#contacto'">Quiero mi proyección oficial</button>
+      <div class="sent-msg" id="sentMsg">Tu ficha ya fue enviada a nuestro equipo de asesores. Te contactaremos pronto.</div>
+      <div class="warn-msg" id="warnMsg">No se pudo enviar la ficha automáticamente (esto no afecta tu resultado). Cuéntale a tu asesor directamente si no te contactamos pronto.</div>
+    </div>
+
+    <p class="disclaimer">Esta proyección usa el SMMLV 2026 ($1.750.905) y la fórmula real de tasa de reemplazo del Régimen de Prima Media (art. 34 Ley 100, modificado por la Ley 797 de 2003) para Colpensiones, y una proyección de capital acumulado con las reglas de la Garantía de Pensión Mínima para fondos privados (RAIS). No incluye indexación por IPC de tu historia salarial ni semanas exactas certificadas. Es un estimado educativo; tu asesor calculará la cifra definitiva con tu historia laboral oficial.</p>
+  </div>
+</div>
+
+<script>
+const SMLV_2026 = 1750905;
+const EDAD_LEGAL = { "Mujer": 57, "Hombre": 62 };
+
+const sectionModo = {
+  id:"0", title:"¿Qué necesitas proyectar?", sub:"Elige según lo que busca tu cliente.",
+  fields:[
+    { id:"modo", q:"¿Qué quieres calcular?", type:"choice", stack:true,
+      options:[
+        "Cuánto podría pensionarme, con mi situación actual",
+        "Cuánto debo cotizar (IBC) para lograr una pensión objetivo"
+      ], required:true }
+  ]
+};
+
+const sectionA = {
+  id:"A", title:"Datos básicos", sub:"Determinan tu edad legal de pensión.",
+  fields:[
+    { id:"sexo", q:"Sexo", type:"choice", options:["Mujer","Hombre"], required:true },
+    { id:"fnac", q:"Fecha de nacimiento", type:"date", required:true }
+  ]
+};
+
+const sectionB = {
+  id:"B", title:"Tu situación actual", sub:"Semanas cotizadas y continuidad.",
+  fields:[
+    { id:"regimen", q:"¿A qué régimen estás afiliado?", type:"choice", options:["Colpensiones (Prima Media - RPM)","Fondo privado (RAIS)","No lo sé"], required:true },
+    { id:"semanas", q:"¿Cuántas semanas tienes cotizadas hoy?", type:"number", hint:"Da tu mejor estimado si no tienes el dato exacto", required:true },
+    { id:"cotizandoActivo", q:"¿Sigues cotizando de forma activa?", type:"choice", options:["Sí, todos los meses","Sí, pero con algunas interrupciones","No, no estoy cotizando actualmente"], required:true }
+  ]
+};
+
+const sectionC_actual = {
+  id:"C", title:"Tus ingresos", sub:"Con esto estimamos tu IBL (o tu capital acumulado, si estás en RAIS).",
+  fields:[
+    { id:"ibcActual", q:"¿Cuál es tu IBC o salario mensual actual?", type:"number", hint:"En pesos colombianos, ej: 3500000", required:true },
+    { id:"ibcPromedio10", q:"¿Cuál ha sido, en promedio, tu IBC o salario mensual en los últimos 10 años?", type:"number", hint:"Da tu mejor estimado en pesos colombianos", required:true },
+    { id:"saldoActual", q:"Si estás en fondo privado: ¿cuál es el saldo aproximado en tu cuenta individual? (opcional)", type:"number", hint:"Déjalo en blanco si no lo sabes o no aplica" }
+  ]
+};
+
+const sectionC_meta = {
+  id:"C", title:"Tu meta pensional", sub:"Cuéntanos qué te gustaría lograr.",
+  fields:[
+    { id:"mesadaObjetivo", q:"¿Con cuánto te gustaría pensionarte al mes?", type:"number", hint:"En pesos colombianos, ej: 3000000", required:true },
+    { id:"edadObjetivo", q:"¿A qué edad te gustaría lograrlo?", type:"number", hint:"Debe ser igual o mayor a tu edad legal (57 mujeres / 62 hombres), salvo casos especiales", required:true },
+    { id:"saldoActual", q:"Si estás en fondo privado: ¿tienes algún saldo ya acumulado? (opcional)", type:"number", hint:"Déjalo en blanco si no aplica" }
+  ]
+};
+
+const sectionD = {
+  id:"D", title:"Datos de contacto", sub:"Para enviarte tu proyección y que un asesor la confirme.",
+  fields:[
+    { id:"nombre", q:"Nombre completo", type:"text", required:true },
+    { id:"telefono", q:"Número de WhatsApp", type:"tel", required:true },
+    { id:"email", q:"Correo electrónico", type:"email", required:true }
+  ]
+};
+
+function getSections(){
+  const secs = [sectionModo, sectionA, sectionB];
+  if(answers.modo === "Cuánto debo cotizar (IBC) para lograr una pensión objetivo"){
+    secs.push(sectionC_meta);
+  } else {
+    secs.push(sectionC_actual);
+  }
+  secs.push(sectionD);
+  return secs;
+}
+
+let current = 0;
+const answers = {};
+
+function renderStepperDots(){
+  const stepperEl = document.getElementById("stepper");
+  stepperEl.innerHTML = "";
+  getSections().forEach(()=>{
+    const d = document.createElement("div");
+    d.className = "step-dot";
+    d.innerHTML = "<i></i>";
+    stepperEl.appendChild(d);
+  });
+}
+function updateStepper(){
+  const sections = getSections();
+  renderStepperDots();
+  const dots = document.querySelectorAll(".step-dot i");
+  dots.forEach((d,i)=>{ d.style.width = i < current ? "100%" : (i === current ? "50%" : "0%"); });
+  document.getElementById("stepLabelText").textContent = "Sección " + sections[current].id + " · " + sections[current].title;
+  document.getElementById("stepCount").textContent = (current+1) + " / " + sections.length;
+}
+
+function renderSection(){
+  const sections = getSections();
+  const s = sections[current];
+  const card = document.getElementById("cardArea");
+  card.innerHTML = "";
+
+  const h = document.createElement("h2");
+  h.className = "section-title";
+  h.textContent = s.title;
+  card.appendChild(h);
+
+  const sub = document.createElement("p");
+  sub.className = "section-sub";
+  sub.textContent = s.sub;
+  card.appendChild(sub);
+
+  s.fields.forEach(f=>{
+    const wrap = document.createElement("div");
+    wrap.className = "field";
+
+    const label = document.createElement("label");
+    label.className = "q";
+    label.textContent = f.q;
+    if(f.hint){
+      const hint = document.createElement("span");
+      hint.className = "hint";
+      hint.textContent = f.hint;
+      label.appendChild(hint);
+    }
+    wrap.appendChild(label);
+
+    if(f.type === "choice"){
+      const opts = document.createElement("div");
+      opts.className = "opts" + (f.stack ? " stack" : "");
+      f.options.forEach(opt=>{
+        const chip = document.createElement("div");
+        chip.className = "opt" + (answers[f.id]===opt ? " selected":"");
+        chip.textContent = opt;
+        chip.addEventListener("click", ()=>{ answers[f.id] = opt; renderSection(); });
+        opts.appendChild(chip);
+      });
+      wrap.appendChild(opts);
+    } else {
+      const input = document.createElement("input");
+      input.type = f.type;
+      input.value = answers[f.id] || "";
+      input.addEventListener("input", (e)=>{ answers[f.id] = e.target.value; });
+      wrap.appendChild(input);
+    }
+    card.appendChild(wrap);
+  });
+
+  const sectionsNow = getSections();
+  document.getElementById("btnBack").style.visibility = current === 0 ? "hidden" : "visible";
+  document.getElementById("btnNext").textContent = current === sectionsNow.length - 1 ? "Ver mi proyección" : "Continuar";
+  document.getElementById("reqMsg").classList.remove("show");
+  updateStepper();
+}
+
+function validateSection(){
+  const sections = getSections();
+  const s = sections[current];
+  for(const f of s.fields){
+    if(f.required && (!answers[f.id] || String(answers[f.id]).trim()==="")) return false;
+  }
+  return true;
+}
+
+document.getElementById("btnNext").addEventListener("click", ()=>{
+  if(!validateSection()){ document.getElementById("reqMsg").classList.add("show"); return; }
+  const sections = getSections();
+  if(current < sections.length - 1){
+    current++; renderSection(); window.scrollTo({top:0, behavior:"smooth"});
+  } else { finish(); }
+});
+document.getElementById("btnBack").addEventListener("click", ()=>{
+  if(current > 0){ current--; renderSection(); window.scrollTo({top:0, behavior:"smooth"}); }
+});
+
+/* ==================== SHARED HELPERS ==================== */
+function calcEdad(fnacStr){
+  const fnac = new Date(fnacStr);
+  const hoy = new Date();
+  let edad = hoy.getFullYear() - fnac.getFullYear();
+  const m = hoy.getMonth() - fnac.getMonth();
+  if(m < 0 || (m===0 && hoy.getDate() < fnac.getDate())) edad--;
+  return edad;
+}
+function mesesHastaFecha(fnacStr, edadObjetivo){
+  const fnac = new Date(fnacStr);
+  const fechaObjetivo = new Date(fnac);
+  fechaObjetivo.setFullYear(fnac.getFullYear() + edadObjetivo);
+  const hoy = new Date();
+  const meses = (fechaObjetivo.getFullYear()-hoy.getFullYear())*12 + (fechaObjetivo.getMonth()-hoy.getMonth());
+  return Math.max(0, meses);
+}
+function fmtCOP(n){ return "$" + Math.round(n).toLocaleString("es-CO"); }
+function fmtFecha(mesesDesdeHoy){
+  const d = new Date();
+  d.setMonth(d.getMonth() + mesesDesdeHoy);
+  return d.toLocaleDateString("es-CO", { year:"numeric", month:"long" });
+}
+
+/* ==================== MODO 1: PROYECCIÓN CON SITUACIÓN ACTUAL ==================== */
+function proyectarActual(){
+  const SEMANAS_REQ = 1300;
+  const edad = calcEdad(answers.fnac);
+  const edadLegal = EDAD_LEGAL[answers.sexo];
+  const semanasActuales = parseInt(answers.semanas,10) || 0;
+  const semanasFaltantes = Math.max(0, SEMANAS_REQ - semanasActuales);
+  const cotizando = answers.cotizandoActivo !== "No, no estoy cotizando actualmente";
+  const factorSemanasPorMes = answers.cotizandoActivo === "Sí, pero con algunas interrupciones" ? 3.6 : 4.33;
+
+  const mesesHastaEdad = mesesHastaFecha(answers.fnac, edadLegal);
+  const mesesParaSemanas = cotizando ? Math.ceil(semanasFaltantes / factorSemanasPorMes) : null;
+
+  let bloqueado = false;
+  let mesesElapsed;
+  if(!cotizando){
+    if(semanasActuales >= SEMANAS_REQ){ mesesElapsed = mesesHastaEdad; }
+    else { bloqueado = true; mesesElapsed = mesesHastaEdad; }
+  } else {
+    mesesElapsed = Math.max(mesesParaSemanas, mesesHastaEdad);
+  }
+
+  const totalSemanasAlPensionarse = cotizando ? semanasActuales + mesesElapsed * factorSemanasPorMes : semanasActuales;
+  const esRAIS = answers.regimen === "Fondo privado (RAIS)";
+  const ibcActual = parseFloat(answers.ibcActual) || 0;
+  const ibcPromedio10 = parseFloat(answers.ibcPromedio10) || ibcActual;
+  const IBL = ibcPromedio10;
+
+  let mesadaEstimada, tasaFinal = null, tasaBase = null, bono = null, ratio = null, semanasAdicionales = null;
+  let capitalProyectado = null, viaRAIS = null;
+
+  if(!esRAIS){
+    ratio = Math.min(20, Math.max(1, IBL / SMLV_2026));
+    tasaBase = 65.5 - 0.5 * ratio;
+    semanasAdicionales = Math.max(0, totalSemanasAlPensionarse - SEMANAS_REQ);
+    bono = Math.min(Math.floor(semanasAdicionales/50) * 1.5, 80 - tasaBase);
+    tasaFinal = Math.min(tasaBase + bono, 80);
+    mesadaEstimada = Math.max((tasaFinal/100) * IBL, SMLV_2026);
+  } else {
+    const saldoActual = parseFloat(answers.saldoActual) || 0;
+    const aporteNetoMensual = ibcActual * 0.115;
+    const rMensual = 0.0035;
+    const n = mesesElapsed;
+    const fvAportes = n > 0 ? aporteNetoMensual * ((Math.pow(1+rMensual, n) - 1) / rMensual) : 0;
+    const fvSaldo = saldoActual * Math.pow(1+rMensual, n);
+    capitalProyectado = fvAportes + fvSaldo;
+    const mesadaAutofinanciada = capitalProyectado / 240;
+
+    if(mesadaAutofinanciada >= SMLV_2026 * 1.10){
+      mesadaEstimada = mesadaAutofinanciada;
+      viaRAIS = "capital";
+    } else if(totalSemanasAlPensionarse >= 1150){
+      mesadaEstimada = SMLV_2026;
+      viaRAIS = "gpm";
+    } else {
+      mesadaEstimada = null;
+      viaRAIS = "devolucion";
+    }
+  }
+
+  return {
+    edad, edadLegal, semanasActuales, semanasFaltantes, mesesHastaEdad, mesesParaSemanas,
+    mesesElapsed, cotizando, bloqueado, totalSemanasAlPensionarse, esRAIS, IBL,
+    tasaFinal, tasaBase, bono, ratio, semanasAdicionales, mesadaEstimada, capitalProyectado, viaRAIS, SEMANAS_REQ
+  };
+}
+
+/* ==================== MODO 2: CUÁNTO DEBO COTIZAR PARA UNA META ==================== */
+function proyectarMeta(){
+  const SEMANAS_REQ = 1300;
+  const edad = calcEdad(answers.fnac);
+  const edadLegal = EDAD_LEGAL[answers.sexo];
+  const edadObjetivo = Math.max(parseFloat(answers.edadObjetivo) || edadLegal, edadLegal);
+  const semanasActuales = parseInt(answers.semanas,10) || 0;
+  const cotizando = answers.cotizandoActivo !== "No, no estoy cotizando actualmente";
+  const factorSemanasPorMes = answers.cotizandoActivo === "Sí, pero con algunas interrupciones" ? 3.6 : 4.33;
+
+  const mesesHastaObjetivo = mesesHastaFecha(answers.fnac, edadObjetivo);
+  const semanasAlObjetivo = cotizando ? semanasActuales + mesesHastaObjetivo * factorSemanasPorMes : semanasActuales;
+  const mesadaObjetivo = parseFloat(answers.mesadaObjetivo) || 0;
+  const esRAIS = answers.regimen === "Fondo privado (RAIS)";
+
+  const alcanzaSemanas = semanasAlObjetivo >= SEMANAS_REQ;
+
+  let resultado = { edad, edadLegal, edadObjetivo, semanasActuales, semanasAlObjetivo, mesesHastaObjetivo, mesadaObjetivo, esRAIS, alcanzaSemanas, SEMANAS_REQ };
+
+  if(!esRAIS){
+    if(!alcanzaSemanas){
+      resultado.viable = false;
+      resultado.motivo = "semanas";
+      return resultado;
+    }
+    const semanasAdicionales = Math.max(0, semanasAlObjetivo - SEMANAS_REQ);
+    const bono = Math.min(Math.floor(semanasAdicionales/50) * 1.5, 15);
+    const a = 0.005 / SMLV_2026;
+    const b = -(0.655 + bono/100);
+    const c = mesadaObjetivo;
+    const discriminante = b*b - 4*a*c;
+
+    if(discriminante < 0){
+      resultado.viable = false;
+      resultado.motivo = "meta_muy_alta";
+      resultado.bono = bono;
+      return resultado;
+    }
+    const ibl1 = (-b - Math.sqrt(discriminante)) / (2*a);
+    const ratioCheck = ibl1 / SMLV_2026;
+
+    if(ratioCheck < 1){
+      resultado.viable = true;
+      resultado.iblRequerido = SMLV_2026;
+      resultado.notaMinimo = true;
+    } else if(ratioCheck > 20){
+      resultado.viable = false;
+      resultado.motivo = "excede_tope";
+    } else {
+      resultado.viable = true;
+      resultado.iblRequerido = ibl1;
+    }
+    resultado.bono = bono;
+    resultado.semanasAdicionales = semanasAdicionales;
+  } else {
+    const saldoActual = parseFloat(answers.saldoActual) || 0;
+    const rMensual = 0.0035;
+    const n = mesesHastaObjetivo;
+    const capitalNecesario = mesadaObjetivo * 240;
+    const fvSaldo = saldoActual * Math.pow(1+rMensual, n);
+    const capitalFaltante = Math.max(0, capitalNecesario - fvSaldo);
+
+    if(n <= 0){
+      resultado.viable = false;
+      resultado.motivo = "sin_tiempo";
+      return resultado;
+    }
+    const pmtNecesario = capitalFaltante * rMensual / (Math.pow(1+rMensual, n) - 1);
+    const ibcNecesario = pmtNecesario / 0.115;
+    resultado.viable = true;
+    resultado.capitalNecesario = capitalNecesario;
+    resultado.capitalFaltante = capitalFaltante;
+    resultado.ibcNecesario = ibcNecesario;
+  }
+
+  return resultado;
+}
+
+/* ==================== RENDER ==================== */
+function finish(){
+  document.getElementById("quizWrap").classList.add("hide");
+  document.getElementById("resultWrap").classList.add("show");
+
+  if(answers.modo === "Cuánto debo cotizar (IBC) para lograr una pensión objetivo"){
+    const m = proyectarMeta();
+    renderResultMeta(m);
+    window.scrollTo({top:0, behavior:"smooth"});
+    sendToAdvisor({ modo:"meta", ...m });
+  } else {
+    const p = proyectarActual();
+    renderResultActual(p);
+    window.scrollTo({top:0, behavior:"smooth"});
+    sendToAdvisor({ modo:"actual", ...p });
+  }
+}
+
+function renderResultActual(p){
+  document.getElementById("gridHoyTitle").textContent = "Lo que tienes hoy";
+  document.getElementById("gridFaltaTitle").textContent = "Lo que te falta";
+
+  document.getElementById("headTag").textContent = p.esRAIS ? "PROYECCIÓN · FONDO PRIVADO (RAIS)" : "PROYECCIÓN · PRIMA MEDIA (RPM)";
+
+  const flagArea = document.getElementById("flagArea");
+  flagArea.innerHTML = "";
+
+  if(p.esRAIS && p.viaRAIS === "devolucion"){
+    document.getElementById("headBig").textContent = fmtCOP(p.capitalProyectado);
+    document.getElementById("headDesc").textContent = "Con este capital y estas semanas, no alcanzarías a autofinanciar una mesada ni cumplirías las 1150 semanas para la Garantía de Pensión Mínima. Este valor sería una devolución de saldos (pago único), no una mesada mensual.";
+    const div = document.createElement("div");
+    div.className = "flag rojo";
+    div.textContent = "No hay mesada mensual garantizada con esta proyección. Es clave evaluar aumentar el IBC, el tiempo cotizado, o considerar aportes voluntarios.";
+    flagArea.appendChild(div);
+  } else {
+    document.getElementById("headBig").textContent = fmtCOP(p.mesadaEstimada) + " / mes";
+    document.getElementById("headDesc").textContent = p.bloqueado
+      ? "Esta mesada estimada asume que retomas tu cotización. Actualmente no estás cotizando y aún no completas las semanas requeridas."
+      : `Mesada mensual estimada, si cumples tus requisitos hacia ${fmtFecha(p.mesesElapsed)}.`;
+
+    if(p.esRAIS && p.viaRAIS === "gpm"){
+      const div = document.createElement("div");
+      div.className = "flag";
+      div.textContent = "Tu capital proyectado no alcanza a autofinanciar la mesada, pero al tener 1150 semanas o más, accederías a la Garantía de Pensión Mínima (1 SMMLV).";
+      flagArea.appendChild(div);
+    }
+  }
+
+  if(p.bloqueado){
+    const div = document.createElement("div");
+    div.className = "flag rojo";
+    div.textContent = "No estás cotizando actualmente y te faltan semanas. Con esta información, no es posible proyectar una fecha de pensión — el primer paso es retomar tu cotización.";
+    flagArea.appendChild(div);
+  } else if(!p.esRAIS && p.mesesHastaEdad > p.mesesParaSemanas + 12 && p.cotizando){
+    const div = document.createElement("div");
+    div.className = "flag";
+    div.textContent = "Completarías tus semanas mucho antes de llegar a la edad legal. Vale la pena evaluar si te conviene seguir cotizando ese tiempo extra, ya que puede aumentar tu tasa de reemplazo.";
+    flagArea.appendChild(div);
+  }
+
+  document.getElementById("gridHoy").innerHTML = `
+    <div class="metric"><span class="num">${p.edad}</span><span class="lab">Edad actual</span></div>
+    <div class="metric"><span class="num">${p.semanasActuales}</span><span class="lab">Semanas cotizadas hoy</span></div>
+    <div class="metric"><span class="num">${fmtCOP(p.IBL)}</span><span class="lab">IBL estimado (promedio 10 años)</span></div>
+    <div class="metric"><span class="num">${p.edadLegal}</span><span class="lab">Edad legal de pensión</span></div>
+  `;
+  document.getElementById("gridFalta").innerHTML = `
+    <div class="metric"><span class="num">${p.semanasFaltantes}</span><span class="lab">Semanas que te faltan (meta 1300)</span></div>
+    <div class="metric"><span class="num">${p.mesesHastaEdad}</span><span class="lab">Meses para tu edad legal</span></div>
+  `;
+
+  const bd = document.getElementById("breakdown");
+  if(!p.esRAIS){
+    bd.innerHTML = `
+      <div class="breakdown-row"><span>Tasa base (según tu IBL vs. SMMLV)</span><span>${p.tasaBase.toFixed(2)}%</span></div>
+      <div class="breakdown-row"><span>Semanas adicionales sobre las 1300</span><span>${p.semanasAdicionales.toFixed(0)}</span></div>
+      <div class="breakdown-row"><span>Bono por semanas adicionales (+1,5% cada 50)</span><span>+${p.bono.toFixed(2)} pts</span></div>
+      <div class="breakdown-row"><span>Tasa de reemplazo final</span><span>${p.tasaFinal.toFixed(2)}%</span></div>
+      <div class="breakdown-row"><span>IBL estimado</span><span>${fmtCOP(p.IBL)}</span></div>
+      <div class="breakdown-row"><span>Mesada = Tasa × IBL (con piso de 1 SMMLV)</span><span>${fmtCOP(p.mesadaEstimada)}</span></div>
+    `;
+  } else {
+    bd.innerHTML = `
+      <div class="breakdown-row"><span>Capital proyectado en tu cuenta individual</span><span>${fmtCOP(p.capitalProyectado)}</span></div>
+      <div class="breakdown-row"><span>Semanas totales proyectadas al pensionarte</span><span>${p.totalSemanasAlPensionarse.toFixed(0)}</span></div>
+      <div class="breakdown-row"><span>Ruta aplicada</span><span>${p.viaRAIS === 'capital' ? 'Autofinanciada por capital' : p.viaRAIS === 'gpm' ? 'Garantía de Pensión Mínima' : 'Devolución de saldos'}</span></div>
+      <div class="breakdown-row"><span>Mesada estimada</span><span>${p.mesadaEstimada ? fmtCOP(p.mesadaEstimada) : 'No aplica mesada'}</span></div>
+    `;
+  }
+
+  const nextText = p.bloqueado
+    ? "Te recomendamos retomar tu cotización cuanto antes y, en paralelo, evaluar aportes voluntarios o corregir semanas no reportadas."
+    : (p.esRAIS
+        ? "Te recomendamos comparar esta proyección con el simulador oficial de tu fondo privado y evaluar, con nuestro Test de Régimen de Transición, si te conviene mantenerte en RAIS o considerar Colpensiones."
+        : "Te recomendamos formalizar esta proyección con tu historia laboral certificada, y si te falta tiempo importante, revisar una Auditoría de Historia Laboral.");
+  document.getElementById("nextStepText").textContent = nextText;
+}
+
+function renderResultMeta(m){
+  document.getElementById("gridHoyTitle").textContent = "Tu punto de partida";
+  document.getElementById("gridFaltaTitle").textContent = "Tu meta";
+  document.getElementById("headTag").textContent = "META PENSIONAL";
+  document.getElementById("flagArea").innerHTML = "";
+
+  document.getElementById("gridHoy").innerHTML = `
+    <div class="metric"><span class="num">${m.edad}</span><span class="lab">Edad actual</span></div>
+    <div class="metric"><span class="num">${m.semanasActuales}</span><span class="lab">Semanas cotizadas hoy</span></div>
+  `;
+  document.getElementById("gridFalta").innerHTML = `
+    <div class="metric"><span class="num">${fmtCOP(m.mesadaObjetivo)}</span><span class="lab">Mesada objetivo</span></div>
+    <div class="metric"><span class="num">${m.edadObjetivo}</span><span class="lab">Edad objetivo</span></div>
+  `;
+
+  const bd = document.getElementById("breakdown");
+  const flagArea = document.getElementById("flagArea");
+
+  if(!m.esRAIS){
+    if(!m.alcanzaSemanas){
+      document.getElementById("headBig").textContent = "Meta no alcanzable a esa edad";
+      document.getElementById("headDesc").textContent = `A la edad que planteas, proyectamos ${m.semanasAlObjetivo.toFixed(0)} semanas, y se exigen 1300. No es un problema de cuánto cotizas, sino de cuánto tiempo cotizas.`;
+      const div = document.createElement("div");
+      div.className = "flag rojo";
+      div.textContent = "Antes de hablar de IBC, hay que resolver el tiempo: o cotiza sin interrupciones desde ya, o el objetivo de edad debe moverse más adelante.";
+      flagArea.appendChild(div);
+      bd.innerHTML = `<div class="breakdown-row"><span>Semanas proyectadas a esa edad</span><span>${m.semanasAlObjetivo.toFixed(0)}</span></div><div class="breakdown-row"><span>Semanas exigidas</span><span>1300</span></div>`;
+      return;
+    }
+    if(m.motivo === "meta_muy_alta"){
+      document.getElementById("headBig").textContent = "Meta fuera de rango";
+      document.getElementById("headDesc").textContent = "Con las semanas proyectadas a esa edad, no hay ningún IBC (ni siquiera el tope de 20 SMMLV) que alcance esa mesada bajo la fórmula de Prima Media. Revisa si el fondo privado (RAIS) se ajusta mejor a esa meta, o ajusta la mesada objetivo.";
+      bd.innerHTML = `<div class="breakdown-row"><span>Bono por semanas adicionales</span><span>+${m.bono.toFixed(2)} pts</span></div>`;
+      return;
+    }
+    if(m.motivo === "excede_tope"){
+      document.getElementById("headBig").textContent = "Requiere el IBC máximo permitido";
+      document.getElementById("headDesc").textContent = "Esa meta exige cotizar por encima del tope de 20 SMMLV, lo cual no es posible. Con el tope máximo, tu mesada quedaría algo por debajo de tu meta.";
+      return;
+    }
+
+    document.getElementById("headBig").textContent = fmtCOP(m.iblRequerido) + " / mes";
+    document.getElementById("headDesc").textContent = `Ese es el IBC promedio aproximado sobre el que deberías cotizar, de forma sostenida hasta los ${m.edadObjetivo} años, para lograr una mesada de ${fmtCOP(m.mesadaObjetivo)}.`;
+
+    if(m.notaMinimo){
+      const div = document.createElement("div");
+      div.className = "flag verde";
+      div.textContent = "Tu meta es alcanzable cotizando incluso sobre el salario mínimo — no necesitas un IBC más alto que eso.";
+      flagArea.appendChild(div);
+    }
+
+    bd.innerHTML = `
+      <div class="breakdown-row"><span>Semanas proyectadas a la edad objetivo</span><span>${m.semanasAlObjetivo.toFixed(0)}</span></div>
+      <div class="breakdown-row"><span>Semanas adicionales sobre 1300</span><span>${m.semanasAdicionales.toFixed(0)}</span></div>
+      <div class="breakdown-row"><span>Bono por semanas adicionales</span><span>+${m.bono.toFixed(2)} pts</span></div>
+      <div class="breakdown-row"><span>IBC/IBL requerido (aprox.)</span><span>${fmtCOP(m.iblRequerido)}</span></div>
+    `;
+  } else {
+    if(m.motivo === "sin_tiempo"){
+      document.getElementById("headBig").textContent = "No queda tiempo suficiente";
+      document.getElementById("headDesc").textContent = "La edad objetivo ya se cumplió o está a menos de un mes — no hay margen para proyectar aportes futuros.";
+      return;
+    }
+    document.getElementById("headBig").textContent = fmtCOP(m.ibcNecesario) + " / mes";
+    document.getElementById("headDesc").textContent = `Ese es el IBC mensual aproximado que deberías cotizar en tu fondo privado, de forma sostenida hasta los ${m.edadObjetivo} años, para acumular el capital necesario.`;
+    bd.innerHTML = `
+      <div class="breakdown-row"><span>Capital necesario para tu meta</span><span>${fmtCOP(m.capitalNecesario)}</span></div>
+      <div class="breakdown-row"><span>Capital faltante (descontando saldo actual)</span><span>${fmtCOP(m.capitalFaltante)}</span></div>
+      <div class="breakdown-row"><span>IBC mensual necesario (aprox.)</span><span>${fmtCOP(m.ibcNecesario)}</span></div>
+    `;
+  }
+
+  document.getElementById("nextStepText").textContent = "Esta es una meta orientativa — te recomendamos formalizarla con una asesoría personalizada, y repetirla cada 1-2 años a medida que cambien tus ingresos reales.";
+}
+
+/* ==================== SUBMIT ==================== */
+async function sendToAdvisor(payload){
+  const fullPayload = { ...answers, ...payload, fecha_proyeccion: new Date().toISOString() };
+  try{
+    const resp = await fetch("https://formspree.io/f/TU_ENDPOINT_AQUI", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(fullPayload)
+    });
+    if(resp.ok){ document.getElementById("sentMsg").classList.add("show"); }
+    else { document.getElementById("warnMsg").classList.add("show"); }
+  } catch(err){
+    console.error("No se pudo enviar la ficha al asesor:", err);
+    document.getElementById("warnMsg").classList.add("show");
+  }
+}
+
+renderSection();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="auth-check.js"></script>
+
+</body>
+</html>

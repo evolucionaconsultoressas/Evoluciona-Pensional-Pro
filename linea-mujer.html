@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Línea Mujer | Diagnóstico Diferencial | Evoluciona Pensional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F3EC; --bg-panel:#FFFFFF; --ink:#22261F; --ink-soft:#5B5F53;
+    --green-deep:#1C3A2B; --green-mid:#2C5741; --gold:#A8823A; --gold-soft:#EADFC4;
+    --line:#DAD4C3; --morado:#705184; --morado-soft:#E9E1EE;
+    --verde:#3F7D5D; --amarillo:#B8862F; --naranja:#B5602F; --rojo:#AE4B33; --azul:#3A5F80;
+    --radius:4px; --shadow:0 1px 2px rgba(28,58,43,0.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{ background:var(--bg); color:var(--ink); font-family:'Public Sans',sans-serif; line-height:1.5; min-height:100vh; }
+  h1,h2,h3{ font-family:'Fraunces',serif; font-weight:500; color:var(--green-deep); letter-spacing:-0.01em; }
+  .wrap{ max-width:700px; margin:0 auto; padding:0 24px 80px; }
+
+  .top{ background:var(--green-deep); color:#F6F3EC; padding:40px 24px 32px; border-bottom:3px solid var(--morado); }
+  .top-inner{ max-width:700px; margin:0 auto; }
+  .eyebrow{ font-size:13px; color:var(--gold-soft); margin:0 0 6px; }
+  .top h1{ color:#FBF9F4; font-size:28px; margin:0 0 8px; line-height:1.15; }
+  .top p{ color:#D8D9CE; font-size:15px; max-width:56ch; margin:0; }
+
+  .context-box{ max-width:700px; margin:22px auto 0; padding:0 24px; }
+  .context-inner{ background:var(--morado-soft); border-left:4px solid var(--morado); border-radius:var(--radius); padding:16px 18px; font-size:13.5px; color:#3E2E49; }
+  .context-inner strong{ color:var(--morado); }
+
+  .stepper{ display:flex; gap:6px; max-width:700px; margin:20px auto 0; padding:0 24px; }
+  .step-dot{ flex:1; height:4px; background:var(--line); border-radius:2px; overflow:hidden; }
+  .step-dot i{ display:block; height:100%; width:0%; background:var(--morado); transition:width .35s ease; }
+  .step-label{ max-width:700px; margin:10px auto 0; padding:0 24px; font-size:13px; color:var(--ink-soft); display:flex; justify-content:space-between; }
+
+  .card{ background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:32px; margin-top:18px; }
+  .section-title{ font-size:21px; margin:0 0 4px; }
+  .section-sub{ color:var(--ink-soft); font-size:14px; margin:0 0 24px; }
+
+  .field{ margin-bottom:22px; }
+  .field:last-child{margin-bottom:0;}
+  label.q{ display:block; font-size:15px; font-weight:600; margin-bottom:10px; color:var(--ink); }
+  .hint{ font-size:13px; color:var(--ink-soft); font-weight:400; display:block; margin-top:2px; }
+  input[type=text], input[type=date], input[type=number], input[type=email], input[type=tel]{
+    width:100%; padding:11px 12px; border:1px solid var(--line); border-radius:var(--radius);
+    background:#FEFDFB; font-family:'Public Sans',sans-serif; font-size:15px; color:var(--ink);
+  }
+  input:focus{ outline:2px solid var(--morado); outline-offset:1px; border-color:var(--morado); }
+  .opts{ display:flex; flex-wrap:wrap; gap:8px; }
+  .opt{ border:1px solid var(--line); border-radius:var(--radius); padding:10px 14px; font-size:14px; cursor:pointer; background:#FEFDFB; transition:border-color .15s, background .15s; user-select:none; }
+  .opt:hover{ border-color:var(--morado); }
+  .opt.selected{ border-color:var(--morado); background:var(--morado); color:#F6F3EC; font-weight:600; }
+
+  .nav{ display:flex; justify-content:space-between; align-items:center; margin-top:26px; }
+  button{ font-family:'Public Sans',sans-serif; font-size:15px; font-weight:600; border-radius:var(--radius); padding:12px 22px; cursor:pointer; border:1px solid transparent; }
+  .btn-primary{ background:var(--green-deep); color:#F6F3EC; border-color:var(--green-deep); }
+  .btn-primary:hover{ background:var(--green-mid); }
+  .btn-ghost{ background:transparent; color:var(--ink-soft); border-color:var(--line); }
+  .btn-ghost:hover{ border-color:var(--ink-soft); color:var(--ink); }
+  .req-msg{ font-size:13px; color:var(--rojo); margin-top:10px; display:none; }
+  .req-msg.show{ display:block; }
+
+  .result{ display:none; }
+  .result.show{ display:block; }
+  .quiz.hide{ display:none; }
+
+  .verdict-card{ background:var(--morado); color:#F6F3EC; border-radius:var(--radius); padding:32px; border-bottom:4px solid var(--gold); margin-top:18px; }
+  .verdict-tag{ display:inline-block; font-size:12.5px; font-weight:700; padding:5px 10px; border-radius:3px; margin-bottom:14px; background:var(--gold-soft); color:#4A3A18; }
+  .verdict-card h2{ color:#FBF9F4; font-size:24px; margin:0 0 10px; }
+  .verdict-card p{ color:#EAE3EF; font-size:15px; margin:0; max-width:58ch; }
+
+  .group-title{ font-size:14px; font-weight:700; color:var(--green-deep); margin:26px 0 12px; }
+  .metric-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:6px; }
+  .metric{ background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; }
+  .metric .num{ font-family:'Fraunces', serif; font-size:20px; color:var(--green-deep); display:block; }
+  .metric .lab{ font-size:12.5px; color:var(--ink-soft); }
+
+  .note-list{ display:flex; flex-direction:column; gap:10px; margin-top: 6px;}
+  .opciones-list{ display:flex; flex-direction:column; gap:12px; margin-top: 6px; }
+  .opcion-card{ background:var(--bg-panel); border:1px solid var(--line); border-left:4px solid var(--ink-soft); border-radius:var(--radius); padding:18px 20px; }
+  .opcion-card.estado-aplica{ border-left-color: var(--verde); }
+  .opcion-card.estado-posible{ border-left-color: var(--azul); }
+  .opcion-card.estado-pendiente{ border-left-color: var(--amarillo); }
+  .opcion-card.estado-revisar{ border-left-color: var(--naranja); }
+  .opcion-card.estado-no_aplica{ border-left-color: var(--rojo); opacity:.85; }
+  .opcion-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:8px; }
+  .opcion-titulo{ font-family:'Fraunces',serif; font-size:16px; color:var(--green-deep); margin:0; }
+  .opcion-badge{ font-size:11px; font-weight:700; padding:3px 9px; border-radius:3px; white-space:nowrap; letter-spacing:.02em; }
+  .badge-aplica{ background:#E4F0EA; color:#1F4433; }
+  .badge-posible{ background:#E1E9F0; color:#233C4D; }
+  .badge-pendiente{ background:var(--gold-soft); color:#4A3A18; }
+  .badge-revisar{ background:#F3E3D5; color:#5A3A1E; }
+  .badge-no_aplica{ background:#F8E9E4; color:#5E2E1E; }
+  .opcion-texto{ font-size:14px; color:var(--ink-soft); margin:0; }
+  .opcion-paso{ font-size:13px; color:var(--green-mid); margin:10px 0 0; font-weight:600; }
+  .advisor-badge{ display:inline-block; font-size:11px; font-weight:700; letter-spacing:.05em; background:var(--gold); color:#3A2E10; padding:4px 10px; border-radius:3px; margin-bottom:12px; }
+  .note{ padding:14px 16px; border-radius:var(--radius); border-left:4px solid var(--azul); background:#E9F0F5; font-size:14px; color:#233C4D; }
+  .note.gold{ border-color:var(--gold); background:var(--gold-soft); color:#4A3A18; }
+  .note.rojo{ border-color:var(--rojo); background:#F8E9E4; color:#5E2E1E; }
+  .note.verde{ border-color:var(--verde); background:#E4F0EA; color:#1F4433; }
+  .note .pill{ display:inline-block; font-size:11px; font-weight:700; padding:2px 7px; border-radius:3px; margin-bottom:6px; background:rgba(0,0,0,0.08); }
+
+  .next-step{ margin-top:24px; background:var(--gold-soft); border-radius:var(--radius); padding:22px 24px; }
+  .next-step h3{ margin:0 0 8px; font-size:17px; color:var(--green-deep); }
+  .next-step p{ margin:0 0 16px; font-size:14.5px; color:#4A4230; }
+  .sent-msg{ font-size:13.5px; color:var(--green-mid); margin-top:16px; display:none; }
+  .sent-msg.show{ display:block; }
+
+  .disclaimer{ margin-top:24px; font-size:12.5px; color:var(--ink-soft); border-top:1px solid var(--line); padding-top:16px; }
+
+  @media (max-width:560px){
+    .top h1{ font-size:23px; }
+    .card{ padding:22px 18px; }
+    .verdict-card{ padding:24px 20px; }
+    .metric-grid{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <span class="advisor-badge">HERRAMIENTA PARA ASESORES</span>
+    <p class="eyebrow">EVOLUCIONA PENSIONAL · LÍNEA MUJER</p>
+    <h1>Diagnóstico Diferencial para Mujeres</h1>
+    <p>Diligénciala durante la asesoría: revisa todas las opciones de pensión que aplican a tu clienta — edad, semanas reducidas, descuento por hijos, pensión anticipada, y el aporte del cuidado y la maternidad.</p>
+  </div>
+</div>
+
+<div class="context-box">
+  <div class="context-inner">
+    <strong>Aviso importante:</strong> algunos beneficios de este diagnóstico (como el descuento de semanas por hijos) hacen parte del artículo 36 de la Ley 2381 de 2024, que la Corte Constitucional devolvió al Congreso para corrección de trámite. Es decir, hoy <strong>no está en firme</strong>. Lo incluimos como simulación informativa, no como un derecho garantizado todavía.
+  </div>
+</div>
+
+<div class="stepper" id="stepper"></div>
+<div class="step-label"><span id="stepLabelText">Sección A</span><span id="stepCount">1 / 5</span></div>
+
+<div class="wrap">
+  <div class="quiz" id="quizWrap">
+    <div class="card" id="cardArea"></div>
+    <div class="req-msg" id="reqMsg">Por favor responde las preguntas marcadas antes de continuar.</div>
+    <div class="nav">
+      <button class="btn-ghost" id="btnBack" type="button">Atrás</button>
+      <button class="btn-primary" id="btnNext" type="button">Continuar</button>
+    </div>
+  </div>
+
+  <div class="result" id="resultWrap">
+    <div class="verdict-card" id="verdictCard">
+      <span class="verdict-tag" id="verdictTag">TU PERFIL</span>
+      <h2 id="verdictTitle">—</h2>
+      <p id="verdictDesc">—</p>
+    </div>
+
+    <p class="group-title">Lo que sabemos hoy</p>
+    <div class="metric-grid" id="gridHoy"></div>
+
+    <p class="group-title">Opciones de pensión para tu clienta</p>
+    <div class="opciones-list" id="noteList"></div>
+
+    <div class="next-step">
+      <h3 id="nextStepTitle">Siguiente paso recomendado</h3>
+      <p id="nextStepText">—</p>
+      <button class="btn-primary" type="button" onclick="window.location.href='#contacto'">Quiero mi asesoría personalizada</button>
+      <div class="sent-msg" id="sentMsg">Tu ficha ya fue enviada a nuestro equipo de asesores. Te contactaremos pronto.</div>
+    </div>
+
+    <p class="disclaimer">Este diagnóstico usa el calendario de reducción de semanas de la Ley 2381 de 2024 (1300 → 1225 semanas en 2027, disminuyendo 25 semanas por año hasta 1000 en 2036) reportado en la prensa especializada, y una simulación del beneficio de reducción por hijos (art. 36), actualmente devuelto al Congreso para corrección. Ambas cifras deben confirmarse con la norma vigente al momento de tu trámite. La pensión especial por hijo en condición de discapacidad severa (art. 33 parágrafo 4 de la Ley 100) sí es un beneficio consolidado, sujeto a la calificación correspondiente.</p>
+  </div>
+</div>
+
+<script>
+const sections = [
+  {
+    id:"A", title:"Datos básicos de la clienta", sub:"Para calcular su edad legal y su año probable de pensión.",
+    fields:[
+      { id:"nombre", q:"Nombre completo", type:"text", required:true },
+      { id:"fnac", q:"Fecha de nacimiento", type:"date", required:true },
+      { id:"ciudad", q:"Ciudad de residencia", type:"text", required:true }
+    ]
+  },
+  {
+    id:"B", title:"Situación pensional actual", sub:"Punto de partida dentro del sistema.",
+    fields:[
+      { id:"regimen", q:"¿A qué régimen está afiliada?", type:"choice", options:["Colpensiones (Prima Media - RPM)","Fondo privado (RAIS)","No lo sé"], required:true },
+      { id:"semanas", q:"¿Cuántas semanas tiene cotizadas hoy?", type:"number", hint:"Da tu mejor estimado si no tienes el dato exacto", required:true },
+      { id:"cotizandoActivo", q:"¿Sigue cotizando de forma activa?", type:"choice", options:["Sí, todos los meses","Sí, pero con algunas interrupciones","No, no está cotizando actualmente"], required:true }
+    ]
+  },
+  {
+    id:"C", title:"Maternidad y cuidado", sub:"Aquí es donde aplican los beneficios diferenciales.",
+    fields:[
+      { id:"numHijos", q:"¿Cuántos hijos nacidos vivos o adoptados tiene?", type:"number", required:true },
+      { id:"hijoDiscapacidad", q:"¿Alguno de sus hijos tiene una condición de discapacidad severa que requiera su cuidado permanente y le impida trabajar de forma autónoma?", type:"choice", options:["Sí","No"], required:true },
+      { id:"pclHijo", q:"¿Esa condición ya cuenta con una calificación médica formal?", type:"choice", options:["Sí","No","No lo sé"], showIf:{field:"hijoDiscapacidad", equals:"Sí"} },
+      { id:"periodosCuidado", q:"¿Ha tenido periodos sin cotizar por licencias de maternidad, cuidado de sus hijos u otras responsabilidades familiares?", type:"choice", options:["Sí","No"], required:true }
+    ]
+  },
+  {
+    id:"D", title:"Objetivo de la consulta", sub:"Para dirigir la asesoría al servicio correcto.",
+    fields:[
+      { id:"objetivo", q:"¿Qué busca principalmente la clienta?", type:"choice",
+        options:["Pensionarse aprovechando los beneficios para mujeres","Entender cómo le afecta la reforma","Evaluar la pensión especial por hijo en condición de discapacidad","No está segura, necesita orientación"], required:true }
+    ]
+  },
+  {
+    id:"E", title:"Datos de contacto de la clienta", sub:"Para dejar el diagnóstico en su expediente.",
+    fields:[
+      { id:"telefono", q:"Número de WhatsApp", type:"tel", required:true },
+      { id:"email", q:"Correo electrónico", type:"email", required:true }
+    ]
+  }
+];
+
+let current = 0;
+const answers = {};
+
+const stepperEl = document.getElementById("stepper");
+sections.forEach(()=>{
+  const d = document.createElement("div");
+  d.className = "step-dot";
+  d.innerHTML = "<i></i>";
+  stepperEl.appendChild(d);
+});
+
+function updateStepper(){
+  const dots = stepperEl.querySelectorAll(".step-dot i");
+  dots.forEach((d,i)=>{ d.style.width = i < current ? "100%" : (i === current ? "50%" : "0%"); });
+  document.getElementById("stepLabelText").textContent = "Sección " + sections[current].id + " · " + sections[current].title;
+  document.getElementById("stepCount").textContent = (current+1) + " / " + sections.length;
+}
+
+function fieldVisible(f){
+  if(!f.showIf) return true;
+  return answers[f.showIf.field] === f.showIf.equals;
+}
+
+function renderSection(){
+  const s = sections[current];
+  const card = document.getElementById("cardArea");
+  card.innerHTML = "";
+
+  const h = document.createElement("h2");
+  h.className = "section-title";
+  h.textContent = s.title;
+  card.appendChild(h);
+
+  const sub = document.createElement("p");
+  sub.className = "section-sub";
+  sub.textContent = s.sub;
+  card.appendChild(sub);
+
+  s.fields.forEach(f=>{
+    const wrap = document.createElement("div");
+    wrap.className = "field";
+    wrap.style.display = fieldVisible(f) ? "block" : "none";
+
+    const label = document.createElement("label");
+    label.className = "q";
+    label.textContent = f.q;
+    if(f.hint){
+      const hint = document.createElement("span");
+      hint.className = "hint";
+      hint.textContent = f.hint;
+      label.appendChild(hint);
+    }
+    wrap.appendChild(label);
+
+    if(f.type === "choice"){
+      const opts = document.createElement("div");
+      opts.className = "opts";
+      f.options.forEach(opt=>{
+        const chip = document.createElement("div");
+        chip.className = "opt" + (answers[f.id]===opt ? " selected":"");
+        chip.textContent = opt;
+        chip.addEventListener("click", ()=>{ answers[f.id] = opt; renderSection(); });
+        opts.appendChild(chip);
+      });
+      wrap.appendChild(opts);
+    } else {
+      const input = document.createElement("input");
+      input.type = f.type;
+      input.value = answers[f.id] || "";
+      input.addEventListener("input", (e)=>{ answers[f.id] = e.target.value; });
+      wrap.appendChild(input);
+    }
+    card.appendChild(wrap);
+  });
+
+  document.getElementById("btnBack").style.visibility = current === 0 ? "hidden" : "visible";
+  document.getElementById("btnNext").textContent = current === sections.length - 1 ? "Ver mi diagnóstico" : "Continuar";
+  document.getElementById("reqMsg").classList.remove("show");
+  updateStepper();
+}
+
+function validateSection(){
+  const s = sections[current];
+  for(const f of s.fields){
+    if(!fieldVisible(f)) continue;
+    if(f.required && (!answers[f.id] || String(answers[f.id]).trim()==="")) return false;
+  }
+  return true;
+}
+
+document.getElementById("btnNext").addEventListener("click", ()=>{
+  if(!validateSection()){ document.getElementById("reqMsg").classList.add("show"); return; }
+  if(current < sections.length - 1){
+    current++; renderSection(); window.scrollTo({top:0, behavior:"smooth"});
+  } else { finish(); }
+});
+document.getElementById("btnBack").addEventListener("click", ()=>{
+  if(current > 0){ current--; renderSection(); window.scrollTo({top:0, behavior:"smooth"}); }
+});
+
+/* ==================== CALCULATION ENGINE ==================== */
+const FECHA_VIGENCIA = new Date("2027-04-01T00:00:00");
+const EDAD_LEGAL_MUJER = 57;
+
+function calcEdad(fnacStr){
+  const fnac = new Date(fnacStr);
+  const hoy = new Date();
+  let edad = hoy.getFullYear() - fnac.getFullYear();
+  const m = hoy.getMonth() - fnac.getMonth();
+  if(m < 0 || (m===0 && hoy.getDate() < fnac.getDate())) edad--;
+  return edad;
+}
+function anoAlCumplirEdad(fnacStr, edadObjetivo){
+  const fnac = new Date(fnacStr);
+  return fnac.getFullYear() + edadObjetivo;
+}
+function semanasProyectadasA(fechaLimite){
+  const hoy = new Date();
+  const msRestantes = fechaLimite - hoy;
+  const semanasRestantes = Math.max(0, Math.floor(msRestantes / (1000*60*60*24*7)));
+  let factor = 0;
+  if(answers.cotizandoActivo === "Sí, todos los meses") factor = 1;
+  else if(answers.cotizandoActivo === "Sí, pero con algunas interrupciones") factor = 0.7;
+  const semanasActuales = parseInt(answers.semanas,10) || 0;
+  return semanasActuales + Math.round(semanasRestantes * factor);
+}
+function semanasRequeridasPorAno(ano){
+  if(ano < 2027) return 1300;
+  const reducidas = 1225 - 25 * (ano - 2027);
+  return Math.max(1000, reducidas);
+}
+
+function evaluar(){
+  const edad = calcEdad(answers.fnac);
+  const anoPension = anoAlCumplirEdad(answers.fnac, EDAD_LEGAL_MUJER);
+  const semanasActuales = parseInt(answers.semanas,10) || 0;
+  const semanasProyAbril2027 = semanasProyectadasA(FECHA_VIGENCIA);
+  const enTransicion = semanasProyAbril2027 >= 750;
+  const cotizando = answers.cotizandoActivo !== "No, no está cotizando actualmente";
+
+  const fechaPension = new Date(answers.fnac);
+  fechaPension.setFullYear(fechaPension.getFullYear() + EDAD_LEGAL_MUJER);
+  const semanasProyAEdad = semanasProyectadasA(fechaPension > new Date() ? fechaPension : new Date());
+
+  const EDAD_ANTICIPADA = 62;
+  const opciones = [];
+
+  // ---- Opción 1: Régimen de transición (Ley 100) ----
+  if(enTransicion){
+    opciones.push({
+      titulo:"Régimen de transición (Ley 100 de 1993)",
+      estado:"aplica",
+      texto:`Con ${semanasProyAbril2027} semanas proyectadas a abril de 2027, supera el umbral de 750. Requisitos: 57 años y 1300 semanas — sin descuento por hijos, ese beneficio es solo del nuevo sistema.`,
+      paso:"Confirmar con el Test de Régimen de Transición antes de formalizar."
+    });
+  } else if(semanasProyAbril2027 >= 650){
+    opciones.push({
+      titulo:"Régimen de transición (Ley 100 de 1993)",
+      estado:"pendiente",
+      texto:`Está cerca del umbral de 750 semanas (proyectado: ${semanasProyAbril2027}). No es un caso claro todavía.`,
+      paso:"Confirmar con el Test de Régimen de Transición cuanto antes."
+    });
+  } else {
+    opciones.push({
+      titulo:"Régimen de transición (Ley 100 de 1993)",
+      estado:"no_aplica",
+      texto:`No alcanzaría las 750 semanas antes de abril de 2027 (proyectado: ${semanasProyAbril2027}). Se regiría por el nuevo sistema — ahí sí aplican las semanas reducidas y el descuento por hijos.`
+    });
+  }
+
+  // ---- Opción 2: Nuevo sistema — calendario general de semanas reducidas ----
+  if(!enTransicion){
+    const semanasReq = semanasRequeridasPorAno(anoPension);
+    opciones.push({
+      titulo:`Ley 100 bajo el nuevo sistema — ${semanasReq} semanas`,
+      estado:"aplica",
+      texto:`Si se pensiona alrededor de ${anoPension} bajo el calendario reducido para mujeres, el requisito de referencia es de aproximadamente ${semanasReq} semanas (en vez de las 1300 históricas). Hoy tiene ${semanasActuales} — ${cotizando ? `le faltarían aprox. ${Math.max(0, semanasReq - semanasActuales)} semanas si sigue cotizando.` : "no está cotizando actualmente, así que esta ruta no avanza sin retomar la cotización."}`,
+      paso:"Formalizar con la Proyección Pensional Personalizada."
+    });
+
+    // ---- Opción 3: descuento adicional por hijos (art. 36, en trámite) ----
+    if(parseInt(answers.numHijos,10) > 0){
+      const hijos = Math.min(parseInt(answers.numHijos,10), 3);
+      const descuento = hijos * 50;
+      const semanasConDescuento = Math.max(850, semanasReq - descuento);
+      opciones.push({
+        titulo:`Descuento adicional por ${answers.numHijos} hijo(s) — reduce ${descuento} semanas`,
+        estado:"pendiente",
+        texto:`Con ${answers.numHijos} hijo(s), el beneficio de reducción por maternidad (art. 36, Ley 2381/2024) descontaría ${descuento} semanas sobre el requisito del nuevo sistema, llevándolo a un estimado de ${semanasConDescuento} semanas. Este artículo fue devuelto al Congreso por la Corte Constitucional — hoy NO está en firme, es una simulación informativa.`,
+        paso:"No prometer este beneficio como garantizado — verificar el estado del trámite legislativo antes de cada asesoría."
+      });
+    }
+  }
+
+  // ---- Opción 4: Pensión Anticipada de Vejez (art. 37) ----
+  if(semanasActuales > 1000 && semanasActuales < 1300){
+    if(!cotizando){
+      opciones.push({
+        titulo:`Pensión Anticipada de Vejez (art. 37) — desde los ${EDAD_ANTICIPADA} años`,
+        estado:"aplica",
+        texto:`Con ${semanasActuales} semanas y sin poder seguir cotizando, podría acceder a esta figura al cumplir ${EDAD_ANTICIPADA} años (edad especial de este mecanismo, distinta a los 57 de la edad legal general). Se liquida proporcional, con un descuento mensual de la propia mesada por las semanas que faltan hasta 1300 — el Gobierno Nacional aún no reglamenta la fórmula exacta de ese descuento.`,
+        paso:"Verificar primero si el régimen de transición tiene prioridad sobre esta ruta."
+      });
+    } else {
+      opciones.push({
+        titulo:`Pensión Anticipada de Vejez (art. 37) — desde los ${EDAD_ANTICIPADA} años`,
+        estado:"posible",
+        texto:`Tiene más de 1000 semanas. Si en el futuro no puede seguir cotizando antes de llegar a 1300, esta figura queda disponible desde los ${EDAD_ANTICIPADA} años como alternativa.`
+      });
+    }
+  }
+
+  // ---- Opción 5: pensión especial madre de hijo con discapacidad ----
+  if(answers.hijoDiscapacidad === "Sí"){
+    opciones.push({
+      titulo:"Pensión especial de madre de hijo en condición de discapacidad (art. 33 parág. 4, Ley 100)",
+      estado: answers.pclHijo === "Sí" ? "aplica" : "pendiente",
+      texto:"Sin exigir edad mínima — solo las semanas cotizadas para pensión de vejez y la calificación de dependencia total del hijo. Este es un beneficio ya consolidado, no depende de la reforma." + (answers.pclHijo !== "Sí" ? " Falta la calificación médica formal del hijo para poder formalizar la solicitud." : ""),
+      paso: answers.pclHijo === "Sí" ? "Iniciar directamente la gestión del trámite." : "Obtener primero la calificación médica formal de la condición del hijo."
+    });
+  }
+
+  // ---- Opción 6: revisar períodos omisos ----
+  if(semanasActuales < 1300 && (answers.periodosCuidado === "Sí" || semanasActuales < 1000)){
+    opciones.push({
+      titulo:"Revisar períodos omisos o cálculo actuarial",
+      estado:"revisar",
+      texto:"Los periodos sin cotizar por maternidad o cuidado familiar son comunes y explican brechas en la historia laboral — antes de descartar una ruta por falta de semanas, vale la pena auditarla.",
+      paso:"Usar la Ficha de Períodos Omisos con la historia laboral certificada."
+    });
+  }
+
+  return { edad, anoPension, semanasActuales, semanasProyAbril2027, semanasProyAEdad, enTransicion, opciones };
+}
+
+function finish(){
+  const e = evaluar();
+  document.getElementById("quizWrap").classList.add("hide");
+  document.getElementById("resultWrap").classList.add("show");
+  renderResult(e);
+  window.scrollTo({top:0, behavior:"smooth"});
+  sendToAdvisor(e);
+}
+
+function renderResult(e){
+  document.getElementById("verdictTag").textContent = "DIAGNÓSTICO LÍNEA MUJER";
+  document.getElementById("verdictTitle").textContent = `${e.opciones.filter(o=>o.estado==='aplica').length} ruta(s) aplicable(s) encontradas`;
+  document.getElementById("verdictDesc").textContent = `Edad actual: ${e.edad} años · Semanas cotizadas: ${e.semanasActuales} · Cumple 57 años en ${e.anoPension}. Revisa cada opción con la clienta y decide cuál seguir.`;
+
+  document.getElementById("gridHoy").innerHTML = `
+    <div class="metric"><span class="num">${e.edad}</span><span class="lab">Edad actual</span></div>
+    <div class="metric"><span class="num">${e.semanasActuales}</span><span class="lab">Semanas cotizadas hoy</span></div>
+    <div class="metric"><span class="num">${e.anoPension}</span><span class="lab">Año en que cumple 57 años</span></div>
+    <div class="metric"><span class="num">${e.semanasProyAbril2027}</span><span class="lab">Semanas proyectadas a abril 2027</span></div>
+  `;
+
+  const badgeLabels = { aplica:"APLICA", posible:"POSIBLE", pendiente:"PENDIENTE DE CONFIRMAR", revisar:"REVISAR", no_aplica:"NO APLICA" };
+  const noteList = document.getElementById("noteList");
+  noteList.innerHTML = "";
+  e.opciones.forEach(op=>{
+    const div = document.createElement("div");
+    div.className = "opcion-card estado-" + op.estado;
+    div.innerHTML = `
+      <div class="opcion-head">
+        <h3 class="opcion-titulo">${op.titulo}</h3>
+        <span class="opcion-badge badge-${op.estado}">${badgeLabels[op.estado]}</span>
+      </div>
+      <p class="opcion-texto">${op.texto}</p>
+      ${op.paso ? `<p class="opcion-paso">→ ${op.paso}</p>` : ""}
+    `;
+    noteList.appendChild(div);
+  });
+
+  document.getElementById("nextStepTitle").textContent = "Cómo continuar la asesoría";
+  document.getElementById("nextStepText").textContent = "Explícale a la clienta cada ruta marcada como APLICA o POSIBLE, y usa las herramientas señaladas en cada una para formalizar el número exacto antes de cerrar el caso.";
+}
+
+async function sendToAdvisor(e){
+  const payload = {
+    ...answers,
+    resultado_linea_mujer: e.opciones.map(o=>`${o.titulo} [${o.estado}]`).join(" | "),
+    edad_calculada: e.edad,
+    ano_probable_pension: e.anoPension,
+    semanas_proyectadas_abril_2027: e.semanasProyAbril2027,
+    en_regimen_transicion: e.enTransicion,
+    fecha_diagnostico: new Date().toISOString()
+  };
+  try{
+    const resp = await fetch("https://formspree.io/f/TU_ENDPOINT_AQUI", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if(resp.ok){ document.getElementById("sentMsg").classList.add("show"); }
+  } catch(err){
+    console.error("No se pudo enviar la ficha al asesor:", err);
+  }
+}
+
+renderSection();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="auth-check.js"></script>
+
+</body>
+</html>
