@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comprar mi licencia | Evoluciona Pensional PRO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://checkout.wompi.co/widget.js"></script>
+<style>
+  :root{
+    --bg:#F6F3EC; --bg-panel:#FFFFFF; --ink:#22261F; --ink-soft:#5B5F53;
+    --green-deep:#1C3A2B; --green-mid:#2C5741; --gold:#A8823A; --gold-soft:#EADFC4;
+    --line:#DAD4C3; --radius:4px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{ background:var(--green-deep); color:var(--ink); font-family:'Public Sans',sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+  .card{ background:var(--bg-panel); border-radius:var(--radius); box-shadow:0 8px 30px rgba(0,0,0,0.25); padding:40px; width:100%; max-width:440px; }
+  .brand{ font-family:'Fraunces',serif; font-size:19px; color:var(--green-deep); font-weight:600; margin-bottom:4px; display:flex; align-items:center; gap:8px; }
+  .pro-badge{ font-size:10px; background:var(--green-deep); color:#F6F3EC; padding:2px 7px; border-radius:3px; letter-spacing:.04em; }
+  h1{ font-family:'Fraunces',serif; font-size:22px; color:var(--green-deep); margin:14px 0 6px; }
+  .subtitle{ font-size:13.5px; color:var(--ink-soft); margin:0 0 22px; }
+  label{ display:block; font-size:13.5px; font-weight:600; margin-bottom:6px; }
+  input{ width:100%; padding:11px 12px; border:1px solid var(--line); border-radius:var(--radius); font-size:14.5px; margin-bottom:16px; font-family:'Public Sans',sans-serif; }
+  input:focus{ outline:2px solid var(--green-deep); outline-offset:1px; }
+  .plan-toggle{ display:flex; gap:8px; margin-bottom:18px; }
+  .plan-toggle .opt{ flex:1; text-align:center; border:1px solid var(--line); border-radius:var(--radius); padding:10px; font-size:13.5px; font-weight:600; cursor:pointer; }
+  .plan-toggle .opt.selected{ border-color:var(--green-deep); background:var(--green-deep); color:#fff; }
+  .plan-opt{ border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; margin-bottom:10px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+  .plan-opt.selected{ border-color:var(--green-deep); background:var(--gold-soft); }
+  .plan-opt .precio{ font-family:'Fraunces',serif; color:var(--green-deep); font-size:16px; }
+  button{ width:100%; background:var(--green-deep); color:#F6F3EC; border:none; padding:13px; border-radius:var(--radius); font-size:15px; font-weight:700; cursor:pointer; margin-top:8px; }
+  button:hover{ background:var(--green-mid); }
+  button:disabled{ opacity:.5; cursor:not-allowed; }
+  .msg{ font-size:13px; margin-top:16px; padding:12px 14px; border-radius:var(--radius); display:none; }
+  .msg.error{ background:#F8E9E4; color:#5E2E1E; display:block; }
+  .back-link{ display:block; text-align:center; margin-top:20px; font-size:13px; color:var(--ink-soft); text-decoration:none; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand">Evoluciona Pensional <span class="pro-badge">PRO</span></div>
+    <h1>Activa tu licencia</h1>
+    <p class="subtitle">Crea tu cuenta y elige tu plan.</p>
+
+    <div class="plan-toggle" id="planToggle">
+      <div class="opt" data-plan="individual">Individual</div>
+      <div class="opt" data-plan="firma">Despacho</div>
+    </div>
+
+    <form id="formDatos">
+      <label for="nombre">Nombre completo</label>
+      <input type="text" id="nombre" required>
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" required>
+      <label for="password">Crea una contraseña</label>
+      <input type="password" id="password" required minlength="6">
+    </form>
+
+    <div id="opcionesPeriodo"></div>
+
+    <button id="btnComprar" type="button">Continuar al pago</button>
+    <div class="msg" id="msgBox"></div>
+    <a class="back-link" href="index.html">← Volver al inicio</a>
+  </div>
+
+<script>
+  const SUPABASE_URL = "https://mdhdlnfhnqvjelecerla.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_8CdFdPL3mCYzRfALVDO96A_J5mYv9uh";
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const params = new URLSearchParams(window.location.search);
+  let planElegido = params.get("plan") === "firma" ? "firma" : "individual";
+  let periodoElegido = null;
+
+  function marcarPlanToggle(){
+    document.querySelectorAll("#planToggle .opt").forEach(el=>{
+      el.classList.toggle("selected", el.dataset.plan === planElegido);
+    });
+  }
+  document.querySelectorAll("#planToggle .opt").forEach(el=>{
+    el.addEventListener("click", ()=>{ planElegido = el.dataset.plan; marcarPlanToggle(); cargarPeriodos(); });
+  });
+  marcarPlanToggle();
+
+  async function cargarPeriodos(){
+    const { data: planes } = await sb.from("planes").select("*").eq("activo", true).eq("plan", planElegido);
+    const cont = document.getElementById("opcionesPeriodo");
+    cont.innerHTML = "";
+    (planes || []).forEach(p=>{
+      const div = document.createElement("div");
+      div.className = "plan-opt" + (periodoElegido === p.periodo ? " selected" : "");
+      div.innerHTML = `<span>${p.periodo === 'anual' ? 'Anual' : 'Mensual'}</span><span class="precio">$${p.monto_cop.toLocaleString('es-CO')}</span>`;
+      div.addEventListener("click", ()=>{
+        periodoElegido = p.periodo;
+        document.querySelectorAll(".plan-opt").forEach(el=>el.classList.remove("selected"));
+        div.classList.add("selected");
+      });
+      cont.appendChild(div);
+    });
+  }
+  cargarPeriodos();
+
+  function showMsg(text){
+    const box = document.getElementById("msgBox");
+    box.textContent = text;
+    box.className = "msg error";
+  }
+
+  document.getElementById("btnComprar").addEventListener("click", async ()=>{
+    const nombre = document.getElementById("nombre").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if(!nombre || !email || !password){ showMsg("Completa nombre, correo y contraseña."); return; }
+    if(!periodoElegido){ showMsg("Elige mensual o anual."); return; }
+
+    const btn = document.getElementById("btnComprar");
+    btn.disabled = true;
+    btn.textContent = "Preparando...";
+
+    const { data: signUpData, error: signUpError } = await sb.auth.signUp({ email, password });
+    if(signUpError){
+      showMsg(signUpError.message.toLowerCase().includes("already registered")
+        ? "Ese correo ya tiene una cuenta. Inicia sesión y renueva desde ahí."
+        : "No se pudo crear la cuenta: " + signUpError.message);
+      btn.disabled = false; btn.textContent = "Continuar al pago";
+      return;
+    }
+
+    await sb.rpc("crear_licencia_inicial", { mi_plan: planElegido });
+
+    const { data: { session } } = await sb.auth.getSession();
+    const resp = await fetch(`${SUPABASE_URL}/functions/v1/crear-firma-pago`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${session.access_token}` },
+      body: JSON.stringify({ plan: planElegido, periodo: periodoElegido })
+    });
+    const datosPago = await resp.json();
+
+    if(datosPago.error){
+      showMsg("No se pudo iniciar el pago: " + datosPago.error);
+      btn.disabled = false; btn.textContent = "Continuar al pago";
+      return;
+    }
+
+    const checkout = new WidgetCheckout({
+      currency: datosPago.currency,
+      amountInCents: datosPago.amountInCents,
+      reference: datosPago.reference,
+      publicKey: datosPago.publicKey,
+      signature: { integrity: datosPago.signature },
+      customerData: { email: datosPago.customerEmail, fullName: nombre }
+    });
+
+    checkout.open(function(result){
+      const transaction = result.transaction;
+      if(transaction && transaction.status === "APPROVED"){
+        window.location.href = "login.html?bienvenido=1";
+      } else {
+        btn.disabled = false;
+        btn.textContent = "Continuar al pago";
+        showMsg("El pago no se completó. Puedes intentarlo de nuevo con el mismo correo.");
+      }
+    });
+
+    btn.disabled = false;
+    btn.textContent = "Continuar al pago";
+  });
+</script>
+</body>
+</html>
