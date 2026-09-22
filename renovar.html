@@ -61,16 +61,24 @@
     const { data: licencia } = await sb.from("licencias").select("plan, fecha_expiracion").eq("user_id", session.user.id).single();
     planActualUsuario = licencia?.plan || "individual";
     document.getElementById("planActual").textContent = licencia
-      ? `Tu plan actual (${licencia.plan}) vence el ${licencia.fecha_expiracion}.`
+      ? (licencia.plan === "demo"
+          ? "Tu demo de 24 horas terminó. Elige un plan para activar tu licencia:"
+          : `Tu plan actual (${licencia.plan}) vence el ${licencia.fecha_expiracion}.`)
       : "Elige tu plan para activar tu licencia.";
 
-    const { data: planes } = await sb.from("planes").select("*").eq("activo", true).eq("plan", planActualUsuario);
+    // Si viene de un demo, mostramos ambos planes para que elija cuál comprar.
+    // Si ya es cliente pagando, solo mostramos su propio plan (para renovarlo).
+    let query = sb.from("planes").select("*").eq("activo", true);
+    query = (planActualUsuario === "demo")
+      ? query.in("plan", ["individual","firma"])
+      : query.eq("plan", planActualUsuario);
+    const { data: planes } = await query;
     const cont = document.getElementById("opcionesPlan");
     cont.innerHTML = "";
     (planes || []).forEach(p=>{
       const div = document.createElement("div");
       div.className = "plan-opt";
-      div.innerHTML = `<span class="nombre">${p.periodo === 'anual' ? 'Renovación anual' : 'Renovación mensual'}</span><span class="precio">$${p.monto_cop.toLocaleString('es-CO')}</span>`;
+      div.innerHTML = `<span class="nombre">${p.plan === 'firma' ? 'Despacho' : 'Individual'} — ${p.periodo === 'anual' ? 'anual' : 'mensual'}</span><span class="precio">$${p.monto_cop.toLocaleString('es-CO')}</span>`;
       div.addEventListener("click", ()=>{
         document.querySelectorAll(".plan-opt").forEach(el=>el.classList.remove("selected"));
         div.classList.add("selected");
@@ -121,7 +129,7 @@
     checkout.open(function(result){
       const transaction = result.transaction;
       if(transaction && transaction.status === "APPROVED"){
-        window.location.href = "panel.html?renovado=1";
+        window.location.href = "login.html?renovado=1";
       } else {
         btn.disabled = false;
         btn.textContent = "Pagar y renovar";
