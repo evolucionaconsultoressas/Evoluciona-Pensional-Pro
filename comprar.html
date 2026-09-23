@@ -133,12 +133,23 @@
     await sb.rpc("crear_licencia_inicial", { mi_plan: planElegido });
 
     const { data: { session } } = await sb.auth.getSession();
-    const resp = await fetch(`${SUPABASE_URL}/functions/v1/crear-firma-pago`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${session.access_token}` },
-      body: JSON.stringify({ plan: planElegido, periodo: periodoElegido })
-    });
-    const datosPago = await resp.json();
+    let datosPago;
+    try {
+      const resp = await fetch(`${SUPABASE_URL}/functions/v1/crear-firma-pago`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({ plan: planElegido, periodo: periodoElegido })
+      });
+      datosPago = await resp.json();
+    } catch (err) {
+      showMsg("No se pudo conectar con el servidor de pagos. Revisa la consola (F12) y cuéntale el error exacto a tu asistente. Detalle: " + err.message);
+      btn.disabled = false; btn.textContent = "Continuar al pago";
+      return;
+    }
 
     if(datosPago.error){
       showMsg("No se pudo iniciar el pago: " + datosPago.error);
