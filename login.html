@@ -46,7 +46,7 @@
     </form>
 
     <div class="msg" id="msgBox"></div>
-    <a class="back-link" href="index.html">← Volver al inicio</a>
+    <a class="back-link" href="/">← Volver al inicio</a>
   </div>
 
 <script>
@@ -57,7 +57,22 @@
 
   const params = new URLSearchParams(window.location.search);
   if(params.get("expirada")){
-    showMsg("Tu licencia venció o fue desactivada. Escríbenos para renovarla.", "error");
+    showMsg("Tu sesión se cerró (se abrió en otro dispositivo o expiró). Ingresa de nuevo.", "error");
+  } else if(params.get("renovado") || params.get("bienvenido")){
+    showMsg("Pago recibido. Tu licencia se activa en unos segundos: ingresa con tu correo y contraseña.", "info");
+  } else {
+    // Si ya hay una sesión válida en este navegador, entra directo al panel
+    // (evita que la propia sesión abierta bloquee un nuevo inicio de sesión).
+    (async ()=>{
+      try{
+        const { data: { session } } = await sb.auth.getSession();
+        const t = localStorage.getItem("pensional_pro_token");
+        if(session && t){
+          const { data: fila } = await sb.from("sesiones_activas").select("token").eq("token", t).maybeSingle();
+          if(fila){ window.location.replace("panel.html"); }
+        }
+      }catch(e){ console.error(e); }
+    })();
   }
 
   function showMsg(text, type){
@@ -101,10 +116,8 @@
 
     const vencida = new Date(licencia.fecha_expiracion) < new Date();
     if(!licencia.activo || vencida){
-      showMsg("Tu licencia venció o está inactiva. Escríbenos para renovarla.", "error");
-      await sb.auth.signOut();
-      btn.disabled = false;
-      btn.textContent = "Ingresar";
+      showMsg("Tu licencia venció. Te llevamos a renovarla...", "info");
+      setTimeout(()=>{ window.location.href = "renovar.html"; }, 1200);
       return;
     }
 
