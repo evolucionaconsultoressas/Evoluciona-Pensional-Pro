@@ -267,8 +267,8 @@ function renderPeriods(){
           <input type="date" value="${p.fechaFin}" oninput="updatePeriod('${p.id}','fechaFin',this.value)">
         </div>
         <div class="field">
-          <label class="q">IBC o salario aproximado del período
-            <span class="hint">En pesos colombianos</span>
+          <label class="q">Salario devengado en el último periodo de omisión *
+            <span class="hint">Mismo dato que pide Soy Actuario. Si es salario integral, ingresa el 70%. Se aplica el mínimo (SMMLV de esa fecha) y el máximo (25 SMMLV). En PILA + mora y Planilla M se usa como aproximación de cada mes.</span>
           </label>
           <input type="number" value="${p.ibc}" oninput="updatePeriod('${p.id}','ibc',this.value)">
         </div>
@@ -325,6 +325,24 @@ function calcularInteresMora(aporteMensual, fechaVencimiento, fechaPago, tasaEA)
   return aporteMensual * (Math.pow(1 + tasaMensual, mesesMora) - 1);
 }
 
+const SMMLV_POR_ANO = {
+  1994:98700, 1995:118934, 1996:142125, 1997:172005, 1998:203826, 1999:236460, 2000:260100,
+  2001:286000, 2002:309000, 2003:332000, 2004:358000, 2005:381500, 2006:408000, 2007:433700,
+  2008:461500, 2009:496900, 2010:515000, 2011:535600, 2012:566700, 2013:589500, 2014:616000,
+  2015:644350, 2016:689455, 2017:737717, 2018:781242, 2019:828116, 2020:877803, 2021:908526,
+  2022:1000000, 2023:1160000, 2024:1300000, 2025:1423500, 2026:1750905
+};
+
+// Decreto 1296 de 2022: el salario base no puede ser inferior al SMMLV de la fecha
+// ni superior a 25 SMMLV. Se toma el año del último periodo omitido.
+function baseSalarial(salario, fFin){
+  const smmlv = SMMLV_POR_ANO[fFin.getFullYear()];
+  if(!smmlv || !salario) return { base: salario, ajuste: null, smmlv: smmlv || null };
+  if(salario < smmlv) return { base: smmlv, ajuste: "minimo", smmlv };
+  if(salario > smmlv * 25) return { base: smmlv * 25, ajuste: "maximo", smmlv };
+  return { base: salario, ajuste: null, smmlv };
+}
+
 function calcularFicha(){
   const hoy = new Date();
   const fechaPago = document.getElementById("fechaPago").value ? new Date(document.getElementById("fechaPago").value) : hoy;
@@ -348,7 +366,9 @@ function calcularFicha(){
     const responsable = p.tipoVinculacion === "Dependiente" ? "Empleador" : "Trabajador independiente";
     const semanas = diffWeeks(fIni, fFin);
     const mesesPeriodo = diffMonthsSpan(fIni, fFin);
-    const ibc = parseFloat(p.ibc) || 0;
+    const ibcIngresado = parseFloat(p.ibc) || 0;
+    const bs = baseSalarial(ibcIngresado, fFin);
+    const ibc = bs.base;
     const aporteMensual = ibc * 0.16;
     const aportesBase = aporteMensual * mesesPeriodo;
 
@@ -372,7 +392,7 @@ function calcularFicha(){
       totalAportesActuarial += aportesBase;
     }
 
-    filas.push({ ...p, mecanismo, responsable, semanas, aportesBase, interesMora, totalPeriodo, mesesTranscurridos });
+    filas.push({ ...p, mecanismo, responsable, semanas, aportesBase, interesMora, totalPeriodo, mesesTranscurridos, salarioBase: ibc, ajusteSalario: bs.ajuste, smmlvRef: bs.smmlv });
   });
 
   return { filas, totalSemanas, totalAportesMora, totalInteresMora, totalAportesActuarial, totalAportesPlanillaM, tasaEA, fechaPago };
@@ -413,7 +433,7 @@ document.getElementById("btnCalcular").addEventListener("click", ()=>{
       <td><span class="mech-tag mech-${f.mecanismo}">${mechLabels[f.mecanismo]}</span></td>
       <td>${f.responsable}</td>
       <td>${f.semanas}</td>
-      <td>${f.aportesBase ? fmtCOP(f.aportesBase) : "—"}</td>
+      <td>${f.aportesBase ? fmtCOP(f.aportesBase) : "—"}${f.salarioBase ? `<div class="row-note">Salario base: ${fmtCOP(f.salarioBase)}${f.ajusteSalario === "minimo" ? " (ajustado al SMMLV de esa fecha)" : f.ajusteSalario === "maximo" ? " (ajustado al tope de 25 SMMLV)" : ""}</div>` : ""}</td>
       <td>${colInteres}</td>
       <td>${colTotal}</td>
     `;
