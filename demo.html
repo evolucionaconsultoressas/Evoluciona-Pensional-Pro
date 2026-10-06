@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prueba tu demo de 24 horas | Evoluciona Pensional PRO</title>
+<title>Prueba tu demo de 3 días | Evoluciona Pensional PRO</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -37,8 +37,8 @@
 <body>
   <div class="card">
     <div class="brand">Evoluciona Pensional <span class="pro-badge">PRO</span></div>
-    <h1>Prueba 24 horas gratis</h1>
-    <p class="subtitle">Acceso completo a las 8 herramientas por 24 horas. Un demo por persona.</p>
+    <h1>Prueba 3 días gratis</h1>
+    <p class="subtitle">Acceso completo a las 8 herramientas por 3 días. Un demo por persona.</p>
 
     <form id="demoForm">
       <label for="nombre">Nombre completo</label>
@@ -57,7 +57,7 @@
       <label for="password">Crea una contraseña</label>
       <input type="password" id="password" required minlength="6">
 
-      <button type="submit" id="btnDemo">Activar mi demo de 24 horas</button>
+      <button type="submit" id="btnDemo">Activar mi demo de 3 días</button>
     </form>
 
     <div class="msg" id="msgBox"></div>
@@ -97,7 +97,7 @@
         showMsg("No se pudo crear la cuenta: " + signUpError.message, "error");
       }
       btn.disabled = false;
-      btn.textContent = "Activar mi demo de 24 horas";
+      btn.textContent = "Activar mi demo de 3 días";
       return;
     }
 
@@ -116,12 +116,12 @@
       }
       await sb.auth.signOut();
       btn.disabled = false;
-      btn.textContent = "Activar mi demo de 24 horas";
+      btn.textContent = "Activar mi demo de 3 días";
       return;
     }
 
     await sb.auth.signOut(); // para que inicie sesión "limpio" por el flujo normal de login
-    showMsg("¡Demo activado! Ya puedes ingresar con tu correo y contraseña — tienes 24 horas de acceso.", "success");
+    showMsg("¡Demo activado! Ya puedes ingresar con tu correo y contraseña — tienes 3 días de acceso.", "success");
     setTimeout(()=>{ window.location.href = "login.html"; }, 2500);
   });
 </script>
