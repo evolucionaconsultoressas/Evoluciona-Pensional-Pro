@@ -83,6 +83,11 @@
   .mech-tag{ display:inline-block; font-size:11.5px; font-weight:700; padding:3px 8px; border-radius:3px; }
   .mech-mora{ background:#E4F0EA; color:#1F4433; }
   .mech-actuarial{ background:var(--gold-soft); color:#4A3A18; }
+  .sim-fila{ border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; margin-bottom:12px; background:#FCFBF8; }
+  .sim-titulo{ font-weight:700; color:var(--green-deep); margin-bottom:8px; font-size:14px; }
+  table.sim-datos{ width:100%; border-collapse:collapse; font-size:13px; margin:0; }
+  table.sim-datos td{ padding:5px 6px; border-bottom:1px solid #EEE9DB; } table.sim-datos td:first-child{ color:var(--ink-soft); width:55%; }
+  .sim-total{ margin-top:10px; font-weight:700; color:var(--green-deep); font-size:15px; }
   .mech-planillaM{ background:#E1E9F0; color:#233C4D; }
 
   .row-note{ font-size:12.5px; color:var(--ink-soft); margin-top:4px; }
@@ -185,8 +190,15 @@
         <tbody id="tablaPeriodos"></tbody>
       </table>
       <p class="disclaimer"><strong>Períodos con mora (≤6 meses):</strong> el total sí es una cifra de pago real — aportes (16% del IBC histórico del período, sin indexar) + interés moratorio compuesto mes a mes con la tasa que registraste arriba (art. 23 Ley 100). No se aplica actualización monetaria/IPC en este mecanismo: se paga con el salario de la época, más el interés por la demora.</p>
-      <p class="disclaimer"><strong>Períodos con Planilla tipo M (anteriores a marzo de 2014):</strong> mecanismo vigente para ausencia total de pago en períodos previos a esa fecha (Resolución 2388/2016). El valor exacto a pagar se liquida directamente con la administradora al momento de generar la planilla — la cifra de "Aportes" aquí es solo orden de magnitud.</p>
-      <p class="disclaimer"><strong>Períodos con cálculo actuarial (posteriores a marzo de 2014, &gt;6 meses):</strong> aquí sí existe una actualización monetaria del salario de referencia, pero como parte de la metodología de reserva actuarial (Decreto 1887 de 1994), que además usa un interés técnico ("DTF Pensional" = IPC compuesto + 3 puntos efectivos anuales) y factores demográficos que no son seguros de replicar aquí. El valor definitivo solo se obtiene en la plataforma oficial www.soyactuario.com.co — la cifra de "Aportes" en esa fila es solo un orden de magnitud, no el valor a pagar.</p>
+      <p class="disclaimer"><strong>Períodos con Planilla tipo M (anteriores a marzo de 2014):</strong> mecanismo vigente para ausencia total de pago en períodos previos a esa fecha (Resolución 2388/2016). El valor exacto a pagar se liquida directamente con la administradora al momento de generar la planilla.</p>
+      <p class="disclaimer"><strong>Períodos con cálculo actuarial (posteriores a marzo de 2014, &gt;6 meses):</strong> aquí sí existe una actualización monetaria del salario de referencia, pero como parte de la metodología de reserva actuarial (Decreto 1887 de 1994), que además usa un interés técnico ("DTF Pensional" = IPC compuesto + 3 puntos efectivos anuales) y factores demográficos que no son seguros de replicar aquí. El valor definitivo solo se obtiene en la plataforma oficial www.soyactuario.com.co Ingrese ese valor en «Datos para Soy Actuario».</p>
+    </div>
+
+    <div class="card" id="cardSimulador">
+      <h2>Datos para Soy Actuario</h2>
+      <p class="sub">Para cada tramo, ingrese estos datos en el simulador oficial y escriba aquí el valor que arroje. La ficha suma el total.</p>
+      <div id="simuladorFilas"></div>
+      <div id="simTotal" class="sim-total"></div>
     </div>
 
     <div class="card">
@@ -304,7 +316,9 @@ function diffMonthsSpan(d1, d2){
   return Math.max(1, Math.round((d2-d1)/(1000*60*60*24*30.44)));
 }
 function fmtCOP(n){ return "$" + Math.round(n).toLocaleString("es-CO"); }
-function fmtDate(d){ return d ? new Date(d).toLocaleDateString("es-CO") : "—"; }
+function pd(s){ if(s instanceof Date) return s; const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(s||""); return m ? new Date(+m[1], +m[2]-1, +m[3]) : new Date(s); }
+function isoLocal(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function fmtDate(d){ return d ? pd(d).toLocaleDateString("es-CO") : "—"; }
 
 function mesesEnPeriodo(fIni, fFin){
   // Devuelve un arreglo de fechas "1° del mes" para cada mes cubierto por el período
@@ -339,13 +353,14 @@ function baseSalarial(salario, fFin){
   const smmlv = SMMLV_POR_ANO[fFin.getFullYear()];
   if(!smmlv || !salario) return { base: salario, ajuste: null, smmlv: smmlv || null };
   if(salario < smmlv) return { base: smmlv, ajuste: "minimo", smmlv };
-  if(salario > smmlv * 25) return { base: smmlv * 25, ajuste: "maximo", smmlv };
+  const topeVeces = fFin < new Date(2003,0,29) ? 20 : 25;
+  if(salario > smmlv * topeVeces) return { base: smmlv * topeVeces, ajuste: "maximo", smmlv, topeVeces };
   return { base: salario, ajuste: null, smmlv };
 }
 
 function calcularFicha(){
   const hoy = new Date();
-  const fechaPago = document.getElementById("fechaPago").value ? new Date(document.getElementById("fechaPago").value) : hoy;
+  const fechaPago = document.getElementById("fechaPago").value ? pd(document.getElementById("fechaPago").value) : hoy;
   const tasaEA = (parseFloat(document.getElementById("tasaMora").value) || 0) / 100;
 
   const filas = [];
@@ -355,11 +370,23 @@ function calcularFicha(){
   let totalAportesActuarial = 0;
   let totalAportesPlanillaM = 0;
 
+  // Un período que cruza marzo de 2014 se parte en dos tramos: antes (Planilla M) y desde esa fecha (mora o actuarial)
+  const CORTE_M = new Date(2014,2,1);
+  const segmentos = [];
   periods.forEach(p=>{
     if(!p.fechaInicio || !p.fechaFin || !p.fechaDebioReportarse) return;
-    const fReporte = new Date(p.fechaDebioReportarse);
-    const fIni = new Date(p.fechaInicio);
-    const fFin = new Date(p.fechaFin);
+    const a = pd(p.fechaInicio), b = pd(p.fechaFin);
+    if(a < CORTE_M && b >= CORTE_M){
+      segmentos.push({ p, fIni:a, fFin:new Date(2014,1,28), tramo:"antes" });
+      segmentos.push({ p, fIni:CORTE_M, fFin:b, tramo:"despues" });
+    } else segmentos.push({ p, fIni:a, fFin:b, tramo:null });
+  });
+
+  segmentos.forEach(seg=>{
+    const p = seg.p;
+    const fReporte = pd(p.fechaDebioReportarse);
+    const fIni = seg.fIni;
+    const fFin = seg.fFin;
     const mesesTranscurridos = diffMonths(fReporte, hoy);
     const antesMarzo2014 = fFin < new Date("2014-03-01");
     const mecanismo = antesMarzo2014 ? "planillaM" : (mesesTranscurridos <= 6 ? "mora" : "actuarial");
@@ -392,10 +419,26 @@ function calcularFicha(){
       totalAportesActuarial += aportesBase;
     }
 
-    filas.push({ ...p, mecanismo, responsable, semanas, aportesBase, interesMora, totalPeriodo, mesesTranscurridos, salarioBase: ibc, ajusteSalario: bs.ajuste, smmlvRef: bs.smmlv });
+    const avisoIndep = p.tipoVinculacion === "Independiente" && fIni < new Date(2003,0,29);
+    filas.push({ ...p, fechaInicio: isoLocal(fIni), fechaFin: isoLocal(fFin), tramo: seg.tramo, avisoIndep, mecanismo, responsable, semanas, aportesBase, interesMora, totalPeriodo, mesesTranscurridos, salarioBase: ibc, ajusteSalario: bs.ajuste, smmlvRef: bs.smmlv, topeVeces: bs.topeVeces || 25 });
   });
 
   return { filas, totalSemanas, totalAportesMora, totalInteresMora, totalAportesActuarial, totalAportesPlanillaM, tasaEA, fechaPago };
+}
+
+function actualizarSim(){
+  let act = 0, alt = 0, hay = false;
+  document.querySelectorAll(".simInput").forEach(inp=>{
+    inp.setAttribute("value", inp.value);
+    const v = parseFloat(inp.value) || 0;
+    if(v>0) hay = true;
+    if(inp.dataset.alt==="1") alt += v; else act += v;
+  });
+  const el = document.getElementById("simTotal"); if(!el) return;
+  if(!hay){ el.textContent = ""; return; }
+  let t = `Total cálculo actuarial: ${fmtCOP(act)}`;
+  if(alt>0) t += ` · Si el tramo anterior a marzo de 2014 se paga como actuarial en vez de Planilla M: ${fmtCOP(act+alt)}`;
+  el.textContent = t;
 }
 
 document.getElementById("btnCalcular").addEventListener("click", ()=>{
@@ -426,19 +469,47 @@ document.getElementById("btnCalcular").addEventListener("click", ()=>{
     const colInteres = f.mecanismo === "mora" ? fmtCOP(f.interesMora) : "—";
     const colTotal = f.mecanismo === "mora"
       ? `<strong>${fmtCOP(f.totalPeriodo)}</strong>`
-      : `<span class="row-note">${f.mecanismo === 'planillaM' ? 'Consultar con la administradora' : 'Ver plataforma oficial'}</span>`;
+      : `<span class="row-note">${f.mecanismo === 'planillaM' ? 'Consultar con la administradora (o simular como actuarial: ver abajo)' : 'Valor del simulador: ver abajo'}</span>`;
     tr.innerHTML = `
       <td>${f.tipoVinculacion}<div class="row-note">${f.empresaActividad || "—"}</div></td>
       <td>${fmtDate(f.fechaInicio)} — ${fmtDate(f.fechaFin)}</td>
       <td><span class="mech-tag mech-${f.mecanismo}">${mechLabels[f.mecanismo]}</span></td>
       <td>${f.responsable}</td>
       <td>${f.semanas}</td>
-      <td>${f.aportesBase ? fmtCOP(f.aportesBase) : "—"}${f.salarioBase ? `<div class="row-note">Salario base: ${fmtCOP(f.salarioBase)}${f.ajusteSalario === "minimo" ? " (ajustado al SMMLV de esa fecha)" : f.ajusteSalario === "maximo" ? " (ajustado al tope de 25 SMMLV)" : ""}</div>` : ""}</td>
+      <td>${f.mecanismo==="mora" && f.aportesBase ? fmtCOP(f.aportesBase) : "—"}${f.salarioBase ? `<div class="row-note">Salario base: ${fmtCOP(f.salarioBase)}${f.ajusteSalario === "minimo" ? " (ajustado al SMMLV de esa fecha)" : f.ajusteSalario === "maximo" ? ` (ajustado al tope de ${f.topeVeces} SMMLV)` : ""}</div>` : ""}${f.tramo==="antes" ? `<div class="row-note">Tramo anterior a marzo de 2014 de un período que lo cruza.</div>` : ""}${f.tramo==="despues" ? `<div class="row-note">Tramo desde marzo de 2014 del mismo período.</div>` : ""}${f.avisoIndep ? `<div class="row-note" style="color:#AE4B33">Los independientes no pueden convalidar tiempos anteriores al 29 de enero de 2003.</div>` : ""}</td>
       <td>${colInteres}</td>
       <td>${colTotal}</td>
     `;
     tbody.appendChild(tr);
   });
+
+  // --- Datos para Soy Actuario ---
+  const simCont = document.getElementById("simuladorFilas");
+  simCont.innerHTML = "";
+  const simFilas = r.filas.filter(f=>(f.mecanismo==="actuarial" || f.mecanismo==="planillaM") && !f.avisoIndep);
+  window.__simFilas = simFilas.length;
+  if(!simFilas.length){
+    simCont.innerHTML = '<p class="sub">No hay tramos de cálculo actuarial ni de Planilla M en este caso.</p>';
+  }
+  simFilas.forEach((f,i)=>{
+    const alt = f.mecanismo==="planillaM";
+    const div = document.createElement("div");
+    div.className = "sim-fila";
+    div.innerHTML = `
+      <div class="sim-titulo">${alt ? "Alternativa: simular como cálculo actuarial" : "Cálculo actuarial"} · ${fmtDate(f.fechaInicio)} a ${fmtDate(f.fechaFin)} <span class="row-note">(${f.tipoVinculacion}, ${f.semanas} semanas)</span></div>
+      <table class="sim-datos">
+        <tr><td>Fecha de inicio de la omisión</td><td>${fmtDate(f.fechaInicio)}</td></tr>
+        <tr><td>Fecha de fin de la omisión (fecha de corte)</td><td>${fmtDate(f.fechaFin)}</td></tr>
+        <tr><td>Salario devengado en el último período de omisión</td><td><b>${fmtCOP(f.salarioBase)}</b>${f.ajusteSalario==="minimo"?" (ajustado al SMMLV de esa fecha)":f.ajusteSalario==="maximo"?` (ajustado al tope de ${f.topeVeces} SMMLV)`:""}</td></tr>
+        <tr><td>Quién paga</td><td>${f.responsable}</td></tr>
+        <tr><td>Si el salario es integral</td><td>ingrese el 70% del salario</td></tr>
+      </table>
+      ${alt ? '<p class="row-note">Úselo si el trabajador nunca estuvo afiliado en ese tramo (la Planilla M puede no aplicar) o para comparar costos con la Planilla M.</p>' : ""}
+      <label class="q" style="margin-top:8px;">Valor que arroja Soy Actuario ($)</label>
+      <input type="number" class="simInput" data-alt="${alt?1:0}" oninput="actualizarSim()">`;
+    simCont.appendChild(div);
+  });
+  actualizarSim();
 
   const soportes = document.getElementById("soportesGuia");
   soportes.innerHTML = `
@@ -480,6 +551,7 @@ document.getElementById("btnEnviar").addEventListener("click", async ()=>{
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth-check.js"></script>
+<script src="informe.js"></script>
 
 
 <a href="https://wa.me/573244063000?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20Evoluciona%20Pensional%20PRO" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Escribir por WhatsApp" title="Escríbenos por WhatsApp">
