@@ -453,7 +453,7 @@ function proyectarMeta(){
       return resultado;
     }
     const semanasAdicionales = Math.max(0, semanasAlObjetivo - SEMANAS_REQ);
-    const bono = Math.min(Math.floor(semanasAdicionales/50) * 1.5, 15);
+    const bono = Math.floor(semanasAdicionales/50) * 1.5;
     const a = 0.005 / SMLV_2026;
     const b = -(0.655 + bono/100);
     const c = mesadaObjetivo;
@@ -465,7 +465,9 @@ function proyectarMeta(){
       resultado.bono = bono;
       return resultado;
     }
-    const ibl1 = (-b - Math.sqrt(discriminante)) / (2*a);
+    let ibl1 = (-b - Math.sqrt(discriminante)) / (2*a);
+    // la tasa de reemplazo total no puede superar el 80%: si se pasa, la meta exige un IBL de meta/0,8
+    if((65.5 - 0.5*Math.min(20,Math.max(1,ibl1/SMLV_2026)) + bono) > 80) ibl1 = mesadaObjetivo/0.8;
     const ratioCheck = ibl1 / SMLV_2026;
 
     if(ratioCheck < 1){
@@ -700,6 +702,7 @@ renderSection();
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth-check.js"></script>
+<script src="informe.js"></script>
 
 
 <a href="https://wa.me/573244063000?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20Evoluciona%20Pensional%20PRO" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Escribir por WhatsApp" title="Escríbenos por WhatsApp">
