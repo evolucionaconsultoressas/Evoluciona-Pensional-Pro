@@ -3,375 +3,143 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Diagnóstico Pensional General | Evoluciona Pensional</title>
+<title>Diagnóstico Pensional Integral | Evoluciona Pensional PRO</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #F6F3EC;
-    --bg-panel: #FFFFFF;
-    --ink: #22261F;
-    --ink-soft: #5B5F53;
-    --green-deep: #1C3A2B;
-    --green-mid: #2C5741;
-    --gold: #A8823A;
-    --gold-soft: #EADFC4;
-    --line: #DAD4C3;
-    --verde: #3F7D5D;
-    --amarillo: #B8862F;
-    --rojo: #AE4B33;
-    --azul: #3A5F80;
-    --morado: #705184;
-    --carbon: #46433D;
-    --teal: #2E5C63;
-    --radius: 4px;
-    --shadow: 0 1px 2px rgba(28,58,43,0.06);
+    --bg:#F6F3EC; --panel:#FFFFFF; --ink:#22261F; --soft:#5B5F53;
+    --green:#1C3A2B; --mid:#2C5741; --gold:#A8823A; --goldsoft:#EADFC4; --line:#DAD4C3;
+    --verde:#3F7D5D; --amarillo:#B8862F; --naranja:#B5602F; --rojo:#AE4B33; --azul:#3A5F80; --indigo:#5A63A3; --gris:#6B6A63;
+    --radius:4px; --shadow:0 1px 2px rgba(28,58,43,0.06);
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
-  body{
-    background: var(--bg);
-    color: var(--ink);
-    font-family: 'Public Sans', sans-serif;
-    line-height: 1.5;
-    min-height: 100vh;
-  }
-  h1,h2,h3,.display{
-    font-family: 'Fraunces', serif;
-    font-weight: 500;
-    color: var(--green-deep);
-    letter-spacing: -0.01em;
-  }
-  .wrap{
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 0 24px 80px;
-  }
+  body{ background:var(--bg); color:var(--ink); font-family:'Public Sans',sans-serif; line-height:1.55; min-height:100vh; }
+  h1,h2,h3{ font-family:'Fraunces',serif; font-weight:500; color:var(--green); letter-spacing:-0.01em; }
+  .wrap{ max-width:760px; margin:0 auto; padding:0 24px 90px; }
+  .top{ background:var(--green); color:#F6F3EC; padding:38px 24px 30px; border-bottom:3px solid var(--gold); }
+  .top-inner{ max-width:760px; margin:0 auto; }
+  .advisor-badge{ display:inline-block; font-size:11px; font-weight:700; letter-spacing:.05em; background:var(--gold); color:#3A2E10; padding:4px 10px; border-radius:3px; margin-bottom:12px; }
+  .eyebrow{ font-size:13px; color:var(--goldsoft); margin:0 0 6px; }
+  .top h1{ color:#FBF9F4; font-size:29px; margin:0 0 8px; line-height:1.15; }
+  .top p{ color:#D8D9CE; font-size:15px; max-width:60ch; margin:0; }
 
-  /* Header */
-  .top{
-    background: var(--green-deep);
-    color: #F6F3EC;
-    padding: 40px 24px 32px;
-    border-bottom: 3px solid var(--gold);
-  }
-  .top-inner{
-    max-width: 720px;
-    margin: 0 auto;
-  }
-  .eyebrow{
-    font-size: 13px;
-    color: var(--gold-soft);
-    margin: 0 0 6px;
-  }
-  .top h1{
-    color: #FBF9F4;
-    font-size: 30px;
-    margin: 0 0 8px;
-    line-height: 1.15;
-  }
-  .top p{
-    color: #D8D9CE;
-    font-size: 15px;
-    max-width: 52ch;
-    margin: 0;
-  }
+  .stepper{ display:flex; gap:6px; max-width:760px; margin:20px auto 0; padding:0 24px; }
+  .step-dot{ flex:1; height:4px; background:var(--line); border-radius:2px; overflow:hidden; }
+  .step-dot i{ display:block; height:100%; width:0%; background:var(--gold); transition:width .3s ease; }
+  .step-label{ max-width:760px; margin:10px auto 0; padding:0 24px; font-size:13px; color:var(--soft); display:flex; justify-content:space-between; }
 
-  /* Stepper */
-  .stepper{
-    display:flex;
-    gap: 6px;
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 18px 24px 0;
-  }
-  .step-dot{
-    flex: 1;
-    height: 4px;
-    background: var(--line);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .step-dot i{
-    display:block;
-    height: 100%;
-    width: 0%;
-    background: var(--gold);
-    transition: width .35s ease;
-  }
-  .step-label{
-    max-width: 720px;
-    margin: 10px auto 0;
-    padding: 0 24px;
-    font-size: 13px;
-    color: var(--ink-soft);
-    display:flex;
-    justify-content: space-between;
-  }
+  .card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:30px; margin-top:20px; }
+  .section-title{ font-size:21px; margin:0 0 4px; }
+  .section-sub{ color:var(--soft); font-size:14px; margin:0 0 22px; }
+  .field{ margin-bottom:22px; } .field:last-child{ margin-bottom:0; }
+  label.q{ display:block; font-size:15px; font-weight:600; margin-bottom:9px; }
+  .hint{ font-size:13px; color:var(--soft); font-weight:400; display:block; margin-top:2px; }
+  input[type=text], input[type=date], input[type=number], input[type=email], input[type=tel]{
+    width:100%; padding:11px 12px; border:1px solid var(--line); border-radius:var(--radius); background:#FEFDFB; font-family:inherit; font-size:15px; color:var(--ink); }
+  input:focus{ outline:2px solid var(--mid); outline-offset:1px; border-color:var(--mid); }
+  .opts{ display:flex; flex-wrap:wrap; gap:8px; } .opts.stack{ flex-direction:column; }
+  .opt{ border:1px solid var(--line); border-radius:var(--radius); padding:10px 14px; font-size:14px; cursor:pointer; background:#FEFDFB; user-select:none; transition:border-color .15s; }
+  .opts.stack .opt{ padding:13px 16px; }
+  .opt:hover{ border-color:var(--mid); }
+  .opt.selected{ border-color:var(--green); background:var(--green); color:#F6F3EC; font-weight:600; }
 
-  /* Card */
-  .card{
-    background: var(--bg-panel);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 32px;
-    margin-top: 28px;
-  }
-  .section-title{
-    font-size: 22px;
-    margin: 0 0 4px;
-  }
-  .section-sub{
-    color: var(--ink-soft);
-    font-size: 14px;
-    margin: 0 0 26px;
-  }
+  details.ayuda{ margin-top:10px; background:#F4F1E8; border-left:3px solid var(--gold); border-radius:3px; padding:2px 14px; }
+  details.ayuda > summary{ cursor:pointer; font-size:13px; font-weight:600; color:var(--green); padding:8px 0; }
+  details.ayuda .ay{ font-size:13px; color:#4A4A40; padding:0 0 10px; }
+  details.ayuda .ay p{ margin:4px 0; } details.ayuda .ay b{ color:var(--green); }
 
-  .field{
-    margin-bottom: 22px;
-  }
-  .field:last-child{margin-bottom:0;}
-  label.q{
-    display:block;
-    font-size: 15px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: var(--ink);
-  }
-  .hint{
-    font-size: 13px;
-    color: var(--ink-soft);
-    font-weight: 400;
-    display:block;
-    margin-top: 2px;
-  }
-  input[type=text], input[type=date], input[type=number], input[type=email], input[type=tel], select{
-    width:100%;
-    padding: 11px 12px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: #FEFDFB;
-    font-family: 'Public Sans', sans-serif;
-    font-size: 15px;
-    color: var(--ink);
-  }
-  input:focus, select:focus{
-    outline: 2px solid var(--green-mid);
-    outline-offset: 1px;
-    border-color: var(--green-mid);
-  }
-  .opts{
-    display:flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .opt{
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 10px 14px;
-    font-size: 14px;
-    cursor: pointer;
-    background: #FEFDFB;
-    transition: border-color .15s, background .15s;
-    user-select: none;
-  }
-  .opt:hover{ border-color: var(--green-mid); }
-  .opt.selected{
-    border-color: var(--green-deep);
-    background: var(--green-deep);
-    color: #F6F3EC;
-    font-weight: 600;
-  }
-  .opt input{ display:none; }
-  .subfield{
-    margin-top: 12px;
-    padding-left: 2px;
-    display:none;
-  }
-  .subfield.show{ display:block; }
+  .nav{ display:flex; justify-content:space-between; align-items:center; margin-top:26px; }
+  button{ font-family:inherit; font-size:15px; font-weight:600; border-radius:var(--radius); padding:12px 22px; cursor:pointer; border:1px solid transparent; }
+  .btn-primary{ background:var(--green); color:#F6F3EC; border-color:var(--green); } .btn-primary:hover{ background:var(--mid); }
+  .btn-ghost{ background:transparent; color:var(--soft); border-color:var(--line); } .btn-ghost:hover{ color:var(--ink); border-color:var(--soft); }
+  .req-msg{ font-size:13px; color:var(--rojo); margin-top:10px; display:none; } .req-msg.show{ display:block; }
 
-  /* Nav buttons */
-  .nav{
-    display:flex;
-    justify-content: space-between;
-    align-items:center;
-    margin-top: 30px;
-  }
-  button{
-    font-family: 'Public Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    border-radius: var(--radius);
-    padding: 12px 22px;
-    cursor: pointer;
-    border: 1px solid transparent;
-  }
-  .btn-primary{
-    background: var(--green-deep);
-    color: #F6F3EC;
-    border-color: var(--green-deep);
-  }
-  .btn-primary:hover{ background: var(--green-mid); }
-  .btn-ghost{
-    background: transparent;
-    color: var(--ink-soft);
-    border-color: var(--line);
-  }
-  .btn-ghost:hover{ border-color: var(--ink-soft); color: var(--ink); }
-  .btn-primary:disabled{
-    opacity: .45;
-    cursor: not-allowed;
-  }
-  .req-msg{
-    font-size: 13px;
-    color: var(--rojo);
-    margin-top: 10px;
-    display:none;
-  }
-  .req-msg.show{ display:block; }
+  .result{ display:none; } .result.show{ display:block; } .quiz.hide{ display:none; }
+  .profile-card{ background:var(--green); color:#F6F3EC; border-radius:var(--radius); padding:28px 30px; border-bottom:4px solid var(--gold); margin-top:20px; }
+  .profile-tag{ display:inline-block; font-size:12px; font-weight:700; padding:4px 10px; border-radius:3px; margin-bottom:12px; background:var(--gold); color:#1B1B14; }
+  .profile-card h2{ color:#FBF9F4; font-size:25px; margin:0 0 8px; } .profile-card p{ color:#D8D9CE; font-size:14.5px; margin:0; max-width:62ch; }
+  .group-title{ font-family:'Fraunces',serif; font-size:19px; color:var(--green); margin:30px 0 12px; padding-bottom:6px; border-bottom:1px solid var(--line); }
+  .group-sub{ font-size:13.5px; color:var(--soft); margin:-4px 0 12px; }
 
-  /* Result screen */
-  .result{ display:none; }
-  .result.show{ display:block; }
-  .quiz{ display:block; }
-  .quiz.hide{ display:none; }
+  .note{ padding:13px 16px; border-radius:var(--radius); border-left:4px solid var(--azul); background:#E9F0F5; font-size:14px; color:#233C4D; margin-bottom:10px; }
+  .note.verde{ border-color:var(--verde); background:#E4F0EA; color:#1F4433; }
+  .note.gold{ border-color:var(--gold); background:var(--goldsoft); color:#4A3A18; }
+  .note.rojo{ border-color:var(--rojo); background:#F8E9E4; color:#5E2E1E; }
+  .note b{ display:block; margin-bottom:2px; }
 
-  .profile-card{
-    background: var(--green-deep);
-    color: #F6F3EC;
-    border-radius: var(--radius);
-    padding: 34px 32px;
-    text-align: left;
-    border-bottom: 4px solid var(--gold);
-  }
-  .profile-tag{
-    display:inline-block;
-    font-size: 12.5px;
-    font-weight: 700;
-    padding: 5px 10px;
-    border-radius: 3px;
-    margin-bottom: 14px;
-    letter-spacing: .01em;
-  }
-  .profile-card h2{
-    color: #FBF9F4;
-    font-size: 26px;
-    margin: 0 0 10px;
-  }
-  .profile-card p{
-    color: #D8D9CE;
-    font-size: 15px;
-    margin: 0;
-    max-width: 56ch;
-  }
-  .exp-grid{
-    display:grid;
-    grid-template-columns: 1fr;
-    gap: 14px;
-    margin-top: 26px;
-  }
-  .exp-item{
-    background: var(--bg-panel);
-    border: 1px solid var(--line);
-    border-left: 4px solid var(--gold);
-    border-radius: var(--radius);
-    padding: 18px 20px;
-  }
-  .exp-item h3{
-    font-size: 16px;
-    margin: 0 0 6px;
-  }
-  .exp-item p{
-    margin:0;
-    font-size: 14.5px;
-    color: var(--ink-soft);
-  }
-  .next-step{
-    margin-top: 28px;
-    background: var(--gold-soft);
-    border-radius: var(--radius);
-    padding: 22px 24px;
-  }
-  .next-step h3{
-    margin: 0 0 8px;
-    font-size: 17px;
-    color: var(--green-deep);
-  }
-  .next-step p{
-    margin: 0 0 16px;
-    font-size: 14.5px;
-    color: #4A4230;
-  }
-  .opciones-list{ display:flex; flex-direction:column; gap:12px; margin-top: 20px; }
-  .opcion-card{
-    background: var(--bg-panel);
-    border: 1px solid var(--line);
-    border-left: 4px solid var(--ink-soft);
-    border-radius: var(--radius);
-    padding: 18px 20px;
-  }
-  .opcion-card.estado-aplica{ border-left-color: var(--verde); }
-  .opcion-card.estado-posible{ border-left-color: var(--azul); }
-  .opcion-card.estado-pendiente{ border-left-color: var(--amarillo); }
-  .opcion-card.estado-revisar{ border-left-color: var(--naranja); }
-  .opcion-card.estado-no_aplica{ border-left-color: var(--rojo); opacity: .85; }
-  .opcion-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:8px; }
-  .opcion-titulo{ font-family:'Fraunces',serif; font-size:16.5px; color: var(--green-deep); margin:0; }
-  .opcion-badge{ font-size:11px; font-weight:700; padding:3px 9px; border-radius:3px; white-space:nowrap; letter-spacing:.02em; }
-  .badge-aplica{ background:#E4F0EA; color:#1F4433; }
-  .badge-posible{ background:#E1E9F0; color:#233C4D; }
-  .badge-pendiente{ background:var(--gold-soft); color:#4A3A18; }
-  .badge-revisar{ background:#F3E3D5; color:#5A3A1E; }
-  .badge-no_aplica{ background:#F8E9E4; color:#5E2E1E; }
-  .opcion-texto{ font-size: 14px; color: var(--ink-soft); margin:0; }
-  .opcion-paso{ font-size: 13px; color: var(--green-mid); margin: 10px 0 0; font-weight:600; }
-  .disclaimer{
-    margin-top: 26px;
-    font-size: 12.5px;
-    color: var(--ink-soft);
-    border-top: 1px solid var(--line);
-    padding-top: 16px;
-  }
-  .sent-msg{
-    font-size: 13.5px;
-    color: var(--green-mid);
-    margin-top: 18px;
-    display:none;
-  }
-  .sent-msg.show{ display:block; }
-  .advisor-badge{
-    display:inline-block; font-size:11px; font-weight:700; letter-spacing:.05em;
-    background: var(--gold); color:#3A2E10; padding:4px 10px; border-radius:3px; margin-bottom:12px;
-  }
+  .metric-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .metric{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; }
+  .metric .num{ font-family:'Fraunces',serif; font-size:21px; color:var(--green); display:block; }
+  .metric .lab{ font-size:12.5px; color:var(--soft); }
+  .metric.dest{ border-left:4px solid var(--gold); }
 
-  @media (max-width: 560px){
-    .top h1{ font-size: 25px; }
-    .card{ padding: 24px 18px; }
-    .profile-card{ padding: 26px 20px; }
+  .opciones-list{ display:flex; flex-direction:column; gap:12px; }
+  .opcion-card{ background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--gris); border-radius:var(--radius); padding:18px 20px; }
+  .estado-aplica{ border-left-color:var(--verde); } .estado-posible{ border-left-color:var(--azul); } .estado-recuperable{ border-left-color:var(--azul); }
+  .estado-falta{ border-left-color:var(--naranja); } .estado-verificar{ border-left-color:var(--amarillo); } .estado-futura{ border-left-color:var(--indigo); }
+  .estado-pendiente{ border-left-color:var(--amarillo); } .estado-ultimo{ border-left-color:var(--gris); } .estado-no_aplica{ border-left-color:var(--rojo); opacity:.9; }
+  .opcion-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:6px; }
+  .opcion-titulo{ font-family:'Fraunces',serif; font-size:16.5px; color:var(--green); margin:0; }
+  .opcion-badge{ font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:3px; white-space:nowrap; letter-spacing:.02em; }
+  .badge-aplica{ background:#E4F0EA; color:#1F4433; } .badge-posible,.badge-recuperable{ background:#E1E9F0; color:#233C4D; }
+  .badge-falta{ background:#F3E3D5; color:#5A3A1E; } .badge-verificar,.badge-pendiente{ background:var(--goldsoft); color:#4A3A18; }
+  .badge-futura{ background:#E4E6F3; color:#2E3470; } .badge-ultimo{ background:#ECEBE6; color:#4A4943; } .badge-no_aplica{ background:#F8E9E4; color:#5E2E1E; }
+  .opcion-norma{ font-size:11.5px; color:var(--soft); margin:0 0 8px; }
+  .opcion-texto{ font-size:14px; color:#3F4339; margin:6px 0; }
+  .opcion-texto b{ color:var(--green); }
+  .opcion-falta{ font-size:13.5px; background:#F7F3E8; border-radius:3px; padding:8px 12px; margin:8px 0; color:#4A3A18; }
+  .opcion-hacer{ margin:8px 0 4px; padding-left:20px; font-size:13.5px; color:#3F4339; } .opcion-hacer li{ margin-bottom:3px; }
+  .opcion-explica{ font-size:13.5px; margin:10px 0 0; padding-top:8px; border-top:1px dashed var(--line); color:var(--mid); }
+  .opcion-explica b{ color:var(--green); }
+
+  table.tabla{ width:100%; border-collapse:collapse; font-size:13px; }
+  table.tabla th{ text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.03em; color:var(--soft); padding:8px 8px; border-bottom:2px solid var(--line); }
+  table.tabla td{ padding:9px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+  table.tabla td:first-child{ font-weight:600; color:var(--green); }
+
+  ol.plan{ margin:0; padding-left:0; list-style:none; counter-reset:paso; }
+  ol.plan li{ counter-increment:paso; position:relative; padding:12px 14px 12px 48px; margin-bottom:8px; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); font-size:14px; }
+  ol.plan li:before{ content:counter(paso); position:absolute; left:12px; top:11px; width:26px; height:26px; border-radius:50%; background:var(--green); color:#fff; font-size:13px; font-weight:700; text-align:center; line-height:26px; }
+  ol.plan li b{ color:var(--green); } ol.plan li .docs{ display:block; font-size:12.5px; color:var(--soft); margin-top:3px; }
+  .docs-box{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:14px 18px; font-size:13.5px; columns:2; column-gap:26px; }
+  .docs-box div{ break-inside:avoid; margin-bottom:5px; }
+  .docs-box div:before{ content:"☐ "; color:var(--gold); }
+
+  .guion{ background:var(--goldsoft); border-radius:var(--radius); padding:18px 22px; font-size:14.5px; color:#4A3A18; }
+  .guion b{ color:var(--green); }
+  .comparador{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; margin-top:12px; }
+  .comparador h4{ margin:0 0 4px; font-family:'Fraunces',serif; color:var(--green); font-size:16px; }
+  .comparador p{ font-size:13px; color:var(--soft); margin:0 0 12px; }
+  .comparador .fila{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .comparador .res{ margin-top:12px; font-size:14px; font-weight:600; color:var(--green); }
+  .disclaimer{ margin-top:26px; font-size:12px; color:var(--soft); border-top:1px solid var(--line); padding-top:14px; }
+  .sent-msg{ font-size:13px; color:var(--mid); margin-top:14px; display:none; } .sent-msg.show{ display:block; }
+
+  @media (max-width:640px){
+    .top h1{ font-size:24px; } .card{ padding:22px 18px; } .metric-grid{ grid-template-columns:1fr 1fr; }
+    .comparador .fila{ grid-template-columns:1fr; } .docs-box{ columns:1; } table.tabla{ font-size:12px; }
   }
 </style>
 </head>
 <body>
 
-<div class="top">
-  <div class="top-inner">
-    <span class="advisor-badge">HERRAMIENTA PARA ASESORES</span>
-    <p class="eyebrow">EVOLUCIONA PENSIONAL</p>
-    <h1>Diagnóstico Pensional General</h1>
-    <p>Diligénciala durante tu asesoría, con lo que te cuenta el cliente. Al final obtienes todas las rutas de pensión que aplican a su caso, para que la expliques y decidas con él cuál seguir.</p>
-  </div>
-</div>
+<div class="top"><div class="top-inner">
+  <span class="advisor-badge">HERRAMIENTA PARA ASESORES</span>
+  <p class="eyebrow">EVOLUCIONA PENSIONAL</p>
+  <h1>Diagnóstico Pensional Integral</h1>
+  <p>Guía paso a paso para la asesoría: cada pregunta trae ayuda para el asesor, y al final obtienes todas las rutas posibles, qué falta, qué hacer, qué documentos pedir y cómo explicárselo al cliente.</p>
+</div></div>
 
 <div class="stepper" id="stepper"></div>
-<div class="step-label"><span id="stepLabelText">Sección A · Datos básicos</span><span id="stepCount">1 / 7</span></div>
+<div class="step-label"><span id="stepLabelText">Sección A</span><span id="stepCount">1 / 7</span></div>
 
 <div class="wrap">
-
   <div class="quiz" id="quizWrap">
     <div class="card" id="cardArea"></div>
-    <div class="req-msg" id="reqMsg">Por favor responde las preguntas marcadas antes de continuar.</div>
+    <div class="req-msg" id="reqMsg">Responde las preguntas marcadas como obligatorias para continuar.</div>
     <div class="nav">
       <button class="btn-ghost" id="btnBack" type="button">Atrás</button>
       <button class="btn-primary" id="btnNext" type="button">Continuar</button>
@@ -379,489 +147,634 @@
   </div>
 
   <div class="result" id="resultWrap">
-    <div class="profile-card" id="profileCard">
-      <span class="profile-tag" id="profileTag">PERFIL</span>
-      <h2 id="profileTitle">—</h2>
-      <p id="profileDesc">—</p>
-    </div>
-
-    <div class="exp-grid" id="expGrid"></div>
-    <div class="opciones-list" id="opcionesList"></div>
-
-    <div class="next-step">
-      <h3 id="nextStepTitle">Siguiente paso recomendado</h3>
-      <p id="nextStepText">—</p>
-      <button class="btn-primary" type="button" onclick="window.location.href='#contacto'">Guardar en el expediente del cliente</button>
-      <div class="sent-msg" id="sentMsg">Ficha enviada al expediente. Puedes continuar la asesoría con estos resultados.</div>
-    </div>
-
-    <p class="disclaimer">Este diagnóstico es una primera orientación informativa basada en la información registrada y no constituye un cálculo oficial de semanas, IBL o mesada pensional. La evaluación definitiva depende de la historia laboral certificada del cliente.</p>
+    <div id="resultBody"></div>
+    <div class="sent-msg" id="sentMsg">Ficha enviada al expediente.</div>
   </div>
-
 </div>
 
 <script>
-/* ======================= DATA MODEL ======================= */
+/* =====================================================================
+   DIAGNÓSTICO PENSIONAL INTEGRAL — Evoluciona Pensional PRO
+   Normograma verificado el 10 de octubre de 2026.
+   ===================================================================== */
+const OBJ = {
+  vejez:"Saber cuándo y cómo se puede pensionar (vejez)",
+  inval:"Pensión de invalidez (problema de salud)",
+  sobrev:"Pensión de sobrevivientes (falleció un familiar)",
+  recup:"Recuperar semanas o tiempos que faltan",
+  integral:"No sabe qué le conviene: diagnóstico integral",
+  empresa:"Consulta de una empresa por sus trabajadores"
+};
+const REG = { rpm:"Colpensiones (Prima Media)", rais:"Fondo privado (RAIS)", esp:"Régimen especial o exceptuado", nose:"No sabe" };
+const SECT = ["Sector privado (empleado)","Servidor público","Docente","Fuerza Pública","Independiente","Varios sectores"];
+const COT = { si:"Sí, todos los meses", inter:"Sí, con interrupciones", no:"No cotiza actualmente" };
+const SI_NO = ["Sí","No"], SI_NO_VER = ["Sí","No","Por verificar"];
+const eq = (id,v)=>a=>a[id]===v;
+const familia = a => a.objetivo!==OBJ.inval && a.objetivo!==OBJ.sobrev;
+
 const sections = [
-  {
-    id: "A", title: "Datos básicos", sub: "Para identificarte y aplicar correctamente las reglas que dependen de tu edad y sexo.",
-    fields: [
-      { id:"nombre", q:"Nombre completo", type:"text", required:true },
-      { id:"fnac", q:"Fecha de nacimiento", type:"date", required:true },
-      { id:"sexo", q:"Sexo", type:"choice", options:["Mujer","Hombre"], required:true },
-      { id:"ciudad", q:"Ciudad de residencia", type:"text", required:true },
-      { id:"tipoCotizante", q:"¿Cómo cotizas actualmente?", type:"choice",
-        options:["Dependiente (empleado)","Independiente","Contratista","Informal / no cotiza actualmente","Mixto (dependiente e independiente)"], required:true }
-    ]
-  },
-  {
-    id: "B", title: "Situación previsional actual", sub: "Tu punto de partida dentro del sistema pensional.",
-    fields: [
-      { id:"regimen", q:"¿A qué régimen estás afiliado?", type:"choice",
-        options:["Colpensiones (Prima Media - RPM)","Fondo privado (RAIS)","No lo sé"], required:true },
-      { id:"traslados", q:"¿Has estado afiliado a ambos regímenes en algún momento (traslados previos)?", type:"choice", options:["Sí","No","No lo sé"], required:true },
-      { id:"pensionado", q:"¿Estás pensionado actualmente?", type:"choice", options:["Sí","No"], required:true },
-      { id:"tramite", q:"¿Tienes alguna solicitud de pensión en trámite en este momento?", type:"choice", options:["Sí","No"], required:true },
-      { id:"negado", q:"¿Alguna vez te han negado una solicitud de pensión?", type:"choice", options:["Sí","No"], required:true },
-      { id:"semanasAntes94", q:"¿Sabes si tienes semanas cotizadas antes de 1994?", type:"choice", options:["Sí","No","No lo sé"], required:true }
-    ]
-  },
-  {
-    id: "C", title: "Historia laboral", sub: "Lo que ya has cotizado y qué tan continua ha sido tu vida laboral.",
-    fields: [
-      { id:"anosCotizando", q:"¿Hace cuántos años empezaste a cotizar aproximadamente?", type:"number", hint:"Escribe un número de años", required:true },
-      { id:"conoceSemanas", q:"¿Conoces tu número total de semanas cotizadas?", type:"choice", options:["Sí","No"], required:true },
-      { id:"semanas", q:"¿Cuántas semanas tienes cotizadas aproximadamente?", type:"number", hint:"Si no lo sabes con exactitud, da un estimado", showIf:{field:"conoceSemanas", equals:"Sí"} },
-      { id:"interrupciones", q:"¿Has tenido periodos largos sin cotizar (más de 1 año seguido)?", type:"choice", options:["Sí","No"], required:true },
-      { id:"cotizandoActivo", q:"¿Actualmente estás cotizando de forma activa?", type:"choice", options:["Sí","No"], required:true },
-      { id:"exterior", q:"¿Has cotizado en el exterior o tienes convenio internacional de seguridad social?", type:"choice", options:["Sí","No","No lo sé"], required:true }
-    ]
-  },
-  {
-    id: "D", title: "Ingresos", sub: "Esta información nos ayuda a entender la base sobre la que se calcularía tu pensión.",
-    fields: [
-      { id:"ibcActual", q:"¿Cuál es tu ingreso base de cotización (IBC) o salario actual?", type:"choice",
-        options:["Hasta 1 SMLV","Entre 1 y 2 SMLV","Entre 2 y 4 SMLV","Más de 4 SMLV"], required:true },
-      { id:"ingresoVariable", q:"¿Tu ingreso ha variado mucho en los últimos 10 años?", type:"choice", options:["Sí, bastante","No, ha sido estable","No aplica / empecé hace poco"], required:true },
-      { id:"ibcMenor", q:"Si eres independiente: ¿cotizas sobre tu ingreso real o sobre un IBC menor?", type:"choice",
-        options:["Cotizo sobre mi ingreso real","Cotizo sobre un IBC menor","No aplica, soy dependiente"], required:true }
-    ]
-  },
-  {
-    id: "E", title: "Situaciones especiales", sub: "Condiciones que pueden darte beneficios o rutas distintas dentro del sistema.",
-    fields: [
-      { id:"mujerHijos", q:"¿Eres mujer y tienes hijos?", type:"choice", options:["Sí","No","No aplica"], required:true },
-      { id:"numHijos", q:"¿Cuántos hijos tienes?", type:"number", showIf:{field:"mujerHijos", equals:"Sí"} },
-      { id:"pcl", q:"¿Tienes alguna condición de salud que afecte tu capacidad laboral, con o sin calificación de pérdida de capacidad laboral (PCL)?", type:"choice", options:["Sí, ya calificada","Sí, sin calificar","No"], required:true },
-      { id:"altoRiesgo", q:"¿Tu trabajo está clasificado como de alto riesgo (minería, alturas, etc.)?", type:"choice", options:["Sí","No","No lo sé"], required:true },
-      { id:"regimenEspecial", q:"¿Perteneces a un régimen especial o exceptuado (magisterio, fuerzas militares, Ecopetrol, etc.)?", type:"choice", options:["Sí","No"], required:true },
-      { id:"dependeOtro", q:"¿Dependes económicamente de otra persona (posible caso de pensión de sobrevivientes)?", type:"choice", options:["Sí","No"], required:true },
-      { id:"cercaEdad", q:"¿Te faltan menos de 5 años para la edad legal de pensión (57 mujeres / 62 hombres)?", type:"choice", options:["Sí","No","No lo sé"], required:true }
-    ]
-  },
-  {
-    id: "F", title: "Tu objetivo con esta consulta", sub: "Para dirigirte al servicio y al asesor correctos.",
-    fields: [
-      { id:"objetivo", q:"¿Cuál es tu principal objetivo al consultarnos?", type:"choice",
-        options:["Pensionarme pronto","Entender cómo me afecta la reforma pensional","Evaluar si me conviene mi régimen actual","Aumentar el valor de mi futura mesada","Defender un caso que ya me negaron","Consulta empresarial sobre mis trabajadores"], required:true },
-      { id:"historiaReciente", q:"¿Ya solicitaste tu historia laboral en los últimos 6 meses?", type:"choice", options:["Sí","No","No sabía que podía hacerlo"], required:true }
-    ]
-  },
-  {
-    id: "G", title: "Datos de contacto del cliente", sub: "Para dejar la ficha en su expediente y hacerle seguimiento.",
-    fields: [
-      { id:"telefono", q:"Número de WhatsApp", type:"tel", required:true },
-      { id:"email", q:"Correo electrónico", type:"email", required:true },
-      { id:"contactoPreferido", q:"¿Cómo prefieres que te contactemos?", type:"choice", options:["WhatsApp","Correo","Llamada"], required:true }
-    ]
-  }
+ { id:"A", title:"Cliente y motivo de la consulta", sub:"Empiece por quién es el cliente y qué viene a resolver.", fields:[
+   { id:"nombre", q:"Nombre completo del cliente", type:"text", required:true },
+   { id:"fnac", q:"Fecha de nacimiento", type:"date", required:true,
+     ayuda:{ doc:"Cédula de ciudadanía.", por:"La edad define la edad legal de pensión, la transición y varias reglas especiales." } },
+   { id:"sexo", q:"Sexo (para aplicar las reglas normativas)", type:"choice", options:["Mujer","Hombre"], required:true,
+     ayuda:{ por:"Cambia la edad (57 / 62), las semanas exigidas y el umbral de transición (750 / 900)." } },
+   { id:"objetivo", q:"¿Qué viene a resolver el cliente?", type:"choice", stack:true, options:Object.values(OBJ), required:true,
+     ayuda:{ como:"Pregunte: «¿Qué quiere lograr con esta asesoría?». Si no lo tiene claro, marque «diagnóstico integral»: la herramienta revisa todas las rutas." } },
+   { id:"pensionado", q:"¿Ya está pensionado/a?", type:"choice", options:SI_NO, required:true,
+     ayuda:{ doc:"Resolución de reconocimiento y desprendible de pago.", por:"Si ya está pensionado, no se evalúan requisitos de acceso sino la liquidación de la mesada." } },
+   { id:"negado", q:"¿Le han negado alguna vez una pensión?", type:"choice", options:SI_NO, required:true,
+     ayuda:{ doc:"Resolución de negación y recursos presentados.", por:"Una negación abre otra ruta: revisar el acto administrativo y los plazos para recurrir." } }
+ ]},
+ { id:"B", title:"Régimen y situación laboral", sub:"Dónde está afiliado y cómo cotiza hoy.", fields:[
+   { id:"regimen", q:"¿En qué régimen está afiliado?", type:"choice", stack:true, options:Object.values(REG), required:true,
+     ayuda:{ como:"Pregunte: «¿Está en Colpensiones o en un fondo privado (Porvenir, Protección, Colfondos, Skandia)?». Si no lo sabe, se confirma con la historia laboral.", doc:"Certificado de afiliación.", por:"Cambia los requisitos, la forma de calcular y las rutas. La ventana especial de traslado, según la norma, ya cerró (julio de 2026)." } },
+   { id:"sector", q:"Sector laboral principal", type:"choice", options:SECT, required:true,
+     ayuda:{ por:"Docentes, Fuerza Pública y algunos servidores públicos tienen reglas especiales; independientes tienen reglas distintas para recuperar semanas." } },
+   { id:"cotizando", q:"¿Está cotizando actualmente?", type:"choice", options:Object.values(COT), required:true,
+     ayuda:{ como:"Pregunte: «¿Le están pagando seguridad social cada mes?». Cada mes sin cotizar alarga el plazo y cambia las rutas disponibles.", doc:"Últimas planillas de pago (PILA)." } }
+ ]},
+ { id:"C", title:"Semanas cotizadas", sub:"El dato más importante del diagnóstico. Si es un estimado, el resultado es preliminar.", fields:[
+   { id:"conoceSemanas", q:"¿Se conoce el número de semanas cotizadas?", type:"choice", options:["Sí","No"], required:true,
+     ayuda:{ como:"Pida el reporte de semanas cotizadas. Si el cliente no lo tiene, pídalo en el mismo momento (se descarga desde Mi Colpensiones o el portal del fondo).", doc:"Reporte de semanas cotizadas / historia laboral." } },
+   { id:"semanas", q:"Semanas cotizadas según la historia laboral", type:"number", hint:"Solo las que aparecen en el reporte", show:eq("conoceSemanas","Sí"), required:true },
+   { id:"anosCotizando", q:"Años aproximados que lleva cotizando", type:"number", hint:"Se usa para estimar las semanas", show:eq("conoceSemanas","No"), required:true },
+   { id:"saldoAhorro", q:"Saldo aproximado en la cuenta de ahorro individual (opcional)", type:"number", hint:"En pesos, solo si está en fondo privado", show:a=>a.regimen===REG.rais||a.regimen===REG.nose },
+   { id:"ibl", q:"Salario o IBC promedio de los últimos 10 años (opcional)", type:"number", hint:"En pesos. Sirve para estimar la mesada en Colpensiones", ayuda:{ por:"Solo para dar un orden de magnitud de la mesada; la liquidación exacta la hace la administradora." } },
+   { id:"ibcActual", q:"IBC actual (opcional)", type:"number", hint:"En pesos. Sirve para estimar el costo de cotizar el tiempo que falta" }
+ ]},
+ { id:"D", title:"Tiempos que pueden sumar", sub:"Aquí está el valor de la asesoría: tiempos que el cliente no sabe que puede recuperar.", show:familia, fields:[
+   { id:"servicioMilitar", q:"¿Prestó servicio militar obligatorio?", type:"choice", options:SI_NO_VER, required:true,
+     ayuda:{ como:"Pregunte: «¿Fue soldado regular, bachiller o campesino en servicio militar?» y cuántos meses duró.", doc:"Libreta militar o certificación del tiempo de servicio.", por:"Ese tiempo se computa para pensión (Ley 1861 de 2017, art. 45) y puede sumar semanas que no aparecen en la historia laboral." } },
+   { id:"mesesMilitar", q:"Meses de servicio militar", type:"number", show:eq("servicioMilitar","Sí"), required:true },
+   { id:"altoRiesgo", q:"¿Ha trabajado en actividades de alto riesgo?", type:"choice", options:SI_NO_VER, required:true,
+     ayuda:{ como:"Ejemplos: minería subterránea, bomberos, personal de custodia del INPEC, exposición a radiaciones ionizantes o sustancias cancerígenas. La lista oficial está en el Decreto 2090 de 2003: verifíquela.", doc:"Certificación laboral con cargo y funciones; planillas con el aporte adicional de alto riesgo.", por:"Puede reducir la edad de pensión (hasta los 50 años), pero exige 700 semanas de cotización especial." } },
+   { id:"semanasEspeciales", q:"Semanas con cotización especial de alto riesgo", type:"number", hint:"Las cotizadas con el aporte adicional", show:eq("altoRiesgo","Sí"), required:true },
+   { id:"tiempoPublico", q:"¿Tiene tiempos como servidor público sin cotización a pensión?", type:"choice", options:SI_NO_VER, required:true,
+     ayuda:{ como:"Pregunte si trabajó en entidades públicas en épocas en que no cotizaban a pensión (por ejemplo, antes de 1994).", doc:"Certificación electrónica de tiempos laborados (CETIL) de cada entidad.", por:"Esos tiempos pueden sumarse por la vía de bonos pensionales; no se mezclan con las semanas cotizadas." } },
+   { id:"semanasPublicas", q:"Semanas aproximadas de esos tiempos públicos", type:"number", show:eq("tiempoPublico","Sí"), required:true },
+   { id:"hayOmisos", q:"¿Hay épocas trabajadas que no se cotizaron (omisiones)?", type:"choice", options:SI_NO_VER, required:true,
+     ayuda:{ como:"Pregunte: «¿Hubo épocas en que trabajó y no le cotizaron, o en que fue independiente y no pagó?».", doc:"Contratos, certificaciones laborales, declaraciones de renta, extractos bancarios.", por:"Esas semanas se recuperan con tres mecanismos distintos según la fecha: mora, Planilla M o cálculo actuarial." } },
+   { id:"omisoTipo", q:"¿Cómo estaba vinculado en esas épocas?", type:"choice", stack:true, options:["Como empleado: la empresa no afilió o no pagó","Como independiente","Ambos casos"], show:eq("hayOmisos","Sí"), required:true,
+     ayuda:{ por:"Si fue empleado, el pago corresponde al empleador. Si fue independiente, el costo recae en el cliente y la regla del salario base es distinta." } },
+   { id:"omisoSemanas", q:"Semanas aproximadas sin cotizar en total", type:"number", show:eq("hayOmisos","Sí"), required:true },
+   { id:"omisoAntes2014", q:"¿Alguna de esas épocas es anterior a marzo de 2014?", type:"choice", options:SI_NO, show:eq("hayOmisos","Sí"), required:true,
+     ayuda:{ por:"Para períodos anteriores a marzo de 2014 con ausencia total de pago existe la Planilla tipo M." } },
+   { id:"omisoSemanasAntes2014", q:"Semanas sin cotizar anteriores a marzo de 2014", type:"number", show:a=>a.hayOmisos==="Sí"&&a.omisoAntes2014==="Sí", required:true },
+   { id:"omisoRecientes", q:"¿Hay meses sin pagar dentro de los últimos 6 meses?", type:"choice", options:SI_NO, show:a=>a.hayOmisos==="Sí"&&a.cotizando!==COT.si, required:true,
+     ayuda:{ como:"Cuente hacia atrás desde el mes actual. Si el cliente (o su empresa) viene pagando al día, no hay meses recientes por pagar y esa vía no existe.", por:"Los meses de los últimos 6 meses se pagan por PILA normal con mora, sin cálculo actuarial. La ventana se corre cada mes." } },
+   { id:"omisoSemanasRecientes", q:"Semanas sin pagar en esos últimos 6 meses", type:"number", hint:"Máximo unas 26 semanas", show:a=>a.hayOmisos==="Sí"&&a.omisoRecientes==="Sí", required:true }
+ ]},
+ { id:"E", title:"Familia y situaciones especiales", sub:"Rutas que dependen de los hijos y de la pareja.", show:familia, fields:[
+   { id:"numHijos", q:"¿Cuántos hijos tiene (nacidos vivos o adoptados)?", type:"number", show:eq("sexo","Mujer"),
+     ayuda:{ por:"El descuento de semanas por hijo (art. 36 de la Ley 2381) fue devuelto al Congreso por la Corte: hoy no se aplica, pero se informa." } },
+   { id:"hijoDiscapacidad", q:"¿Tiene un hijo con discapacidad que dependa de su cuidado?", type:"choice", options:SI_NO, required:true,
+     ayuda:{ doc:"Calificación de pérdida de capacidad laboral del hijo, registro civil, prueba de dependencia.", por:"Permite pensionarse a cualquier edad con las semanas exigidas (Ley 797 de 2003, art. 9, parágrafo 4)." } },
+   { id:"pclHijo", q:"¿El hijo ya tiene calificación formal de su condición?", type:"choice", options:["Sí","No","No sabe"], show:eq("hijoDiscapacidad","Sí") },
+   { id:"conviveParejaMas5", q:"¿Convive con cónyuge o compañero(a) permanente hace más de 5 años?", type:"choice", options:SI_NO, required:true,
+     ayuda:{ por:"Pensión familiar (Ley 1580 de 2012): suma las semanas de la pareja cuando ninguno logra pensionarse por sí solo." } },
+   { id:"sexoPareja", q:"Sexo de la pareja", type:"choice", options:["Mujer","Hombre"], show:eq("conviveParejaMas5","Sí"), required:true },
+   { id:"edadPareja", q:"Edad de la pareja", type:"number", show:eq("conviveParejaMas5","Sí"), required:true },
+   { id:"semanasPareja", q:"Semanas cotizadas de la pareja", type:"number", show:eq("conviveParejaMas5","Sí"), required:true },
+   { id:"mismoRegimenPareja", q:"¿La pareja está en el mismo régimen (y en el mismo fondo, si es privado)?", type:"choice", options:["Sí","No","No sabe"], show:eq("conviveParejaMas5","Sí"), required:true }
+ ]},
+ { id:"F", title:"Salud y observaciones", sub:"Último filtro antes del concepto.", fields:[
+   { id:"pcl", q:"¿Tiene una condición de salud que limite su capacidad de trabajar?", type:"choice", options:SI_NO, required:true,
+     ayuda:{ por:"Si hay pérdida de capacidad laboral, la ruta puede ser pensión de invalidez (usar el Diagnóstico de Invalidez)." } },
+   { id:"observaciones", q:"Observaciones del asesor (opcional)", type:"text", hint:"Antecedentes, dudas del cliente, empleadores relevantes" }
+ ]},
+ { id:"G", title:"Contacto del cliente", sub:"Opcional: para dejar el informe en su expediente.", fields:[
+   { id:"telefono", q:"WhatsApp del cliente", type:"tel" },
+   { id:"email", q:"Correo del cliente", type:"email" }
+ ]}
 ];
 
-/* ======================= STATE ======================= */
 let current = 0;
 const answers = {};
 
-/* ======================= RENDER STEPPER ======================= */
-const stepperEl = document.getElementById("stepper");
-sections.forEach((s,i)=>{
-  const d = document.createElement("div");
-  d.className = "step-dot";
-  d.innerHTML = "<i></i>";
-  stepperEl.appendChild(d);
-});
+function vis(f){ return f.show ? !!f.show(answers) : true; }
+function secVisible(s){ if(s.show && !s.show(answers)) return false; return s.fields.some(vis); }
+function getSections(){ return sections.filter(secVisible); }
+function prune(){
+  let changed = true, guard = 0;
+  while(changed && guard++ < 6){
+    changed = false;
+    sections.forEach(s=>{
+      const secOff = s.show && !s.show(answers);
+      s.fields.forEach(f=>{
+        if((secOff || !vis(f)) && answers[f.id]!==undefined){ delete answers[f.id]; changed = true; }
+      });
+    });
+  }
+}
 
+function renderStepper(){
+  const el = document.getElementById("stepper"); el.innerHTML = "";
+  getSections().forEach(()=>{ const d = document.createElement("div"); d.className="step-dot"; d.innerHTML="<i></i>"; el.appendChild(d); });
+}
 function updateStepper(){
-  const dots = stepperEl.querySelectorAll(".step-dot i");
-  dots.forEach((d,i)=>{
-    d.style.width = i < current ? "100%" : (i === current ? "50%" : "0%");
-  });
-  document.getElementById("stepLabelText").textContent = "Sección " + sections[current].id + " · " + sections[current].title;
-  document.getElementById("stepCount").textContent = (current+1) + " / " + sections.length;
+  const secs = getSections(); renderStepper();
+  document.querySelectorAll(".step-dot i").forEach((d,i)=>{ d.style.width = i<current ? "100%" : (i===current ? "50%" : "0%"); });
+  document.getElementById("stepLabelText").textContent = "Sección " + secs[current].id + " · " + secs[current].title;
+  document.getElementById("stepCount").textContent = (current+1) + " / " + secs.length;
 }
-
-/* ======================= RENDER FIELDS ======================= */
-function fieldVisible(f){
-  if(!f.showIf) return true;
-  return answers[f.showIf.field] === f.showIf.equals;
+function ayudaHTML(a){
+  let h = "";
+  if(a.como) h += "<p><b>Cómo preguntarlo:</b> " + a.como + "</p>";
+  if(a.doc)  h += "<p><b>Documento a pedir:</b> " + a.doc + "</p>";
+  if(a.por)  h += "<p><b>Por qué importa:</b> " + a.por + "</p>";
+  return h;
 }
-
 function renderSection(){
-  const s = sections[current];
-  const card = document.getElementById("cardArea");
+  const secs = getSections();
+  if(current > secs.length-1) current = secs.length-1;
+  const s = secs[current], card = document.getElementById("cardArea");
   card.innerHTML = "";
-
-  const h = document.createElement("h2");
-  h.className = "section-title";
-  h.textContent = s.title;
-  card.appendChild(h);
-
-  const sub = document.createElement("p");
-  sub.className = "section-sub";
-  sub.textContent = s.sub;
-  card.appendChild(sub);
-
-  s.fields.forEach(f=>{
-    const wrap = document.createElement("div");
-    wrap.className = "field";
-    wrap.id = "field-" + f.id;
-    wrap.style.display = fieldVisible(f) ? "block" : "none";
-
-    const label = document.createElement("label");
-    label.className = "q";
-    label.textContent = f.q;
-    if(f.hint){
-      const hint = document.createElement("span");
-      hint.className = "hint";
-      hint.textContent = f.hint;
-      label.appendChild(hint);
-    }
+  const h = document.createElement("h2"); h.className="section-title"; h.textContent = s.title; card.appendChild(h);
+  const sub = document.createElement("p"); sub.className="section-sub"; sub.textContent = s.sub; card.appendChild(sub);
+  s.fields.filter(vis).forEach(f=>{
+    const wrap = document.createElement("div"); wrap.className="field";
+    const label = document.createElement("label"); label.className="q"; label.textContent = f.q + (f.required ? " *" : "");
+    if(f.hint){ const hs = document.createElement("span"); hs.className="hint"; hs.textContent = f.hint; label.appendChild(hs); }
     wrap.appendChild(label);
-
-    if(f.type === "choice"){
-      const opts = document.createElement("div");
-      opts.className = "opts";
-      f.options.forEach(opt=>{
-        const chip = document.createElement("div");
-        chip.className = "opt" + (answers[f.id]===opt ? " selected":"");
-        chip.textContent = opt;
-        chip.addEventListener("click", ()=>{
-          answers[f.id] = opt;
-          renderSection();
-        });
+    if(f.type==="choice"){
+      const opts = document.createElement("div"); opts.className = "opts" + (f.stack ? " stack" : "");
+      f.options.forEach(o=>{
+        const chip = document.createElement("div"); chip.className = "opt" + (answers[f.id]===o ? " selected" : ""); chip.textContent = o;
+        chip.addEventListener("click", ()=>{ answers[f.id] = o; prune(); renderSection(); });
         opts.appendChild(chip);
       });
       wrap.appendChild(opts);
     } else {
-      const input = document.createElement("input");
-      input.type = f.type;
-      input.value = answers[f.id] || "";
-      input.addEventListener("input", (e)=>{ answers[f.id] = e.target.value; });
+      const input = document.createElement("input"); input.type = f.type; input.value = answers[f.id] || "";
+      input.addEventListener("input", e=>{ answers[f.id] = e.target.value; });
       wrap.appendChild(input);
     }
-
+    if(f.ayuda){
+      const d = document.createElement("details"); d.className = "ayuda";
+      d.innerHTML = "<summary>Ayuda para el asesor</summary><div class='ay'>" + ayudaHTML(f.ayuda) + "</div>";
+      wrap.appendChild(d);
+    }
     card.appendChild(wrap);
   });
-
-  document.getElementById("btnBack").style.visibility = current === 0 ? "hidden" : "visible";
-  document.getElementById("btnNext").textContent = current === sections.length - 1 ? "Ver mi diagnóstico" : "Continuar";
+  document.getElementById("btnBack").style.visibility = current===0 ? "hidden" : "visible";
+  document.getElementById("btnNext").textContent = current===secs.length-1 ? "Generar concepto" : "Continuar";
   document.getElementById("reqMsg").classList.remove("show");
   updateStepper();
 }
-
-function validateSection(){
-  const s = sections[current];
-  for(const f of s.fields){
-    if(!fieldVisible(f)) continue;
-    if(f.required && (!answers[f.id] || String(answers[f.id]).trim()==="")){
-      return false;
-    }
-  }
-  return true;
+function validar(){
+  const s = getSections()[current];
+  return s.fields.filter(vis).every(f=>!f.required || (answers[f.id]!==undefined && String(answers[f.id]).trim()!==""));
 }
-
 document.getElementById("btnNext").addEventListener("click", ()=>{
-  if(!validateSection()){
-    document.getElementById("reqMsg").classList.add("show");
-    return;
-  }
-  if(current < sections.length - 1){
-    current++;
-    renderSection();
-    window.scrollTo({top:0, behavior:"smooth"});
-  } else {
-    finish();
-  }
+  if(!validar()){ document.getElementById("reqMsg").classList.add("show"); return; }
+  const secs = getSections();
+  if(current < secs.length-1){ current++; renderSection(); window.scrollTo({top:0,behavior:"smooth"}); } else { finish(); }
 });
+document.getElementById("btnBack").addEventListener("click", ()=>{ if(current>0){ current--; renderSection(); window.scrollTo({top:0,behavior:"smooth"}); } });
 
-document.getElementById("btnBack").addEventListener("click", ()=>{
-  if(current > 0){
-    current--;
-    renderSection();
-    window.scrollTo({top:0, behavior:"smooth"});
-  }
-});
+/* ===================== MOTOR DE RUTAS ===================== */
+const SMLV = 1750905;
+const VIGENCIA = new Date("2027-04-01T00:00:00");
+const ESTADOS = { aplica:"APLICA", posible:"POSIBLE", recuperable:"RECUPERABLE", falta:"FALTAN REQUISITOS", verificar:"POR VERIFICAR",
+                  futura:"DESDE 1-ABR-2027", pendiente:"PENDIENTE: NO APLICAR", ultimo:"ÚLTIMO RECURSO", no_aplica:"NO APLICA" };
+const ORDEN = { aplica:1, recuperable:2, posible:3, falta:4, verificar:5, futura:6, pendiente:7, ultimo:8, no_aplica:9 };
 
-/* ======================= CLASSIFICATION ENGINE ======================= */
-function calcEdad(fnacStr){
-  if(!fnacStr) return null;
-  const fnac = new Date(fnacStr);
-  const hoy = new Date();
-  let edad = hoy.getFullYear() - fnac.getFullYear();
-  const m = hoy.getMonth() - fnac.getMonth();
-  if(m < 0 || (m===0 && hoy.getDate() < fnac.getDate())) edad--;
-  return edad;
+function num(id){ const n = parseFloat(answers[id]); return isNaN(n) ? 0 : n; }
+function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function edadA(fnac){ const f=new Date(fnac), h=new Date(); let e=h.getFullYear()-f.getFullYear(); const m=h.getMonth()-f.getMonth(); if(m<0||(m===0&&h.getDate()<f.getDate())) e--; return e; }
+function addMeses(d,m){ const x=new Date(d.getTime()); x.setMonth(x.getMonth()+m); return x; }
+function mesesEntre(a,b){ return (b.getFullYear()-a.getFullYear())*12 + (b.getMonth()-a.getMonth()); }
+function fFecha(d){ return d.toLocaleDateString("es-CO",{month:"long",year:"numeric"}); }
+function fAnos(m){ if(m<=0) return "ya"; const a=Math.floor(m/12), r=m%12, p=[]; if(a) p.push(a+(a===1?" año":" años")); if(r) p.push(r+(r===1?" mes":" meses")); return p.join(" y "); }
+function fCOP(n){ return "$"+Math.round(n).toLocaleString("es-CO"); }
+
+// C-197/2023 (mujeres, Colpensiones): 1.250 en 2026, baja 25 por año hasta 1.000 en 2036
+function semMujerRPM(y){ return y<2026 ? 1300 : Math.max(1000, 1250-25*(y-2026)); }
+function semReqRPM(mujer,y){ return mujer ? semMujerRPM(y) : 1300; }
+// Garantía de pensión mínima en fondos privados (mujeres): 1.150 en 2025, baja 15 por año hasta 1.000
+function semGPM(mujer,y){ return mujer ? Math.max(1000, 1150-15*Math.max(0,y-2025)) : 1150; }
+
+function estimarMesada(ibl, semFinal){
+  const ratio = Math.min(20, Math.max(1, ibl/SMLV));
+  const base = 65.5 - 0.5*ratio;
+  const bono = Math.min(Math.floor(Math.max(0, semFinal-1300)/50)*1.5, 80-base);
+  const tasa = Math.min(base+bono, 80);
+  return { tasa, mesada: Math.max(ibl*tasa/100, SMLV) };
 }
 
-function estimarSemanas(){
-  if(answers.conoceSemanas === "Sí" && answers.semanas){
-    return parseInt(answers.semanas, 10);
+const SEMAFORO = [
+  { tipo:"verde", t:"Rige hoy", d:"Ley 100/1993 modificada por la Ley 797/2003, más la sentencia C-197/2023 (mujeres en Colpensiones: 1.250 semanas en 2026) y los decretos vigentes." },
+  { tipo:"", t:"Reforma pensional (Ley 2381/2024): desde el 1 de abril de 2027", d:"La sentencia C-264/2026 declaró exequible casi toda la ley y fijó esa fecha. Atención: Colpensiones pidió aplazarla al 1 de abril de 2028 y Hacienda pidió un incidente de impacto fiscal; a la fecha de este normograma la Corte no ha cambiado la fecha." },
+  { tipo:"gold", t:"Devueltos al Congreso: no aplicar", d:"Artículos 14, 36 y 93 completos, y apartes de los artículos 11, 19, 23, 63, 84 y 92 (por ejemplo, el descuento de semanas por hijo del art. 36)." }
+];
+
+function evaluar(){
+  const A = answers, hoy = new Date();
+  const base = { cliente: A.nombre || "" };
+
+  if(A.objetivo === OBJ.empresa) return { ...base, desvio:{ tag:"CONSULTA EMPRESARIAL", titulo:"Esta consulta va por el Diagnóstico Empresarial",
+    texto:"La consulta viene de una empresa que quiere revisar a sus trabajadores, no de una persona con su propia historia laboral.", paso:"Abra «Diagnóstico Empresarial» desde el panel y cargue la lista de trabajadores." } };
+  if(A.pensionado === "Sí") return { ...base, desvio:{ tag:"YA PENSIONADO", titulo:"El trabajo es revisar y proteger la mesada",
+    texto:"El cliente ya está pensionado: no se evalúan requisitos de acceso sino la liquidación (IBL, tasa de reemplazo, factores), posibles reliquidaciones, compatibilidad y sustitución pensional.", paso:"Pida la resolución de reconocimiento y el desprendible de pago para revisar la liquidación." } };
+
+  const mujer = A.sexo === "Mujer";
+  const edad = edadA(A.fnac);
+  const edadLegal = mujer ? 57 : 62;
+  const fechaEdad = new Date(A.fnac); fechaEdad.setFullYear(fechaEdad.getFullYear()+edadLegal);
+  const edadCumplida = fechaEdad <= hoy;
+  const mesesAEdad = Math.max(0, mesesEntre(hoy, fechaEdad));
+  const cot = A.cotizando;
+  const factor = cot===COT.no ? 0 : (cot===COT.inter ? 3.6 : 4.33);
+  const conoce = A.conoceSemanas === "Sí";
+  const semCot = conoce ? Math.round(num("semanas")) : Math.round(num("anosCotizando") * (cot===COT.inter ? 34 : 46));
+  const mil = A.servicioMilitar==="Sí" ? Math.round(num("mesesMilitar")*4.345) : 0;
+  const pub = A.tiempoPublico==="Sí" ? Math.round(num("semanasPublicas")) : 0;
+  const omi = A.hayOmisos==="Sí" ? Math.round(num("omisoSemanas")) : 0;
+  const rec = mil + pub + omi;
+  const reqHoy = semReqRPM(mujer, hoy.getFullYear());
+  const ibl = num("ibl");
+  const regEsp = A.regimen===REG.esp || A.sector==="Docente" || A.sector==="Fuerza Pública";
+
+  // proyección en Colpensiones
+  function proyRPM(semBase){
+    let year = hoy.getFullYear(), fecha = null, req = reqHoy;
+    for(let i=0; i<6; i++){
+      req = semReqRPM(mujer, year);
+      const falta = Math.max(0, req - semBase);
+      let meses = 0;
+      if(falta>0){ if(factor===0) return { req, falta, fecha:null, meses:null, semFinal:semBase }; meses = Math.ceil(falta/factor); }
+      const fSem = addMeses(hoy, meses);
+      fecha = fSem > fechaEdad ? fSem : (fechaEdad > hoy ? fechaEdad : hoy);
+      if(fecha.getFullYear() === year) break;
+      year = fecha.getFullYear();
+    }
+    const meses = Math.max(0, mesesEntre(hoy, fecha));
+    return { req, falta: Math.max(0, req - semBase), fecha, meses, semFinal: semBase + factor*meses };
   }
-  const anos = parseInt(answers.anosCotizando, 10) || 0;
-  let factor = 46; // semanas/año promedio si cotiza continuo
-  if(answers.interrupciones === "Sí") factor = 34;
-  if(answers.cotizandoActivo === "No") factor = factor * 0.8;
-  return Math.round(anos * factor);
-}
+  const pb = proyRPM(semCot);
+  const pr = rec>0 ? proyRPM(semCot+rec) : null;
 
-function classify(){
-  const edad = calcEdad(answers.fnac);
-  const edadLegal = answers.sexo === "Mujer" ? 57 : 62;
-  const edadAnticipada = answers.sexo === "Mujer" ? 62 : 65;
-  const semanasUmbralTransicion = answers.sexo === "Mujer" ? 750 : 900;
-  const semanasEst = estimarSemanas();
-  const anosParaEdad = edadLegal - (edad || 0);
+  // transición (Ley 2381)
+  const umbral = mujer ? 750 : 900;
+  const mesesVig = Math.max(0, mesesEntre(hoy, VIGENCIA));
+  const semProy = semCot + factor*mesesVig;
+  const deficitT = Math.max(0, Math.ceil(umbral - semProy));
+  const enTransicion = deficitT === 0;
 
-  // ---- Casos de desvío total: no se listan opciones de vejez ----
-  if(answers.negado === "Sí"){
-    return { tipo:"desvio", profile:{
-      key:"defensa", tag:"REQUIERE DEFENSA JURÍDICA",
-      title:"El caso necesita una revisión jurídica de fondo",
-      desc:"El cliente ya recibió una negación previa. Esto requiere un análisis del acto administrativo y, muy probablemente, un recurso o una acción de defensa formal — no aplica la ruta de diagnóstico general.",
-      color:"var(--carbon)"
-    }, nextStep:"Agendar directamente con el equipo de Defensa para revisar el acto de negación." };
-  }
-  if(answers.pensionado === "Sí"){
-    return { tipo:"desvio", profile:{
-      key:"pensionado", tag:"YA PENSIONADO",
-      title:"El diagnóstico se enfoca en proteger y optimizar la mesada",
-      desc:"El cliente ya está pensionado. El trabajo aquí es revisar que su mesada esté correctamente liquidada y protegida en el tiempo, no evaluar requisitos de acceso.",
-      color:"var(--teal)"
-    }, nextStep:"Revisar la liquidación de la mesada actual." };
-  }
-  if(answers.objetivo === "Consulta empresarial sobre mis trabajadores"){
-    return { tipo:"desvio", profile:{
-      key:"empresarial", tag:"PERFIL EMPRESARIAL",
-      title:"El caso requiere el Diagnóstico Empresarial Pensional",
-      desc:"La consulta viene desde el rol de empleador. Usa el Diagnóstico Empresarial para analizar la planilla y los trabajadores próximos a la edad pensional.",
-      color:"var(--teal)"
-    }, nextStep:"Abrir el Diagnóstico Empresarial Pensional." };
-  }
+  const rutas = [];
+  const R = o => { o.orden = ORDEN[o.estado]; rutas.push(o); };
+  const derivaciones = [];
 
-  // ---- Proyecciones base ----
-  const hoy = new Date();
-  const fechaVigencia = new Date("2027-04-01");
-  const mesesHastaVigencia = Math.max(0, (fechaVigencia.getFullYear()-hoy.getFullYear())*12 + (fechaVigencia.getMonth()-hoy.getMonth()));
-  const cotizando = answers.cotizandoActivo !== "No";
-  const factorMes = !cotizando ? 0 : (answers.interrupciones === "Sí" ? 3.6 : 4.33);
-  const semanasProyAbril2027 = semanasEst + mesesHastaVigencia * factorMes;
-  const enTransicion = semanasProyAbril2027 >= semanasUmbralTransicion;
-  const cercaTransicion = !enTransicion && semanasProyAbril2027 >= semanasUmbralTransicion - 100;
-
-  const opciones = [];
-
-  // Si no conoce semanas exactas, va primero como advertencia general
-  if(answers.conoceSemanas !== "Sí"){
-    opciones.push({
-      titulo:"Confirmar semanas exactas con historia laboral",
-      estado:"pendiente",
-      texto:"El cliente no tiene el dato exacto de semanas cotizadas — todo lo que sigue es una proyección preliminar sobre un estimado, no un cálculo certificado.",
-      paso:"Solicitar la historia laboral certificada en Colpensiones o el fondo privado antes de formalizar cualquier ruta."
-    });
-  }
-
-  // Opción: Régimen de transición (Ley 100)
-  if(enTransicion){
-    opciones.push({
-      titulo:"Régimen de transición (Ley 100 de 1993)",
-      estado:"aplica",
-      texto:`Con ${semanasProyAbril2027.toFixed(0)} semanas proyectadas a abril de 2027, superaría el umbral de ${semanasUmbralTransicion}. Seguiría bajo las reglas actuales: ${edadLegal} años + 1300 semanas.`,
-      paso:"Confirmar con el Test de Régimen de Transición y trazar la ruta exacta con la Proyección Pensional."
-    });
-  } else if(cercaTransicion){
-    opciones.push({
-      titulo:"Régimen de transición (Ley 100 de 1993)",
-      estado:"pendiente",
-      texto:`Está cerca del umbral (${semanasUmbralTransicion} semanas) pero no es un caso claro. Proyección actual: ${semanasProyAbril2027.toFixed(0)} semanas a abril de 2027.`,
-      paso:"Confirmar cuanto antes con el Test de Régimen de Transición — cada mes de cotización cuenta para este caso."
-    });
-  } else {
-    opciones.push({
-      titulo:"Régimen de transición (Ley 100 de 1993)",
-      estado:"no_aplica",
-      texto:`No alcanzaría el umbral de ${semanasUmbralTransicion} semanas antes de abril de 2027 (proyectado: ${semanasProyAbril2027.toFixed(0)}). Se regiría por el nuevo sistema de pilares.`
-    });
+  // ---------- 1. Vejez en Colpensiones ----------
+  if(A.regimen!==REG.rais && A.regimen!==REG.esp && !regEsp){
+    const cumpleYa = edadCumplida && semCot >= reqHoy;
+    let estado, porque, falta = null, cuando = "—";
+    const reqTxt = mujer ? `${reqHoy} semanas este año (mujeres en Colpensiones, C-197/2023: baja 25 por año hasta 1.000 en 2036)` : "1.300 semanas";
+    if(cumpleYa){ estado="aplica"; cuando="Ya"; porque=`Ya cumple la edad (${edadLegal} años) y las semanas (${semCot} de ${reqHoy} exigidas).`; }
+    else if(pb.fecha){ estado="posible"; cuando=fFecha(pb.fecha); porque=`Cotizando sin interrupciones, cumpliría edad y semanas hacia <b>${fFecha(pb.fecha)}</b> (en ${fAnos(pb.meses)}).`;
+      falta=`Faltan ${Math.max(0,reqHoy-semCot)} semanas${!edadCumplida?` y ${fAnos(mesesAEdad)} para la edad legal`:""}. Requisito de semanas: ${reqTxt}.`; }
+    else if(pr && pr.fecha){ estado="recuperable"; cuando=fFecha(pr.fecha); porque=`Con lo que cotizó no llega, pero si recupera los ${rec} semanas de tiempos que pueden sumarse (ver rutas de recuperación), cumpliría hacia <b>${fFecha(pr.fecha)}</b>.`;
+      falta=`Hoy le faltan ${Math.max(0,reqHoy-semCot)} semanas y no está cotizando.`; }
+    else { estado="falta"; porque=`Hoy no cotiza y las semanas no alcanzan (${semCot} de ${reqHoy}).` + (rec>0 ? ` Aun recuperando los ${rec} semanas de tiempos que pueden sumarse, tendría ${semCot+rec} y le faltarían ${Math.max(0,reqHoy-semCot-rec)}: necesitaría retomar la cotización.` : ""); falta=`Le faltan ${Math.max(0,reqHoy-semCot)} semanas. Requisito: ${reqTxt}.`; }
+    if(ibl>0){ const est = estimarMesada(ibl, pb.fecha ? pb.semFinal : semCot);
+      porque += ` Mesada estimada orientativa: <b>${fCOP(est.mesada)}</b> (tasa de reemplazo ${est.tasa.toFixed(1)}%, en pesos de hoy; la liquidación exacta la hace Colpensiones).`; }
+    R({ id:"rpm", titulo:"Pensión de vejez en Colpensiones", estado, norma:"Ley 100 art. 33, modificado por Ley 797/2003 art. 9 · C-197/2023 (mujeres)", porque, falta,
+      hacer: cumpleYa ? ["Pedir la historia laboral actualizada y radicar la solicitud en Colpensiones.","Verificar que las semanas del reporte coincidan con los soportes antes de radicar."]
+                      : ["Mantener la cotización continua: cada mes sin cotizar alarga el plazo.","Confirmar las semanas exactas con la historia laboral certificada.", ...(rec>0?["Recuperar los tiempos señalados abajo para adelantar la fecha."]:[])],
+      explica:`«Para pensionarse en Colpensiones hacen falta dos cosas: la edad (${edadLegal} años) y las semanas (${reqHoy} este año). ${cumpleYa?"Usted ya cumple las dos.":(pb.fecha?`Si sigue cotizando sin parar, las cumple hacia ${fFecha(pb.fecha)}.`:"Hoy le faltan semanas y hay que ver cómo conseguirlas.")}»`,
+      cuando, requiere: cumpleYa ? "Solo el trámite" : "Seguir cotizando"+(factor>0 && num("ibcActual")>0 ? ` (≈ ${fCOP(num("ibcActual")*0.16)} al mes si cotiza como independiente)`:""), riesgo:"Cada interrupción en la cotización retrasa la fecha." });
   }
 
-  // Opción: completar 1300 semanas cotizando
-  if(semanasEst >= 1300){
-    opciones.push({
-      titulo:"Pensión ordinaria — ya cumple semanas",
-      estado:"aplica",
-      texto:"El cliente ya reporta las 1300 semanas exigidas. El trabajo aquí es de gestión y trámite, no de construcción de historia laboral.",
-      paso:"Iniciar directamente la gestión del trámite pensional."
-    });
-  } else if(cotizando){
-    const semanasFaltan = 1300 - semanasEst;
-    const mesesFaltan = Math.ceil(semanasFaltan / factorMes);
-    opciones.push({
-      titulo:"Completar las 1300 semanas cotizando",
-      estado:"aplica",
-      texto:`Le faltan ${semanasFaltan} semanas. Si sigue cotizando sin interrupciones, las completaría en aproximadamente ${mesesFaltan} meses (~${(mesesFaltan/12).toFixed(1)} años).`,
-      paso:"Formalizar con la Proyección Pensional Personalizada para obtener el IBL y la mesada estimada."
-    });
-  } else {
-    opciones.push({
-      titulo:"Completar las 1300 semanas cotizando",
-      estado:"no_aplica",
-      texto:"El cliente no está cotizando actualmente, así que esta ruta no avanza mientras no retome la cotización."
-    });
+  // ---------- 2. Vejez en fondo privado ----------
+  if(A.regimen!==REG.rpm && A.regimen!==REG.esp && !regEsp){
+    const yEdad = Math.max(hoy.getFullYear(), fechaEdad.getFullYear());
+    const gpm = semGPM(mujer, yEdad);
+    const saldo = num("saldoAhorro");
+    let estado, porque;
+    if(edadCumplida && semCot>=gpm){ estado="aplica"; porque=`Ya cumple la edad y tiene ${semCot} semanas (la garantía de pensión mínima exige ${gpm} en ${yEdad}). Accede a pensión: por capital si el ahorro alcanza, o por la garantía de pensión mínima (1 SMMLV).`; }
+    else if(edadCumplida){ estado="verificar"; porque=`Ya cumple la edad pero tiene ${semCot} semanas (la garantía exige ${gpm}). Solo accede a pensión si el capital alcanza para una mesada de al menos 110% del SMMLV; si no, procede devolución de saldos.`; }
+    else { estado="posible"; porque=`Dos caminos: pensión por capital (sin edad mínima, si el ahorro alcanza para una mesada de al menos 110% del SMMLV) o garantía de pensión mínima desde los ${edadLegal} años con ${gpm} semanas (${semCot>=gpm?"ya las tiene":`le faltan ${gpm-semCot}`}).`; }
+    if(mujer) porque += " La reducción de semanas para mujeres en fondos privados debe verificarse con el fondo.";
+    if(saldo>0) porque += ` Saldo informado: ${fCOP(saldo)}. Pida al fondo la simulación de pensión por capital.`;
+    if(A.regimen===REG.nose) porque += " <b>Primero confirme el régimen:</b> no se sabe si está en fondo privado.";
+    R({ id:"rais", titulo:"Pensión de vejez en fondo privado (capital o garantía de pensión mínima)", estado, norma:"Ley 100 arts. 64-65, modificados por Ley 797/2003 · C-054/2024 (mujeres)", porque,
+      falta: estado==="verificar" ? `Faltan ${Math.max(0,gpm-semCot)} semanas para la garantía de pensión mínima.` : null,
+      hacer:["Pedir al fondo la simulación de pensión por capital y el reporte de semanas.","Comparar con la opción de trasladar semanas o completar semanas antes de aceptar una devolución de saldos."],
+      explica:"«En un fondo privado la pensión depende de cuánto ahorró: si el capital alcanza, se pensiona; si no, pero tiene suficientes semanas, el Estado completa hasta un salario mínimo.»",
+      cuando: edadCumplida ? "Ya (si el capital o las semanas alcanzan)" : `Desde los ${edadLegal} años`, requiere:"Simulación del fondo", riesgo:"Si ni el capital ni las semanas alcanzan, solo queda devolución de saldos." });
   }
 
-  // Opción: Pensión Anticipada de Vejez (art. 37, Ley 2381/2024)
-  if(semanasEst > 1000 && semanasEst < 1300){
-    if(!cotizando){
-      opciones.push({
-        titulo:"Pensión Anticipada de Vejez (art. 37, Ley 2381/2024)",
-        estado:"aplica",
-        texto:`Con ${semanasEst} semanas y sin poder seguir cotizando, podría acceder a esta figura al cumplir ${edadAnticipada} años (edad especial de este mecanismo, distinta a la edad legal general). Se liquida proporcional a las semanas, con un descuento mensual por las que faltan hasta 1300 — el Gobierno Nacional aún no reglamenta la fórmula exacta de ese descuento.`,
-        paso:"Verificar primero si el régimen de transición tiene prioridad sobre esta ruta, y confirmar la edad exacta del cliente."
-      });
-    } else {
-      opciones.push({
-        titulo:"Pensión Anticipada de Vejez (art. 37, Ley 2381/2024)",
-        estado:"posible",
-        texto:`Tiene más de 1000 semanas. Si en el futuro no puede seguir cotizando antes de llegar a 1300, esta figura queda disponible desde los ${edadAnticipada} años como alternativa.`
-      });
+  // ---------- 3. Transición (Ley 2381) ----------
+  if(!regEsp){
+    let estado, porque;
+    if(deficitT===0){ estado="futura"; porque=`Proyección al 1 de abril de 2027: ${Math.round(semProy)} semanas (umbral ${umbral} para ${mujer?"mujeres":"hombres"}). Probablemente quede protegido por el régimen de transición.`; }
+    else if(rec>=deficitT){ estado="recuperable"; porque=`Proyección al 1 de abril de 2027: ${Math.round(semProy)} semanas; faltan ${deficitT} para el umbral de ${umbral}. Los tiempos recuperables (${rec} semanas) alcanzarían a cubrir la diferencia si se acreditan antes de esa fecha.`; }
+    else if(deficitT<=100){ estado="falta"; porque=`Proyección al 1 de abril de 2027: ${Math.round(semProy)} semanas; faltan ${deficitT} para el umbral de ${umbral}.`; }
+    else { estado="no_aplica"; porque=`Proyección al 1 de abril de 2027: ${Math.round(semProy)} semanas, lejos del umbral de ${umbral} (faltan ${deficitT}). Se regiría por el nuevo sistema de pilares.`; }
+    porque += " La fecha de entrada en vigor podría cambiar (hay una solicitud de aplazamiento a 2028): verifíquela antes de decidir.";
+    R({ id:"trans", titulo:"Régimen de transición de la reforma (Ley 2381)", estado, norma:"Ley 2381/2024 arts. 75-76 · Decreto 1225/2024 · C-264/2026", porque,
+      falta: deficitT>0 ? `Semanas por completar antes del 1 de abril de 2027: ${deficitT}.` : null,
+      hacer: deficitT>0 ? ["Cotizar sin interrupciones hasta la fecha de entrada en vigor.","Convalidar semanas por la ruta más barata (mora, Planilla M y, al final, cálculo actuarial solo por lo mínimo).","Confirmar la fecha vigente de entrada en vigor de la reforma."]
+                        : ["Confirmar con el Test de Régimen de Transición y con la fecha vigente de la reforma.","Mantener la cotización hasta esa fecha para conservar el margen."],
+      explica:`«La reforma cambia las reglas desde el 1 de abril de 2027. Quien tenga ${umbral} semanas a esa fecha conserva las reglas anteriores${deficitT>0?`; a usted le faltan ${deficitT}`:"; usted va bien encaminado/a"}.»`,
+      cuando:"Se define el 1-abr-2027", requiere: deficitT>0 ? `${deficitT} semanas más` : "Mantener el ritmo", riesgo:"La fecha podría aplazarse." });
+  }
+
+  // ---------- 4. Pensión anticipada (art. 37) ----------
+  if(!regEsp){
+    const edadAnt = mujer ? 62 : 65;
+    const semAnt = semCot + factor*Math.max(0, mesesEntre(hoy, addMeses(new Date(A.fnac), edadAnt*12)));
+    if(semCot>1000 && semCot<1300){
+      if(enTransicion) R({ id:"a37", titulo:"Pensión anticipada de vejez (art. 37, Ley 2381)", estado:"verificar", norma:"Ley 2381/2024 art. 37 · vigente desde el 1-abr-2027",
+        porque:`Con ${semCot} semanas (más de 1.000 y menos de 1.300), esta figura (edad especial de ${edadAnt} años, mesada proporcional con descuento mensual hasta completar 1.300) sería la ruta. Pero el art. 37 no aplica a quien esté cubierto por el régimen de transición, y con estas semanas es probable que lo esté. El Gobierno aún no reglamenta la fórmula del descuento.`,
+        falta:null, hacer:["Confirmar con el texto del art. 37 y de los arts. 75-76 si el cliente queda en transición.","Si no queda en transición, esta es la ruta; si queda, se rige por Ley 100 (edad legal + semanas)."],
+        explica:"«Hay una pensión anticipada para quien no logra completar las semanas, pero tiene un efecto: la mesada sale reducida. Antes hay que ver si usted ya está protegido por la transición.»",
+        cuando:`Desde el 1-abr-2027 y los ${edadAnt} años`, requiere:"Más de 1.000 semanas; no estar en transición", riesgo:"Descuento mensual aún sin reglamentar; mesada reducida." });
+      else R({ id:"a37", titulo:"Pensión anticipada de vejez (art. 37, Ley 2381)", estado:"futura", norma:"Ley 2381/2024 art. 37 · vigente desde el 1-abr-2027",
+        porque:`Con más de 1.000 semanas, podría acceder desde los ${edadAnt} años (edad especial de esta figura). Se liquida proporcional a las semanas, con un descuento mensual por las que faltan hasta 1.300; la fórmula del descuento aún no está reglamentada.`,
+        falta:null, hacer:["Esperar la entrada en vigor y la reglamentación del descuento.","Mientras tanto, evaluar si es más conveniente completar las 1.300 semanas."],
+        explica:"«Si se queda sin poder cotizar, hay una salida: pensionarse con menos semanas, aceptando que la mesada se descuente poco a poco.»",
+        cuando:`Desde el 1-abr-2027 y los ${edadAnt} años`, requiere:"Más de 1.000 semanas", riesgo:"Mesada reducida; fórmula sin reglamentar." });
+    } else if(!enTransicion && semAnt>1000 && semAnt<1300 && factor>0){
+      R({ id:"a37", titulo:"Pensión anticipada de vejez (art. 37, Ley 2381): opción a futuro", estado:"futura", norma:"Ley 2381/2024 art. 37 · vigente desde el 1-abr-2027",
+        porque:`Si sigue cotizando, tendría unas ${Math.round(semAnt)} semanas a los ${edadAnt} años: entraría en el rango de esta figura (más de 1.000 y menos de 1.300) si dejara de cotizar antes de completar 1.300.`,
+        falta:null, hacer:["Tenerla presente como plan B si más adelante no puede seguir cotizando."],
+        explica:"«Es un plan B: si más adelante no puede seguir cotizando, existe esta salida con mesada reducida.»",
+        cuando:`Desde el 1-abr-2027 y los ${edadAnt} años`, requiere:"Más de 1.000 semanas", riesgo:"Mesada reducida." });
     }
   }
 
-  // Opción: revisar períodos omisos / cálculo actuarial
-  if(semanasEst < 1300 && (semanasEst < 1000 || answers.interrupciones === "Sí" || answers.tipoCotizante === "Informal / no cotiza actualmente")){
-    opciones.push({
-      titulo:"Revisar períodos omisos o cálculo actuarial",
-      estado:"revisar",
-      texto:"Antes de descartar una ruta por falta de semanas, conviene auditar la historia laboral: puede haber periodos no cotizados recuperables por mora, Planilla tipo M o cálculo actuarial que sumen semanas reales.",
-      paso:"Usar la Ficha de Períodos Omisos con la historia laboral certificada del cliente."
-    });
+  // ---------- 5. Descuento por hijos (art. 36) ----------
+  if(!regEsp && mujer && num("numHijos")>0){
+    const n = Math.min(3, Math.round(num("numHijos")));
+    R({ id:"a36", titulo:`Descuento de semanas por hijos (art. 36): ${n*50} semanas`, estado:"pendiente", norma:"Ley 2381/2024 art. 36 · devuelto al Congreso (C-264/2026)",
+      porque:`Con ${Math.round(num("numHijos"))} hijo(s), el beneficio descontaría ${n*50} semanas (50 por hijo, hasta 3). Pero el artículo 36 fue devuelto al Congreso por vicios de trámite: hoy no está en firme.`,
+      falta:null, hacer:["No prometerlo como derecho: verificar el estado de la subsanación legislativa antes de cada asesoría."],
+      explica:"«Hay una propuesta para que cada hijo reste 50 semanas, pero todavía no está aprobada de forma definitiva; no cuente con ella por ahora.»",
+      cuando:"Sin fecha", requiere:"Subsanación del Congreso", riesgo:"Puede cambiar o no aprobarse." });
   }
 
-  const mujerConHijos = answers.mujerHijos === "Sí";
-  if(mujerConHijos){
-    opciones.push({
-      titulo:"Línea Mujer — beneficios diferenciales",
-      estado:"revisar",
-      texto:"Por tener hijos, el caso puede beneficiarse de semanas reducidas y otras condiciones diferenciales previstas para mujeres.",
-      paso:"Completar el Diagnóstico Diferencial de Línea Mujer para ver el detalle exacto."
-    });
+  // ---------- 6. Hijo con discapacidad ----------
+  if(A.hijoDiscapacidad==="Sí"){
+    const falta = Math.max(0, reqHoy - semCot);
+    const estado = A.pclHijo!=="Sí" ? "verificar" : (falta===0 ? "aplica" : (rec>=falta ? "recuperable" : "falta"));
+    R({ id:"hijo", titulo:"Pensión especial por hijo con discapacidad (a cualquier edad)", estado, norma:"Ley 797/2003 art. 9 parágrafo 4 (Ley 100 art. 33 parágrafo 4)",
+      porque:`No exige edad mínima: solo las semanas de la pensión de vejez (${reqHoy}) y que el hijo tenga calificación formal y dependa del cliente. ${A.pclHijo==="Sí"?"El hijo ya está calificado.":"Falta confirmar o tramitar la calificación del hijo."} Es un beneficio ya vigente, no depende de la reforma.`,
+      falta: falta>0 ? `Le faltan ${falta} semanas.` : null,
+      hacer:[A.pclHijo==="Sí"?"Reunir calificación, registro civil y prueba de dependencia, y radicar.":"Tramitar primero la calificación formal de la condición del hijo.","Verificar si la jurisprudencia aplica al padre cuando es el cuidador."],
+      explica:"«Cuando un hijo depende de su cuidado por una discapacidad calificada, la ley permite pensionarse sin esperar la edad, solo con las semanas.»",
+      cuando: falta===0 ? "Ya" : "Al completar semanas", requiere:"Calificación del hijo y semanas", riesgo:"Debe probarse la dependencia." });
   }
 
-  return { tipo:"opciones", edad, edadLegal, semanasEst, semanasProyAbril2027, opciones, mujerConHijos };
+  // ---------- 7. Alto riesgo ----------
+  if(A.altoRiesgo==="Sí" || A.altoRiesgo==="Por verificar"){
+    const esp = Math.round(num("semanasEspeciales"));
+    const red = Math.min(5, Math.floor(Math.max(0, esp-1300)/60));
+    const edadAR = 55 - red;
+    let estado, porque, falta=null;
+    if(A.altoRiesgo==="Por verificar"){ estado="verificar"; porque="Hay que confirmar si la actividad figura en el Decreto 2090 de 2003 y si el empleador pagó el aporte adicional (10 puntos). Si aplica: edad base de 55 años, 700 semanas de cotización especial y reducción de un año por cada 60 semanas especiales por encima del mínimo de semanas, hasta los 50 años."; }
+    else {
+      const okSem = semCot>=1300, okEsp = esp>=700, okEdad = edad>=edadAR;
+      estado = (okSem&&okEsp&&okEdad) ? "aplica" : (okEsp ? "posible" : "falta");
+      porque = `Edad base 55 años; reducción de un año por cada 60 semanas especiales por encima del mínimo (con ${esp} semanas especiales: edad ${edadAR}). Exige 700 semanas de cotización especial y el mínimo de semanas del sistema.`;
+      const fl=[]; if(!okEsp) fl.push(`${700-esp} semanas de cotización especial`); if(!okSem) fl.push(`${1300-semCot} semanas totales`); if(!okEdad) fl.push(`${edadAR-edad} años de edad`);
+      if(fl.length) falta = "Faltan: " + fl.join(", ") + ".";
+    }
+    R({ id:"alto", titulo:"Pensión especial por actividades de alto riesgo", estado, norma:"Decreto Ley 2090/2003 · verificar vigencia y lista de actividades", porque, falta,
+      hacer:["Pedir la certificación laboral con cargo y funciones, y las planillas con el aporte adicional de alto riesgo.","Verificar en el Decreto 2090 que la actividad esté listada y el período de vinculación.","Confirmar el mínimo de semanas aplicable al caso (en mujeres puede variar)."],
+      explica:"«Si trabajó en una actividad de alto riesgo y su empleador pagó el aporte adicional, puede pensionarse antes de los 57 o 62 años.»",
+      cuando: edadAR+" años", requiere:"700 semanas de cotización especial", riesgo:"Si el empleador no pagó el aporte adicional, la prueba es difícil." });
+  }
+
+  // ---------- 8. Servicio militar ----------
+  if(A.servicioMilitar==="Sí" || A.servicioMilitar==="Por verificar"){
+    R({ id:"mil", titulo:"Servicio militar obligatorio: tiempo que suma", estado: A.servicioMilitar==="Sí" ? "recuperable" : "verificar", norma:"Ley 1861/2017 art. 45 · T-300/2019",
+      porque: A.servicioMilitar==="Sí" ? `El tiempo de servicio militar se computa para pensión. Con ${Math.round(num("mesesMilitar"))} meses serían unas <b>${mil} semanas</b> que pueden no aparecer en la historia laboral. No se mezclan con las semanas cotizadas: se tramitan aparte.` : "Hay que confirmar si prestó servicio militar obligatorio y por cuánto tiempo. Si lo prestó, ese tiempo se computa para pensión.",
+      falta:null, hacer:["Pedir la libreta militar o certificación del tiempo de servicio.","Solicitar el reconocimiento ante el Ministerio de Defensa y la administradora de pensiones, y confirmar el trámite vigente."],
+      explica:"«El servicio militar cuenta para la pensión. Es tiempo que hoy quizá no aparece en su historia laboral y se puede reclamar.»",
+      cuando:"Al acreditarlo", requiere:"Certificación y solicitud", riesgo:"El trámite exige soportes y puede demorar." });
+  }
+
+  // ---------- 9. Tiempos públicos ----------
+  if(A.tiempoPublico==="Sí" || A.tiempoPublico==="Por verificar" || A.sector==="Servidor público"){
+    R({ id:"pub", titulo:"Tiempos como servidor público (bono pensional)", estado: A.tiempoPublico==="Sí" ? "recuperable" : "verificar", norma:"Ley 100 art. 33 parágrafo 1 y bonos pensionales (arts. 115 y ss.) · verificar caso",
+      porque: A.tiempoPublico==="Sí" ? `Reporta ${pub} semanas en entidades públicas sin cotización. Esos tiempos pueden sumarse a la pensión por la vía de bonos o cómputo de tiempos, según la entidad y la fecha.` : "Si trabajó en entidades públicas en épocas sin cotización a pensión, esos tiempos pueden sumarse. Falta confirmarlo.",
+      falta:null, hacer:["Pedir la certificación electrónica de tiempos laborados (CETIL) a cada entidad.","Verificar si procede bono pensional y quién lo emite."],
+      explica:"«Los años trabajados en el sector público, aunque no se cotizaran, pueden sumarse a su pensión; hay que pedir el certificado de cada entidad.»",
+      cuando:"Al acreditarlo", requiere:"CETIL por entidad", riesgo:"Cada entidad certifica por separado." });
+  }
+
+  // ---------- 10. Recuperar omisiones ----------
+  let omisos = null;
+  if(A.hayOmisos==="Sí"){
+    const tipo = A.omisoTipo || "";
+    const esInd = tipo.indexOf("independiente")>=0 || tipo.indexOf("Ambos")>=0;
+    const esEmp = tipo.indexOf("empleado")>=0 || tipo.indexOf("Ambos")>=0;
+    const r = A.omisoRecientes==="Sí" ? Math.min(26, Math.round(num("omisoSemanasRecientes"))) : 0;
+    const p = A.omisoAntes2014==="Sí" ? Math.round(num("omisoSemanasAntes2014")) : 0;
+    const resto = Math.max(0, omi - r - p);
+    const defT = Math.max(0, deficitT - r - p);
+    const minT = enTransicion ? 0 : Math.min(resto, defT);
+    const defP = Math.max(0, reqHoy - semCot - r - p);
+    const minP = Math.min(resto, defP);
+    const pasos = [];
+    if(r>0) pasos.push(`<b>1) Mora (últimos 6 meses):</b> pagar ${r} semanas por PILA normal con intereses de mora (Decreto 1296/2022). No requiere cálculo actuarial.`);
+    else if(cot===COT.si) pasos.push("<b>1) Mora:</b> no aplica: el cliente cotiza al día, no hay meses recientes por pagar.");
+    else pasos.push("<b>1) Mora:</b> no hay meses sin pagar dentro de los últimos 6 meses.");
+    if(p>0) pasos.push(`<b>2) Planilla tipo M:</b> ${p} semanas anteriores a marzo de 2014 con ausencia total de pago. Confirmar con la administradora el valor y las condiciones.`);
+    else pasos.push("<b>2) Planilla tipo M:</b> no hay períodos anteriores a marzo de 2014.");
+    pasos.push(`<b>3) Cálculo actuarial:</b> solo por lo que reste (${resto} semanas) y, de ellas, únicamente las necesarias: ${enTransicion?`para la pensión ordinaria, unas ${minP} semanas`:(minT===0?`para el umbral de transición no hace falta (la mora y la Planilla M ya cubren la diferencia); para la pensión ordinaria, unas ${minP} semanas`:`para llegar al umbral de transición, unas ${minT} semanas; para la pensión ordinaria, unas ${minP}`)}.`);
+    const avisos = [];
+    if(esEmp) avisos.push("Si fue empleado: el pago corresponde al empleador y el salario base es el último salario del período omitido (mínimo el SMMLV de esa fecha y máximo 25 SMMLV).");
+    if(esInd && !enTransicion && deficitT>0) avisos.push("<b>Atención, artículo 20 del Decreto 1225/2024:</b> si es independiente y busca entrar a la transición, el salario base pasa a ser el promedio ponderado de toda la vida laboral, deflactado a la fecha de corte; el costo puede ser varias veces mayor. Por eso conviene comprar solo las semanas mínimas.");
+    else if(esInd) avisos.push("Si fue independiente y no busca la transición, se aplica la regla general del Decreto 1296/2022 (ingreso realmente percibido en el período omitido).");
+    if(esInd && !enTransicion && deficitT>0 && defT===0) avisos.push("Con la mora y la Planilla M se cubre el déficit de transición sin necesidad de cálculo actuarial. Confirme con la administradora cómo se liquida la Planilla M para independientes.");
+    if(r>0 || cot!==COT.si) avisos.push("La ventana de 6 meses se corre cada mes: el mes más antiguo sale de la ventana y pasa a cálculo actuarial.");
+    avisos.push("El valor real del cálculo actuarial solo lo da el simulador oficial (Soy Actuario): simule «todo el bache» y «solo lo mínimo» y compare.");
+    omisos = { r,p,resto,minT,minP,defT,defP };
+    R({ id:"omisos", titulo:"Recuperar períodos sin cotizar (ruta en orden)", estado:"recuperable", norma:"Decreto 1296/2022 · Decreto 1887/1994 · Decreto 1225/2024 art. 20 · Planilla tipo M",
+      porque:`Hay unas <b>${omi} semanas</b> sin cotizar. Se recuperan en este orden, de lo más barato a lo más costoso:<br>${pasos.join("<br>")}<br><br>${avisos.join("<br>")}`,
+      falta:null, hacer:["Reunir los soportes de cada período (contratos, certificaciones, declaraciones de renta, extractos).","Simular en Soy Actuario con todas las semanas y con solo las mínimas, y comparar el costo.","Pagar primero por mora lo reciente y por Planilla M lo anterior a 2014, antes de solicitar el actuarial."],
+      explica:"«Esas semanas no están perdidas: se pueden pagar. Lo importante es el orden: primero lo más barato y el cálculo actuarial solo por lo que falte, para que no salga tan caro.»",
+      cuando:"Al pagar", requiere:"Pago por mora, Planilla M y/o actuarial mínimo", riesgo: esInd&&!enTransicion ? "Independiente buscando transición: base de promedio de toda la vida (costo alto)." : "Cada mes la ventana de mora se reduce." });
+  } else if(A.hayOmisos==="Por verificar" || A.objetivo===OBJ.recup){
+    R({ id:"omisos", titulo:"Revisar si hay períodos para recuperar", estado:"verificar", norma:"Decreto 1296/2022 · Planilla tipo M · Decreto 1887/1994",
+      porque:"Antes de descartar una ruta por falta de semanas, hay que auditar la historia laboral: puede haber épocas trabajadas que no se cotizaron y que se pueden recuperar por mora (últimos 6 meses), Planilla M (antes de marzo de 2014) o cálculo actuarial.",
+      falta:null, hacer:["Pedir la historia laboral y contrastarla con contratos y certificaciones.","Usar la Ficha de Períodos Omisos para clasificar cada período."],
+      explica:"«Vamos a revisar si hubo épocas en que trabajó y no se cotizó: esas semanas muchas veces se pueden recuperar.»",
+      cuando:"—", requiere:"Auditoría de la historia laboral", riesgo:"Sin soportes no se puede recuperar." });
+  }
+
+  // ---------- 11. Último recurso ----------
+  const hayVejezViable = rutas.some(x=>["rpm","rais"].indexOf(x.id)>=0 && (x.estado==="aplica"||x.estado==="posible"||x.estado==="recuperable"));
+  if(edadCumplida && !hayVejezViable && A.regimen!==REG.esp && !regEsp){
+    const esRAIS = A.regimen===REG.rais;
+    R({ id:"ultimo", titulo: esRAIS ? "Devolución de saldos" : "Indemnización sustitutiva", estado:"ultimo", norma: esRAIS ? "Ley 100 art. 66" : "Ley 100 art. 37",
+      porque:`Ya cumplió la edad pero no alcanza los requisitos y no puede completarlos. ${esRAIS?"El fondo devolvería el saldo de la cuenta de ahorro individual, con rendimientos.":"Colpensiones pagaría una suma única calculada sobre lo cotizado."} Pone fin a la posibilidad de pensión: es el último recurso, después de revisar recuperación de tiempos, pensión familiar y anticipada.`,
+      falta:null, hacer:["Antes de aceptarla, agotar la recuperación de tiempos y las demás rutas de esta lista.","Si se elige, solicitarla formalmente con la historia laboral actualizada."],
+      explica:"«Si no se logra la pensión, existe la devolución de lo cotizado. Pero es una suma única y se pierde la posibilidad de pensión; por eso es el último paso.»",
+      cuando:"Al solicitarla", requiere:"Solicitud formal", riesgo:"Se pierde la opción de pensión mensual." });
+  }
+
+  // ---------- 12. Pensión familiar ----------
+  if(A.conviveParejaMas5==="Sí"){
+    const edadP = num("edadPareja"), legP = A.sexoPareja==="Mujer"?57:62;
+    const suma = semCot + Math.round(num("semanasPareja"));
+    let estado, porque;
+    if(A.mismoRegimenPareja==="No"){ estado="no_aplica"; porque="La pensión familiar exige que ambos estén en el mismo régimen (y, en fondo privado, en la misma administradora)."; }
+    else if(edadCumplida && edadP>=legP && suma>=reqHoy && semCot<reqHoy){ estado="posible"; porque=`Ambos cumplieron la edad y, sumando las semanas (${suma}), alcanzan las exigidas (${reqHoy}). Ninguno logra pensionarse solo. Faltan por verificar las condiciones adicionales de la ley.`; }
+    else { estado="falta"; const fl=[]; if(!edadCumplida) fl.push("el cliente aún no cumple la edad"); if(edadP<legP) fl.push("la pareja aún no cumple la edad"); if(suma<reqHoy) fl.push(`la suma de semanas (${suma}) no alcanza ${reqHoy}`); if(semCot>=reqHoy) fl.push("el cliente ya puede pensionarse solo"); porque="Hoy no se cumple: " + fl.join("; ") + "."; }
+    R({ id:"fam", titulo:"Pensión familiar", estado, norma:"Ley 1580/2012 · Decreto 288/2014 · C-134/2016", porque, falta:null,
+      hacer:["Reunir historia laboral de ambos y prueba de convivencia (más de 5 años).","Verificar en la ley y el decreto las condiciones adicionales (cotización previa de cada cónyuge, tope de la mesada, mismo régimen)."],
+      explica:"«Cuando ninguno de los dos alcanza a pensionarse solo, la ley permite sumar las semanas de la pareja para una pensión familiar.»",
+      cuando:"Cuando ambos cumplan edad", requiere:"Suma de semanas y convivencia", riesgo:"Condiciones estrictas; la mesada tiene tope." });
+  }
+
+  // ---------- 13. Regímenes especiales ----------
+  if(regEsp){
+    const det = A.sector==="Docente" ? "Docentes: Ley 91/1989 y Ley 812/2003 art. 81. El régimen depende de la fecha de vinculación (antes o después del 27 de junio de 2003)."
+              : A.sector==="Fuerza Pública" ? "Fuerza Pública: Ley 923/2004 y Decreto 4433/2004 (asignación de retiro y régimen propio)."
+              : "Identifique cuál régimen especial o exceptuado aplica (Ecopetrol, Rama Judicial, etc.) y su norma propia.";
+    R({ id:"esp", titulo:"Régimen especial o exceptuado: verificar la norma propia", estado:"verificar", norma:"Según el régimen", porque:`Este caso no se rige por las reglas generales de Colpensiones o fondos privados. ${det} Por eso la herramienta no calcula requisitos aquí: se deben verificar con la norma y la entidad pagadora.`,
+      falta:null, hacer:["Identificar el régimen exacto y la fecha de vinculación.","Pedir a la entidad la certificación de tiempos y factores salariales.","Verificar el texto oficial vigente antes de proyectar."],
+      explica:"«Su situación tiene reglas propias, distintas a las del resto. Primero identificamos cuál le aplica y luego calculamos.»",
+      cuando:"Según el régimen", requiere:"Norma y certificación de la entidad", riesgo:"Aplicar reglas generales sería un error." });
+  }
+
+  // ---------- Derivaciones ----------
+  if(A.objetivo===OBJ.inval || A.pcl==="Sí") derivaciones.push({ t:"Posible pensión de invalidez", d:"Hay una condición de salud que limita el trabajo. Use el Diagnóstico de Invalidez y Viabilidad: evalúa la pérdida de capacidad laboral, las semanas y si vale la pena llevar el caso." });
+  if(A.objetivo===OBJ.sobrev) derivaciones.push({ t:"Pensión de sobrevivientes", d:"La consulta nace de un fallecimiento. Use el Determinador de Tipo de Pensión: verifica parentesco, semanas del causante y convivencia." });
+  if(A.negado==="Sí") derivaciones.push({ t:"Negación previa: revisar el acto administrativo", d:"Pida la resolución de negación y los recursos presentados: puede haber vicios que permitan recurrir o acudir a la vía judicial. Cuente los plazos." });
+
+  rutas.sort((a,b)=>a.orden-b.orden);
+
+  // ---------- Plan de acción y documentos ----------
+  const plan = [], docs = [];
+  const P = (t,d,ds)=>{ plan.push({t,d,docs:ds||[]}); (ds||[]).forEach(x=>{ if(docs.indexOf(x)<0) docs.push(x); }); };
+  if(!conoce) P("Pedir la historia laboral certificada","El cliente no conoce sus semanas: todo el concepto es preliminar hasta tenerla.",["Historia laboral / reporte de semanas cotizadas","Cédula de ciudadanía"]);
+  if(A.regimen===REG.nose) P("Confirmar el régimen de afiliación","Define qué rutas aplican (Colpensiones o fondo privado).",["Certificado de afiliación"]);
+  if(A.servicioMilitar==="Sí"||A.servicioMilitar==="Por verificar") P("Reunir los soportes del servicio militar","Para reclamar ese tiempo.",["Libreta militar o certificación del tiempo de servicio"]);
+  if(A.tiempoPublico==="Sí"||A.tiempoPublico==="Por verificar"||A.sector==="Servidor público") P("Pedir los certificados de tiempos públicos","Uno por cada entidad.",["CETIL de cada entidad pública"]);
+  if(A.altoRiesgo==="Sí"||A.altoRiesgo==="Por verificar") P("Documentar la actividad de alto riesgo","Cargo, funciones y aporte adicional.",["Certificación laboral con cargo y funciones","Planillas con el aporte adicional de alto riesgo"]);
+  if(A.hayOmisos==="Sí") P("Reunir los soportes de las épocas sin cotizar y simular el costo","Clasificar cada período (mora, Planilla M, actuarial) y simular en Soy Actuario «todo» y «solo lo mínimo».",["Contratos o certificaciones laborales","Declaraciones de renta y extractos (si fue independiente)","Simulación de Soy Actuario"]);
+  if(A.hijoDiscapacidad==="Sí") P("Tramitar o reunir la calificación del hijo","Es el requisito para la pensión especial.",["Calificación de pérdida de capacidad laboral del hijo","Registro civil del hijo","Prueba de dependencia económica"]);
+  if(A.conviveParejaMas5==="Sí") P("Reunir información de la pareja","Para evaluar la pensión familiar.",["Historia laboral de la pareja","Prueba de convivencia (más de 5 años)"]);
+  if(A.negado==="Sí") P("Conseguir la resolución de negación","Para revisar plazos y fundamentos.",["Resolución de negación y recursos presentados"]);
+  if(regEsp) P("Identificar el régimen especial exacto","Sin eso no se pueden calcular requisitos.",["Certificación de la entidad con tiempos y factores salariales"]);
+  P("Verificar el normograma antes de radicar o recomendar un pago","Revisar el estado de la reforma (fecha de entrada en vigor y artículos devueltos al Congreso) y el texto oficial vigente.");
+  P("Entregar al cliente un concepto escrito","Con régimen aplicable, situación real, rutas, plan de acción y comparación de costo-beneficio (use el botón de informe en PDF).");
+
+  return { ...base, edad, edadLegal, fechaEdad, edadCumplida, semCot, mil, pub, omi, rec, reqHoy, umbral, semProy, deficitT, enTransicion,
+           pb, pr, rutas, derivaciones, plan, docs, omisos, mujer, regEsp, regimen:A.regimen, sector:A.sector, objetivo:A.objetivo };
 }
 
-/* ======================= RESULT RENDER ======================= */
-function renderResult(r){
-  const profileCard = document.getElementById("profileCard");
-  const expGrid = document.getElementById("expGrid");
-  const opcionesList = document.getElementById("opcionesList");
+/* ===================== PRESENTACIÓN DEL CONCEPTO ===================== */
+function nota(tipo,t,d){ return `<div class="note ${tipo}"><b>${t}</b>${d}</div>`; }
+function metrica(n,l,dest){ return `<div class="metric${dest?" dest":""}"><span class="num">${n}</span><span class="lab">${l}</span></div>`; }
 
-  if(r.tipo === "desvio"){
-    profileCard.style.display = "block";
-    expGrid.style.display = "none";
-    opcionesList.style.display = "none";
-    document.getElementById("profileTag").textContent = r.profile.tag;
-    document.getElementById("profileTag").style.background = r.profile.color;
-    document.getElementById("profileTag").style.color = "#1B1B14";
-    document.getElementById("profileTitle").textContent = r.profile.title;
-    document.getElementById("profileDesc").textContent = r.profile.desc;
-    profileCard.style.borderBottomColor = r.profile.color;
-    document.getElementById("nextStepTitle").textContent = "Siguiente paso recomendado";
-    document.getElementById("nextStepText").textContent = r.nextStep;
+function renderResult(e){
+  const body = document.getElementById("resultBody");
+  if(e.desvio){
+    body.innerHTML = `<div class="profile-card"><span class="profile-tag">${esc(e.desvio.tag)}</span><h2>${esc(e.desvio.titulo)}</h2><p>${esc(e.desvio.texto)}</p></div>` +
+      nota("gold","Siguiente paso", esc(e.desvio.paso));
     return;
   }
+  const c = k => e.rutas.filter(r=>r.estado===k).length;
+  const resumen = [ c("aplica")&&`${c("aplica")} ruta(s) que aplican hoy`, (c("posible"))&&`${c("posible")} posible(s) a futuro`, c("recuperable")&&`${c("recuperable")} ruta(s) por recuperar tiempos`,
+                    c("verificar")&&`${c("verificar")} ruta(s) por verificar`, c("futura")&&`${c("futura")} desde abril de 2027` ].filter(Boolean).join(" · ") || "Sin rutas viables con los datos actuales";
+  let h = `<div class="profile-card"><span class="profile-tag">CONCEPTO PRELIMINAR DE ASESORÍA</span><h2>${esc(e.cliente||"Cliente")}</h2><p>${esc(resumen)}.</p></div>`;
 
-  // Caso normal: lista de opciones
-  profileCard.style.display = "block";
-  document.getElementById("profileTag").textContent = "DIAGNÓSTICO GENERAL";
-  document.getElementById("profileTag").style.background = "var(--gold)";
-  document.getElementById("profileTag").style.color = "#1B1B14";
-  document.getElementById("profileTitle").textContent = `${r.opciones.filter(o=>o.estado==='aplica').length} ruta(s) aplicable(s) encontradas`;
-  document.getElementById("profileDesc").textContent = `Edad actual: ${r.edad} años · Semanas estimadas: ${r.semanasEst} · Edad legal: ${r.edadLegal} años. Revisa cada opción con el cliente y decide cuál seguir.`;
-  profileCard.style.borderBottomColor = "var(--gold)";
+  // Semáforo jurídico
+  h += `<p class="group-title">Estado jurídico: léalo antes de asesorar</p><p class="group-sub">Normograma verificado el 10 de octubre de 2026. Actualice la verificación en cada asesoría.</p>`;
+  SEMAFORO.forEach(s=>{ h += nota(s.tipo, s.t, s.d); });
+  e.derivaciones.forEach(d=>{ h += nota("rojo", d.t, d.d); });
 
-  expGrid.style.display = "none";
-  opcionesList.style.display = "flex";
-  opcionesList.innerHTML = "";
+  // 1. Régimen aplicable
+  h += `<p class="group-title">1 · Régimen aplicable</p>`;
+  h += nota("", "Régimen y sector", `${esc(e.regimen)} · ${esc(e.sector)}. ${e.regimen===REG.nose?"Primero hay que confirmar el régimen: cambia las rutas.":""}`);
+  if(e.mujer && !e.regEsp && e.regimen!==REG.rais) h += nota("verde","Reducción de semanas para mujeres (ya vigente)", `Por la sentencia C-197/2023, en Colpensiones las mujeres necesitan <b>${e.reqHoy} semanas en ${new Date().getFullYear()}</b>; el requisito baja 25 por año hasta 1.000 en 2036. No depende de la reforma.`);
+  if(!e.regEsp) h += nota("", "Traslado de régimen", "La ventana especial de traslado, según la norma, ya cerró (julio de 2026). El régimen actual es el que cuenta.");
+  if(!e.regEsp) h += nota(e.enTransicion?"verde":"gold", "Régimen de transición de la reforma", e.enTransicion ? `Proyección al 1 de abril de 2027: ${Math.round(e.semProy)} semanas, sobre el umbral de ${e.umbral}. Probablemente quede protegido.` : `Proyección al 1 de abril de 2027: ${Math.round(e.semProy)} semanas; faltan ${e.deficitT} para el umbral de ${e.umbral}.`);
 
-  const badgeLabels = { aplica:"APLICA", posible:"POSIBLE", pendiente:"PENDIENTE DE CONFIRMAR", revisar:"REVISAR", no_aplica:"NO APLICA" };
+  // 2. Situación real
+  h += `<p class="group-title">2 · Situación pensional real</p><p class="group-sub">No se mezclan: las semanas cotizadas, los tiempos recuperables y las semanas exigidas son cosas distintas.</p><div class="metric-grid">`;
+  h += metrica(e.edad, "Edad actual");
+  h += metrica(e.edadLegal, e.edadCumplida?"Edad legal (ya cumplida)":`Edad legal (la cumple en ${fFecha(e.fechaEdad)})`);
+  h += metrica(e.semCot, "Semanas cotizadas (historia laboral)", true);
+  h += metrica(e.rec, `Tiempos recuperables${e.rec?` (militar ${e.mil}, público ${e.pub}, omisiones ${e.omi})`:""}`);
+  h += metrica(e.semCot+e.rec, "Total si se recuperan todos");
+  h += metrica(e.reqHoy, `Semanas exigidas hoy en Colpensiones`);
+  h += `</div>`;
 
-  r.opciones.forEach(op=>{
-    const div = document.createElement("div");
-    div.className = "opcion-card estado-" + op.estado;
-    div.innerHTML = `
-      <div class="opcion-head">
-        <h3 class="opcion-titulo">${op.titulo}</h3>
-        <span class="opcion-badge badge-${op.estado}">${badgeLabels[op.estado]}</span>
-      </div>
-      <p class="opcion-texto">${op.texto}</p>
-      ${op.paso ? `<p class="opcion-paso">→ ${op.paso}</p>` : ""}
-    `;
-    opcionesList.appendChild(div);
+  // 3. Rutas
+  h += `<p class="group-title">3 · Rutas posibles</p><p class="group-sub">Ordenadas de la más cercana a la más lejana. Cada una trae su norma, qué falta, qué hacer y una frase para explicarla.</p><div class="opciones-list">`;
+  e.rutas.forEach(r=>{
+    h += `<div class="opcion-card estado-${r.estado}"><div class="opcion-head"><h3 class="opcion-titulo">${r.titulo}</h3><span class="opcion-badge badge-${r.estado}">${ESTADOS[r.estado]}</span></div>`+
+         `<p class="opcion-norma">${r.norma}</p><p class="opcion-texto">${r.porque}</p>`+
+         (r.falta?`<p class="opcion-falta"><b>Qué falta:</b> ${r.falta}</p>`:"")+
+         (r.hacer&&r.hacer.length?`<p class="opcion-texto"><b>Qué hacer:</b></p><ul class="opcion-hacer">${r.hacer.map(x=>`<li>${x}</li>`).join("")}</ul>`:"")+
+         `<p class="opcion-explica"><b>Cómo explicarlo:</b> ${r.explica}</p></div>`;
   });
+  if(!e.rutas.length) h += nota("gold","Sin rutas","Con los datos ingresados no hay rutas para evaluar. Revise las respuestas.");
+  h += `</div>`;
 
-  document.getElementById("nextStepTitle").textContent = "Cómo continuar la asesoría";
-  document.getElementById("nextStepText").textContent = "Explícale al cliente cada ruta marcada como APLICA o POSIBLE, y usa las herramientas señaladas en cada una para formalizar el número exacto antes de cerrar el caso.";
+  // 4. Plan de acción
+  h += `<p class="group-title">4 · Plan de acción</p><ol class="plan">` + e.plan.map(p=>`<li><b>${p.t}.</b> ${p.d}${p.docs.length?`<span class="docs">Documentos: ${p.docs.join("; ")}</span>`:""}</li>`).join("") + `</ol>`;
+  if(e.docs.length) h += `<p class="group-title" style="font-size:16px;margin-top:20px">Documentos a solicitar al cliente</p><div class="docs-box">${e.docs.map(d=>`<div>${d}</div>`).join("")}</div>`;
+
+  // 5. Comparación
+  const filas = e.rutas.filter(r=>["aplica","posible","recuperable","futura","falta","ultimo"].indexOf(r.estado)>=0);
+  if(filas.length){
+    h += `<p class="group-title">5 · Comparación costo-beneficio</p><table class="tabla"><thead><tr><th>Ruta</th><th>¿Cuándo?</th><th>Qué requiere</th><th>Riesgo</th></tr></thead><tbody>` +
+         filas.map(r=>`<tr><td>${r.titulo}</td><td>${r.cuando||"—"}</td><td>${r.requiere||"—"}</td><td>${r.riesgo||"—"}</td></tr>`).join("") + `</tbody></table>`;
+  }
+  if(e.omisos){
+    h += `<div class="comparador"><h4>Comparador de costo del cálculo actuarial</h4><p>Simule en Soy Actuario dos veces y escriba los valores: la herramienta calcula el ahorro real de comprar solo lo mínimo.</p>`+
+         `<div class="fila"><div><label class="q">Valor: todas las semanas omitidas ($)</label><input type="number" id="cmpA" oninput="calcCmp()"></div><div><label class="q">Valor: solo las semanas mínimas ($)</label><input type="number" id="cmpB" oninput="calcCmp()"></div></div><div class="res" id="cmpRes"></div></div>`;
+  }
+
+  // Guion
+  const top = e.rutas.filter(r=>["aplica","recuperable","posible","futura"].indexOf(r.estado)>=0).slice(0,3);
+  h += `<p class="group-title">Cómo explicárselo al cliente</p><div class="guion">Hoy <b>${esc(e.cliente||"el cliente")}</b> tiene <b>${e.semCot} semanas</b> cotizadas${e.rec>0?` y hay unas <b>${e.rec}</b> más que se pueden recuperar`:""}. ` +
+       (top.length ? top.map(r=>r.explica.replace(/^«|»$/g,"")).join(" ") : "Con la información actual no hay una ruta clara; el primer paso es completar la historia laboral.") +
+       ` Antes de decidir, confirmamos el estado de la reforma y los documentos.</div>`;
+  h += `<p class="disclaimer">Este concepto es una orientación preliminar basada en la información registrada y en el normograma verificado el 10 de octubre de 2026. No constituye liquidación oficial ni concepto jurídico. Antes de radicar una solicitud o recomendar un pago, verifique el texto oficial vigente y la historia laboral certificada.</p>`;
+  body.innerHTML = h;
 }
 
-/* ======================= SUBMIT ======================= */
+function calcCmp(){
+  const a = document.getElementById("cmpA"), b = document.getElementById("cmpB"), r = document.getElementById("cmpRes");
+  a.setAttribute("value", a.value); b.setAttribute("value", b.value);
+  const va = parseFloat(a.value)||0, vb = parseFloat(b.value)||0;
+  if(va>0 && vb>0 && vb<=va){ const ah = va-vb; r.textContent = `Ahorro: ${fCOP(ah)} (${(ah/va*100).toFixed(0)}% menos) al comprar solo lo mínimo.`; }
+  else if(va>0 && vb>va){ r.textContent = "Revise: el valor de «solo lo mínimo» no debería superar el de «todo»."; }
+  else r.textContent = "";
+}
+
 function finish(){
-  const r = classify();
+  const e = evaluar();
+  window.__ultimo = e;
   document.getElementById("quizWrap").classList.add("hide");
   document.getElementById("resultWrap").classList.add("show");
-  renderResult(r);
+  renderResult(e);
   window.scrollTo({top:0, behavior:"smooth"});
-  sendToAdvisor(r);
+  sendToAdvisor(e);
 }
-
-async function sendToAdvisor(r){
-  const payload = {
-    ...answers,
-    resultado_tipo: r.tipo,
-    opciones_encontradas: r.tipo === "opciones" ? r.opciones.map(o=>`${o.titulo} [${o.estado}]`).join(" | ") : (r.profile ? r.profile.tag : null),
-    semanas_estimadas: r.semanasEst,
-    edad_calculada: r.edad,
-    fecha_diagnostico: new Date().toISOString()
-  };
+async function sendToAdvisor(e){
+  const payload = { ...answers, rutas: e.rutas ? e.rutas.map(r=>r.titulo+" ["+r.estado+"]").join(" | ") : e.desvio.tag, fecha: new Date().toISOString() };
   try{
-    const resp = await fetch("https://formspree.io/f/TU_ENDPOINT_AQUI", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    if(resp.ok){
-      document.getElementById("sentMsg").classList.add("show");
-    }
-  } catch(err){
-    console.error("No se pudo enviar la ficha al asesor:", err);
-  }
+    const resp = await fetch("https://formspree.io/f/TU_ENDPOINT_AQUI", { method:"POST", headers:{ "Content-Type":"application/json", "Accept":"application/json" }, body:JSON.stringify(payload) });
+    if(resp.ok) document.getElementById("sentMsg").classList.add("show");
+  }catch(err){ console.error("No se pudo enviar la ficha:", err); }
 }
 
-/* ======================= INIT ======================= */
 renderSection();
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth-check.js"></script>
-
+<script src="informe.js"></script>
 
 <a href="https://wa.me/573244063000?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20Evoluciona%20Pensional%20PRO" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Escribir por WhatsApp" title="Escríbenos por WhatsApp">
   <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16.004 3C9.377 3 4 8.373 4 15c0 2.34.666 4.523 1.82 6.37L4 29l7.82-1.77A11.93 11.93 0 0 0 16.004 27C22.63 27 28 21.627 28 15S22.63 3 16.004 3zm0 21.8a9.76 9.76 0 0 1-4.98-1.36l-.357-.212-4.64 1.05 1.08-4.52-.233-.37A9.75 9.75 0 1 1 25.75 15a9.76 9.76 0 0 1-9.746 9.8zm5.46-7.32c-.3-.15-1.77-.87-2.044-.97-.274-.1-.473-.15-.672.15-.2.3-.77.97-.944 1.17-.174.2-.348.224-.647.075-.3-.15-1.266-.467-2.412-1.49-.892-.795-1.494-1.776-1.668-2.076-.174-.3-.019-.462.13-.61.134-.133.3-.348.448-.522.15-.174.2-.3.3-.5.1-.2.05-.374-.025-.524-.075-.15-.672-1.62-.922-2.22-.243-.583-.49-.504-.672-.513l-.573-.01c-.2 0-.524.075-.798.374-.274.3-1.047 1.023-1.047 2.495s1.072 2.894 1.222 3.094c.15.2 2.11 3.222 5.112 4.52.715.308 1.272.492 1.707.63.717.228 1.37.196 1.886.119.575-.086 1.77-.724 2.02-1.423.25-.7.25-1.298.174-1.423-.075-.125-.274-.2-.573-.35z"/></svg>
@@ -872,5 +785,6 @@ renderSection();
   .whatsapp-float svg{width:30px;height:30px;fill:#fff;}
   @media (max-width:560px){ .whatsapp-float{ bottom:16px; right:16px; width:52px; height:52px; } .whatsapp-float svg{width:27px;height:27px;} }
 </style>
+
 </body>
 </html>
